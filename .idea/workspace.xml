@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c5f507d9-5a7e-42b8-b87a-960e51655414" name="Default Changelist" comment="Init repo">
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1fOAltI0oqYXmZLuPeSBWLaepue" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="js.linters.configure.manually.selectedeslint" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.standard" value="true" />
+    <property name="node.js.path.for.package.eslint" value="$USER_HOME$/n/bin/node" />
+    <property name="node.js.path.for.package.standard" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.standard" value="" />
+    <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c5f507d9-5a7e-42b8-b87a-960e51655414" name="Default Changelist" comment="" />
+      <created>1596078919876</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1596078919876</updated>
+      <workItem from="1596078921013" duration="491000" />
+      <workItem from="1596079432987" duration="370000" />
+    </task>
+    <task id="LOCAL-00001" summary="Init repo">
+      <created>1596079257218</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1596079257218</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Init repo" />
+    <option name="LAST_COMMIT_MESSAGE" value="Init repo" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1126" y="614" width="298" height="234" key="#ESLint" timestamp="1596079488774">
+      <screen x="0" y="24" width="2560" height="1416" />
+    </state>
+    <state x="1126" y="614" width="298" height="234" key="#ESLint/0.24.2560.1416/2560.177.1920.1080@0.24.2560.1416" timestamp="1596079488774" />
+    <state x="830" y="213" width="1358" height="931" key="CommitChangelistDialog2" timestamp="1596079299156">
+      <screen x="0" y="24" width="2560" height="1416" />
+    </state>
+    <state x="830" y="213" width="1358" height="931" key="CommitChangelistDialog2/0.24.2560.1416/2560.177.1920.1080@0.24.2560.1416" timestamp="1596079299156" />
+    <state x="875" y="468" width="800" height="526" key="Vcs.Push.Dialog.v2" timestamp="1596079373442">
+      <screen x="0" y="24" width="2560" height="1416" />
+    </state>
+    <state x="875" y="468" width="800" height="526" key="Vcs.Push.Dialog.v2/0.24.2560.1416/2560.177.1920.1080@0.24.2560.1416" timestamp="1596079373442" />
+  </component>
+</project>
