@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c5f507d9-5a7e-42b8-b87a-960e51655414" name="Default Changelist" comment="" />
+    <list default="true" id="c5f507d9-5a7e-42b8-b87a-960e51655414" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/deploy.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/deploy.yml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -42,7 +44,7 @@
       <option name="presentableId" value="Default" />
       <updated>1596078919876</updated>
       <workItem from="1596078921013" duration="491000" />
-      <workItem from="1596079432987" duration="2075000" />
+      <workItem from="1596079432987" duration="2387000" />
     </task>
     <task id="LOCAL-00001" summary="Init repo">
       <created>1596079257218</created>
@@ -72,7 +74,14 @@
       <option name="project" value="LOCAL" />
       <updated>1596081382047</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Add firebase-tools dep">
+      <created>1596081544087</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1596081544087</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -83,20 +92,21 @@
     <MESSAGE value="Add firebase" />
     <MESSAGE value="Update deployment to build directory" />
     <MESSAGE value="Test CI deployment" />
-    <option name="LAST_COMMIT_MESSAGE" value="Test CI deployment" />
+    <MESSAGE value="Add firebase-tools dep" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add firebase-tools dep" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1126" y="614" width="298" height="234" key="#ESLint" timestamp="1596079488774">
       <screen x="0" y="24" width="2560" height="1416" />
     </state>
     <state x="1126" y="614" width="298" height="234" key="#ESLint/0.24.2560.1416/2560.177.1920.1080@0.24.2560.1416" timestamp="1596079488774" />
-    <state x="830" y="213" width="1358" height="931" key="CommitChangelistDialog2" timestamp="1596081382004">
+    <state x="830" y="213" width="1358" height="931" key="CommitChangelistDialog2" timestamp="1596081544044">
       <screen x="0" y="24" width="2560" height="1416" />
     </state>
-    <state x="830" y="213" width="1358" height="931" key="CommitChangelistDialog2/0.24.2560.1416/2560.177.1920.1080@0.24.2560.1416" timestamp="1596081382004" />
-    <state x="875" y="468" width="800" height="526" key="Vcs.Push.Dialog.v2" timestamp="1596081383178">
+    <state x="830" y="213" width="1358" height="931" key="CommitChangelistDialog2/0.24.2560.1416/2560.177.1920.1080@0.24.2560.1416" timestamp="1596081544044" />
+    <state x="875" y="468" width="800" height="526" key="Vcs.Push.Dialog.v2" timestamp="1596081545572">
       <screen x="0" y="24" width="2560" height="1416" />
     </state>
-    <state x="875" y="468" width="800" height="526" key="Vcs.Push.Dialog.v2/0.24.2560.1416/2560.177.1920.1080@0.24.2560.1416" timestamp="1596081383178" />
+    <state x="875" y="468" width="800" height="526" key="Vcs.Push.Dialog.v2/0.24.2560.1416/2560.177.1920.1080@0.24.2560.1416" timestamp="1596081545572" />
   </component>
 </project>
