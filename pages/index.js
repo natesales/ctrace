@@ -1,65 +1,90 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import React from 'react';
+import { AppBar, Toolbar, Typography, IconButton, Paper, Grid, Container, Button } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles'
+import Box from "@material-ui/core/Box";
+import Navbar from "../Components/Navbar";
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
-export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            light: "#636363",
+            main: "#575757",
+            dark: "#202020",
+            contrastText: "#fff",
+        },
+        secondary: {
+            light: "#fff",
+            main: "#969696",
+            dark: "#6E6E6E",
+            contrastText: "#000"
+        }
+    }
+});
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+const useStyles = makeStyles((theme) => ({
+    root: {
+        height: '100vh',
+        background: theme.palette.primary.light,
+    },
+    mainGrid: {
+        height: '100vh',
+        display: 'grid',
+        placeItems: 'center',
+    },
+    loginContainer: {
+        width: 'clamp(0ch, 95%, 46ch)',
+        background: '#F5F5F5',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    oAuthContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        padding: '10px',
+        marginBottom: '30px',
+        textTransform: 'none',
+        textDecoration: 'none',
+    },
+    oAuthText: {
+        color: theme.palette.primary.main,
+        fontSize: '1rem',
+        paddingLeft: '10px',
+    },
+    googleLogo: {
+        height: '30px',
+        width: '30px',
+    }
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+}));
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+function Login() {
+    const classes = useStyles();
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+    return (
+        <div className={classes.root}>
+            <Box className={classes.mainGrid}>
+                <Paper className={classes.loginContainer} elevation={3}>
+                    <Typography variant="h2" gutterBottom className={classes.title}>
+                        cTrace
+                    </Typography>
+                    <Button variant="contained" className={classes.oAuthContainer}>
+                        <img alt="google logo" src="https://cdn.discordapp.com/attachments/473705436793798676/738834931219693588/google.png" className={classes.googleLogo} />
+                        <Typography variant="h6" className={classes.oAuthText}>
+                            Sign in with Google
+                        </Typography>
+                    </Button>
+                </Paper>
+            </Box>
         </div>
-      </main>
+)
+}
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+export default function Index() {
+    return(
+        <ThemeProvider theme={theme}>
+            <Login />
+        </ThemeProvider>
+    )
 }
