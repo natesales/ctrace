@@ -1,12 +1,12 @@
 import React, {useState} from "react"
 import { AppBar, Toolbar, Typography, IconButton, Paper, Grid, Container, Button, Box, InputBase } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
-import Navbar from "@Components/Navbar";
+import Navbar from "components/Navbar";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import LocationCard from "@Components/LocationCard";
+import LocationCard from "components/LocationCard";
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search'
-import LocationAlert from "@Components/LocationAlert";
+import LocationAlert from "components/LocationAlert";
 
 const theme = createMuiTheme({
     palette: {

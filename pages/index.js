@@ -2,7 +2,7 @@ import React from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Paper, Grid, Container, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
 import Box from "@material-ui/core/Box";
-import Navbar from "../Components/Navbar";
+import Navbar from "../components/Navbar";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
