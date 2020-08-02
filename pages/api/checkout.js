@@ -13,16 +13,16 @@ export default async function handler(req, res) {
                 return res.status(400).json({success: false});
             }
 
-            if (!person.current_location) {
-                return res.status(400).json({success: false, message: "You're not checked in anywhere!"});
+            if (!person[0]["current_location"]) {
+                return res.status(400).json({success: false, message: "You're not checked in anywhere!", db: person});
             }
 
             // TODO: Check if this actually succeed and return as success variable
-            await Person.updateOne({"uid": req.body.uid}, {
+            const db_response = await Person.updateOne({"uid": req.body.uid}, {
                 current_location: null
             })
 
-            res.status(200).json({success: true});
+            res.status(200).json({success: true, resp: db_response});
             break
         default:
             res.status(400).json({success: false})
