@@ -14,7 +14,7 @@ export default async function handler(req, res) {
                 return res.status(400).json({success: false});
             }
 
-            if (person[0]["current_location"] === null) {
+            if (person.current_location !== null) {
                 return res.status(400).json({success: false, message: "You're already checked in!"});
             }
 
@@ -23,7 +23,6 @@ export default async function handler(req, res) {
                 return res.status(400).json({success: false, message: "Location not found"});
             }
 
-            // TODO: Check if this actually succeed and return as success variable
             const updated_person = await Person.updateOne({"uid": req.body.uid}, {
                 current_location: {
                     location: req.body.location,
@@ -35,7 +34,7 @@ export default async function handler(req, res) {
                 return res.status(400).json({success: false});
             }
 
-            res.status(200).json({success: true});
+            res.status(200).json({success: true, message: "Checked in to '" + location.name + "'"});
             break
         default:
             res.status(400).json({success: false});
