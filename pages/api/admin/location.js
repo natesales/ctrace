@@ -9,11 +9,11 @@ export default async function handler(req, res) {
     switch (method) {
         case 'POST':
             const location = await Location.findOne({"name": req.body["name"]});
-            if (location.length == null) {
-                return res.status(400).json({success: false});
+            if (location !== null) {
+                return res.status(400).json({success: false, message: "Location with this name already exists"});
             }
 
-            Location.insertOne({
+            await Location.create({ // TODO: insert
                 name: req.body["name"],
                 max_occupancy: req.body["max_occupancy"]
             })
