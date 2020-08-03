@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import {Box, IconButton, InputBase, Paper, Typography} from '@material-ui/core';
 import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles'
 import Navbar from "components/Navbar";
@@ -6,6 +6,7 @@ import LocationCard from "components/LocationCard";
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search'
 import LocationAlert from "components/LocationAlert";
+import {useFetchUser} from "../lib/user";
 
 const theme = createMuiTheme({
     palette: {
@@ -134,14 +135,25 @@ const useStyles = makeStyles((theme) => ({
 
 function HomePage() {
     const classes = useStyles();
+    const {user, loading} = useFetchUser({required: true});
 
-    const [ places, setPlaces ] = useState(null);
+    const [places, setPlaces] = useState(user.locations);
+
+    useEffect(() => {
+
+    }, []);
 
     const placeinfo = {name: 'Upper School Library', count: '6'};
 
+    const placeCards = places.map(place => {
+        return (
+            <LocationCard key={place._id} place={place}/>
+        )
+    });
+
     return (
         <div className={classes.root}>
-            <Navbar />
+            <Navbar/>
             <LocationAlert/>
             <Box className={classes.mainGrid}>
                 <Paper className={classes.mainContainer} elevation={3}>
@@ -155,14 +167,7 @@ function HomePage() {
                             </IconButton>
                         </Box>
                         <Box className={classes.cardContainer} style={{margin: '0px 0px 10px 10px'}}>
-                            <LocationCard place={placeinfo} />
-                            <LocationCard place={placeinfo} />
-                            <LocationCard place={placeinfo} />
-                            <LocationCard place={placeinfo} />
-                            <LocationCard place={placeinfo} />
-                            <LocationCard place={placeinfo} />
-                            <LocationCard place={placeinfo} />
-                            <LocationCard place={placeinfo} />
+                            {placeCards}
                         </Box>
                     </Box>
                     <Box className={classes.cardFlex}>

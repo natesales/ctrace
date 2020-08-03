@@ -1,6 +1,7 @@
 import auth0 from '../../lib/auth0'
 import dbConnect from "../../utils/dbConnect";
 import Person from "../../models/Person";
+import Location from "../../models/Location"
 import mongoose from "mongoose";
 
 export default auth0.requireAuthentication(async function me(req, res) {
@@ -8,6 +9,8 @@ export default auth0.requireAuthentication(async function me(req, res) {
         const {user} = await auth0.getSession(req);
 
         await dbConnect();
+
+        const response = {google_info: user};
 
         const person = await Person.findOne({"uid": user.nickname});
         if (person === null) {
@@ -23,9 +26,12 @@ export default auth0.requireAuthentication(async function me(req, res) {
                 }
 
             });
+        } else {
+            response.current_location = person.current_location;
+            response.locations = await Location.find({})
         }
 
-        res.json(user);
+        res.json(response);
     } catch (error) {
         console.error(error);
         res.status(error.status || 500).end(error.message)

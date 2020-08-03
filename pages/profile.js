@@ -22,7 +22,7 @@ function Profile() {
     const {user, loading} = useFetchUser({required: true});
 
     async function testApi() {
-        const testcall = await fetch('http://localhost:3000/api/checkin', {
+        const testcall = await fetch('http://localhost:3000/api/checkout', {
             method: 'POST',
             credentials: 'include',
             headers: {'Content-Type': 'application/json'},
@@ -43,7 +43,7 @@ function Profile() {
 
     return (
         <div>
-            {loading ? <>Loading...</> : <ProfileCard user={user}/>}
+            {loading ? <>Loading...</> : <ProfileCard user={user.google_info}/>}
         </div>
     )
 }

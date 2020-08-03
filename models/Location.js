@@ -12,9 +12,8 @@ const LocationSchema = new mongoose.Schema({
     },
     current_occupancy: {
         type: Number,
-        required: false,
         defaultValue: 0
     }
 });
 
-module.exports = mongoose.models.Location || mongoose.model("Location", LocationSchema)
+module.exports = mongoose.models.Location || mongoose.model("Location", LocationSchema);

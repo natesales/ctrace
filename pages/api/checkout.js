@@ -27,6 +27,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
             const updated_person = await Person.findOne({uid: req.body.uid}).then(async function (doc) {
                 let entry = doc.log[doc.log.length - 1];
                 entry["time_out"] = Date.now();
+                doc.markModified('log');
                 await doc.save();
                 console.log(entry);
             });
@@ -38,7 +39,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
             }
 
             res.status(200).json({success: true});
-            break
+            break;
         default:
             res.status(400).json({success: false});
             break
