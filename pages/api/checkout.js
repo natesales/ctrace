@@ -1,14 +1,18 @@
 import dbConnect from '../../utils/dbConnect';
 import Person from '../../models/Person';
+import auth0 from '../../lib/auth0'
 
-export default async function handler(req, res) {
-    const {method} = req
+export default auth0.requireAuthentication(async function handler(req, res) {
 
-    await dbConnect()
+    const {user} = auth0.getSession(req);
+
+    const {method} = req;
+
+    await dbConnect();
 
     switch (method) {
         case 'POST':
-            const person = await Person.findOne({"uid": req.body.uid});
+            const person = await Person.findOne({"uid": user.nickname});
             if (person == null) {
                 return res.status(400).json({success: false});
             }
@@ -18,14 +22,14 @@ export default async function handler(req, res) {
             }
 
             // TODO: Check if this actually succeed and return as success variable
-            const db_response = await Person.updateOne({"uid": req.body.uid}, {
+            const db_response = await Person.updateOne({"uid": user.nickname}, {
                 current_location: null
-            })
+            });
 
             res.status(200).json({success: true, resp: db_response});
-            break
+            break;
         default:
-            res.status(400).json({success: false})
+            res.status(400).json({success: false});
             break
     }
-}
+})

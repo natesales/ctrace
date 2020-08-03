@@ -17,6 +17,6 @@ const PersonSchema = new mongoose.Schema({
         required: false,
         defaultValue: []
     }
-})
+});
 
 export default mongoose.models.Person || mongoose.model('Person', PersonSchema)
