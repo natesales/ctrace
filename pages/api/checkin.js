@@ -14,22 +14,27 @@ export default async function handler(req, res) {
                 return res.status(400).json({success: false});
             }
 
-            if (person.current_location !== null) {
+            // Check for already signed in
+            if (person.log.length > 0 && "time_out" in person.log[person.log.length - 1]) {
                 return res.status(400).json({success: false, message: "You're already checked in!"});
             }
 
+            // Check if the location doesn't exist
             const location = await Location.findOne({"_id": req.body.location});
             if (location == null) {
-                return res.status(400).json({success: false, message: "Location not found"});
+                return res.status(400).json({success: false, message: "Location doesn't exist"});
             }
 
-            const updated_person = await Person.updateOne({"uid": req.body.uid}, {
-                current_location: {
-                    location: req.body.location,
-                    time_in: Date.now()
+            // Push the new checkin
+            const updated_person = await Person.update({uid: req.body.uid}, {
+                $push: {
+                    log: {
+                        location: req.body.location,
+                        time_in: Date.now()
+                    }
                 }
             });
-
+            
             if (!updated_person) {
                 return res.status(400).json({success: false});
             }

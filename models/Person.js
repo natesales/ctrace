@@ -12,7 +12,7 @@ const PersonSchema = new mongoose.Schema({
         required: false,
         defaultValue: null
     },
-    logs: {
+    log: {
         type: Array,
         required: false,
         defaultValue: []
