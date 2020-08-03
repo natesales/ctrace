@@ -2,9 +2,9 @@ import dbConnect from '../../utils/dbConnect';
 import Person from '../../models/Person';
 import auth0 from '../../lib/auth0'
 
-export default auth0.requireAuthentication(async function handler(req, res) {
-
-    const {user} = auth0.getSession(req);
+export default async function handler(req, res) {
+    // auth0.requireAuthentication(
+    // const {user} = auth0.getSession(req);
 
     const {method} = req;
 
@@ -12,7 +12,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
 
     switch (method) {
         case 'POST':
-            const person = await Person.findOne({"uid": user.nickname});
+            const person = await Person.findOne({"uid": req.body.uid});
             if (person == null) {
                 return res.status(400).json({success: false, message: "Person with this UID doesn't exist"});
             }
@@ -22,7 +22,6 @@ export default auth0.requireAuthentication(async function handler(req, res) {
                 return res.status(400).json({success: false, message: "You're not checked in!"});
             }
 
-            // TODO: This isn't setting time_out
             // Set the time_out
             const updated_person = await Person.findOne({uid: req.body.uid}).then(async function (doc) {
                 let entry = doc.log[doc.log.length - 1];
@@ -44,4 +43,4 @@ export default auth0.requireAuthentication(async function handler(req, res) {
             res.status(400).json({success: false});
             break
     }
-})
+}
