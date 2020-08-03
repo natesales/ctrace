@@ -1,9 +1,7 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Paper, Grid, Container, Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles'
+import {Button, Paper, Typography} from '@material-ui/core';
+import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles'
 import Box from "@material-ui/core/Box";
-import Navbar from "../components/Navbar";
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
     palette: {
@@ -69,7 +67,7 @@ function Login() {
                     <Typography variant="h2" gutterBottom className={classes.title}>
                         cTrace
                     </Typography>
-                    <Button variant="contained" className={classes.oAuthContainer}>
+                    <Button variant="contained" className={classes.oAuthContainer} href="/api/login/" >
                         <img alt="google logo" src="https://cdn.discordapp.com/attachments/473705436793798676/738834931219693588/google.png" className={classes.googleLogo} />
                         <Typography variant="h6" className={classes.oAuthText}>
                             Sign in with Google

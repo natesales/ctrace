@@ -1,8 +1,7 @@
 import React, {useState} from "react"
-import { AppBar, Toolbar, Typography, IconButton, Paper, Grid, Container, Button, Box, InputBase } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles'
+import {Box, IconButton, InputBase, Paper, Typography} from '@material-ui/core';
+import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles'
 import Navbar from "components/Navbar";
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import LocationCard from "components/LocationCard";
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search'
@@ -45,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
         maxHeight: '467px',
         position: 'relative',
         top: '190px',
+        borderRadius: '10px',
         [theme.breakpoints.down(864)]: {
             maxHeight: 'none',
         },
@@ -55,21 +55,28 @@ const useStyles = makeStyles((theme) => ({
     cardFlex: {
         flex: '1 1 410px',
         maxHeight: '100%',
+        borderRadius: '10px',
         background: theme.palette.primary.light,
         [theme.breakpoints.down(864)]: {
             width: '100%',
         },
     },
     cardContainer: {
-        margin: '10px',
         maxHeight: '410px',
         [theme.breakpoints.down(864)]: {
             maxHeight: 'none',
             marginBottom: '0px',
         },
         overflow: 'scroll',
-        '&:-webkit-scrollbar': {
-            width: '2px',
+        '&::-webkit-scrollbar': {
+            width: '5px',
+        },
+        '&::-webkit-scrollbar-track': {
+            background: '#636363',
+        },
+        '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#fff',
+            borderRadius: '20px',
         },
         scrollbarWidth: 'thin',
         overflowX: 'hidden',
@@ -147,7 +154,14 @@ function HomePage() {
                                 <AddIcon />
                             </IconButton>
                         </Box>
-                        <Box className={classes.cardContainer}>
+                        <Box className={classes.cardContainer} style={{margin: '0px 0px 10px 10px'}}>
+                            <LocationCard place={placeinfo} />
+                            <LocationCard place={placeinfo} />
+                            <LocationCard place={placeinfo} />
+                            <LocationCard place={placeinfo} />
+                            <LocationCard place={placeinfo} />
+                            <LocationCard place={placeinfo} />
+                            <LocationCard place={placeinfo} />
                             <LocationCard place={placeinfo} />
                         </Box>
                     </Box>
