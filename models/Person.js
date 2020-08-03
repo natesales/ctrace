@@ -11,6 +11,11 @@ const PersonSchema = new mongoose.Schema({
         type: Object,
         required: false,
         defaultValue: null
+    },
+    logs: {
+        type: Array,
+        required: false,
+        defaultValue: []
     }
 })
 
