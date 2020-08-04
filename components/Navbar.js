@@ -5,7 +5,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Box from "@material-ui/core/Box";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import {createMuiTheme, ThemeProvider} from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
     palette: {
@@ -37,33 +37,37 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Nav() {
+function Nav(props) {
     const classes = useStyles();
 
     return (
         <AppBar position="fixed" className={classes.appBar}>
             <Toolbar>
                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                    <MenuIcon />
+                    <MenuIcon/>
                 </IconButton>
                 <Typography variant="h6" className={classes.title}>
                     cTrace
                 </Typography>
-                <IconButton edge="end" className={classes.profileButton} color="inherit" aria-label="menu">
-                    <CropFreeIcon />
+
+                <input id="qrCodeInput" type="file" onChange={props.handleQRCode} style={{display: "none"}}/>
+
+                <IconButton edge="end" className={classes.profileButton} color="inherit" aria-label="menu" htmlFor="qrCodeInput" component="label">
+                    <CropFreeIcon/>
                 </IconButton>
+
                 <IconButton edge="end" className={classes.profileButton} color="inherit" aria-label="menu">
-                    <AccountCircleIcon />
+                    <AccountCircleIcon/>
                 </IconButton>
             </Toolbar>
         </AppBar>
     )
 }
 
-export default function Navbar() {
+export default function Navbar(props) {
     return (
         <ThemeProvider theme={theme}>
-            <Nav />
+            <Nav handleQRCode={props.handleQRCode}/>
         </ThemeProvider>
     )
 }

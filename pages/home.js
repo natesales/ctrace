@@ -7,6 +7,7 @@ import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search'
 import LocationAlert from "@components/LocationAlert";
 import {useFetchUser} from "../lib/user";
+import QrCode from 'qrcode-reader';
 
 const theme = createMuiTheme({
     palette: {
@@ -195,12 +196,38 @@ function HomePage(props) {
                 })
             }
         }
-
     }
+
+    const handleQRCode = (event) => {
+        console.log("Calling handleQR")
+        if (event.currentTarget.files && event.currentTarget.files[0]) {
+            const FR = new FileReader();
+
+            FR.addEventListener("load", function (e) {
+                const qr = new QrCode();
+                qr.callback = function (error, result) {
+                    if (error) {
+                        console.log(error)
+                        return;
+                    }
+                    const location_id = result["result"].split("?loc=")[1];
+                    console.log(location_id);
+
+                    // TODO: Check user in with `location_id` if not null
+                }
+                qr.decode(e.target.result);
+            });
+
+            FR.readAsDataURL(event.currentTarget.files[0]);
+        } else {
+            alert("Error uploading image.");
+            throw new Error("Error uploading image.");
+        }
+    };
 
     return (
         <div className={classes.root}>
-            <Navbar/>
+            <Navbar handleQRCode={handleQRCode}/>
             <LocationAlert/>
             <Box className={classes.mainGrid}>
                 <Paper className={classes.mainContainer} elevation={3}>
@@ -210,7 +237,7 @@ function HomePage(props) {
                                 Pinned Locations
                             </Typography>
                             <IconButton aria-label="add a pinned location" className={classes.addPinnedButton}>
-                                <AddIcon />
+                                <AddIcon/>
                             </IconButton>
                         </Box>
                         <Box className={classes.cardContainer} style={{margin: '0px 0px 10px 10px'}}>
