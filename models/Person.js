@@ -7,6 +7,12 @@ const PersonSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide a UID for this Person.']
     },
+    name: {
+        /* lastname+first_initial User ID */
+
+        type: String,
+        required: [true, 'Please provide a name for this Person.']
+    },
     log: {
         type: Array,
         required: false,

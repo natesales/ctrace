@@ -17,6 +17,7 @@ export default auth0.requireAuthentication(async function me(req, res) {
             const newPerson = new Person({
                 _id: new mongoose.Types.ObjectId(),
                 uid: user.nickname,
+                name: user.name
             });
 
             newPerson.save((error) => {
