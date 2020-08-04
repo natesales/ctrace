@@ -256,7 +256,7 @@ export default function Home() {
 
     return (
         <ThemeProvider theme={theme}>
-            {loading ? null : <HomePage user={user} loading={loading}/>}
+            {loading ? <div>Loading...</div> : <HomePage user={user} loading={loading}/>}
         </ThemeProvider>
     )
 }
