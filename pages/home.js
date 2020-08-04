@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react"
 import {Box, IconButton, InputBase, Paper, Typography} from '@material-ui/core';
 import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles'
-import Navbar from "components/Navbar";
-import LocationCard from "components/LocationCard";
+import Navbar from "@components/Navbar";
+import LocationCard from "@components/LocationCard";
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search'
-import LocationAlert from "components/LocationAlert";
+import LocationAlert from "@components/LocationAlert";
 import {useFetchUser} from "../lib/user";
 
 const theme = createMuiTheme({
@@ -123,6 +123,7 @@ const useStyles = makeStyles((theme) => ({
     },
     inputRoot: {
         color: 'inherit',
+        width: '100%',
     },
     inputInput: {
         padding: theme.spacing(1.7, 1, 1, 0),
@@ -130,26 +131,72 @@ const useStyles = makeStyles((theme) => ({
         transition: theme.transitions.create('width'),
         width: '100%',
     },
+    placeList: {
+        listStyleType: 'none',
+        padding: 0,
+        margin: 0
+    }
 
 }));
 
-function HomePage() {
+function HomePage(props) {
     const classes = useStyles();
-    const {user, loading} = useFetchUser({required: true});
-
-    const [places, setPlaces] = useState(user.locations);
 
     useEffect(() => {
-
     }, []);
 
-    const placeinfo = {name: 'Upper School Library', count: '6'};
+    const places = props.user.locations;
 
-    const placeCards = places.map(place => {
-        return (
-            <LocationCard key={place._id} place={place}/>
-        )
-    });
+    const [shownPlaces, setShownPlaces] = useState(
+        places.map(place => {
+            let isEntered = false;
+            let showButton = true;
+
+            if ("current_location" in props.user) {
+                showButton = false;
+            }
+
+            if (place._id === props.user.current_location._id) {
+                isEntered = true;
+                showButton = true;
+            }
+
+            const result = <LocationCard key={place._id} place={place} isEntered={isEntered} showButton={showButton}
+                                         isDisplayed={true}/>;
+
+            return (
+                result
+            )
+        }));
+
+    const [searchState, setSearchState] = useState('');
+
+    function handleSearch(event) {
+        setSearchState(event.target.value);
+        let search_string = event.target.value.toUpperCase();
+
+        for (let i = 0; i < shownPlaces.length; i++) {
+            const place_name = shownPlaces[i].props.place.name;
+            if (place_name.toUpperCase().indexOf(search_string) > -1) {
+                setShownPlaces(prevState => {
+                    let newState = prevState;
+                    newState[i] = <LocationCard key={newState[i].props.place._id} place={newState[i].props.place}
+                                                isEntered={newState[i].props.isEntered}
+                                                showButton={newState[i].props.showButton} isDisplayed={true}/>;
+                    return (newState)
+                })
+            } else {
+                setShownPlaces(prevState => {
+                    let newState = prevState;
+                    newState[i] = <LocationCard key={newState[i].props.place._id} place={newState[i].props.place}
+                                                isEntered={newState[i].props.isEntered}
+                                                showButton={newState[i].props.showButton} isDisplayed={false}/>;
+                    return (newState)
+                })
+            }
+        }
+
+    }
 
     return (
         <div className={classes.root}>
@@ -167,7 +214,7 @@ function HomePage() {
                             </IconButton>
                         </Box>
                         <Box className={classes.cardContainer} style={{margin: '0px 0px 10px 10px'}}>
-                            {placeCards}
+
                         </Box>
                     </Box>
                     <Box className={classes.cardFlex}>
@@ -179,7 +226,7 @@ function HomePage() {
                         <Box className={classes.searchContainer}>
                             <div className={classes.search}>
                                 <div className={classes.searchIcon}>
-                                    <SearchIcon />
+                                    <SearchIcon/>
                                 </div>
                                 <InputBase
                                     placeholder="Search…"
@@ -187,12 +234,15 @@ function HomePage() {
                                         root: classes.inputRoot,
                                         input: classes.inputInput,
                                     }}
-                                    inputProps={{ 'aria-label': 'search' }}
+                                    inputProps={{'aria-label': 'search'}}
+                                    onChange={handleSearch}
+                                    value={searchState}
                                 />
                             </div>
                         </Box>
-                        <Box className={classes.cardContainer}>
-
+                        <Box className={classes.cardContainer}
+                             style={{margin: '0px 0px 10px 10px', maxHeight: 'calc(410px - 58px - 10px)'}}>
+                            {props.loading ? null : shownPlaces}
                         </Box>
                     </Box>
                 </Paper>
@@ -202,9 +252,11 @@ function HomePage() {
 }
 
 export default function Home() {
+    const {user, loading} = useFetchUser({required: true});
+
     return (
         <ThemeProvider theme={theme}>
-            <HomePage />
+            <HomePage user={user} loading={loading}/>
         </ThemeProvider>
     )
 }

@@ -12,7 +12,7 @@ const LocationSchema = new mongoose.Schema({
     },
     current_occupancy: {
         type: Number,
-        defaultValue: 0
+        default: 0
     }
 });
 

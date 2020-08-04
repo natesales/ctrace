@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {makeStyles} from "@material-ui/core/styles";
-import { Typography, IconButton, Paper, Grid, Container, Button, Box } from '@material-ui/core';
+import {Box, Button, Paper, Typography} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     placePaper: {
@@ -32,21 +32,29 @@ const useStyles = makeStyles((theme) => ({
 export default function LocationCard(props) {
     const classes = useStyles();
 
-    const [ isEntered, setIsEntered ] = useState(false);
-
     return (
-        <Paper className={classes.placePaper}>
+        <Paper className={classes.placePaper} style={{display: props.isDisplayed ? '' : 'none'}}>
             <Box className={classes.cardType}>
                 <Typography variant="h4" className={classes.locationName}>
                     {props.place.name}
                 </Typography>
                 <Typography variant="h6" className={classes.locationPopulation}>
-                    Currently: {props.place.count} people
+                    Currently: {props.place.current_occupancy} people
                 </Typography>
             </Box>
-            <Button variant="outlined" className={classes.actionButton}>
-                Enter
-            </Button>
+
+            {props.showButton ?
+                props.isEntered ?
+                    <Button variant="outlined" className={classes.actionButton}>
+                        Leave
+                    </Button>
+                    :
+                    <Button variant="outlined" className={classes.actionButton}>
+                        Enter
+                    </Button>
+                :
+                null
+            }
         </Paper>
     )
 }

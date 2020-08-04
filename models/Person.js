@@ -7,15 +7,15 @@ const PersonSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide a UID for this Person.']
     },
-    current_location: {
-        type: Object,
-        required: false,
-        defaultValue: null
-    },
     log: {
         type: Array,
         required: false,
-        defaultValue: []
+        default: []
+    },
+    pinned_locations: {
+        type: Array,
+        required: false,
+        default: []
     }
 });
 

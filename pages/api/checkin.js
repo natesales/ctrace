@@ -19,7 +19,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
             }
 
             // Check for already signed in
-            if (person.log.length > 0 && "time_out" in person.log[person.log.length - 1]) {
+            if (person.log.length > 0 && !("time_out" in person.log[person.log.length - 1])) {
                 return res.status(400).json({success: false, message: "You're already checked in!"});
             }
 
