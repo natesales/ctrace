@@ -152,17 +152,21 @@ function HomePage(props) {
             let isEntered = false;
             let showButton = true;
 
-            if ("current_location" in props.user) {
+            if (props.user.current_location != null) {
                 showButton = false;
+                if (place._id === props.user.current_location._id) {
+                    isEntered = true;
+                    showButton = true;
+                }
             }
 
-            if (place._id === props.user.current_location._id) {
-                isEntered = true;
-                showButton = true;
-            }
-
-            const result = <LocationCard key={place._id} place={place} isEntered={isEntered} showButton={showButton}
-                                         isDisplayed={true}/>;
+            const result = <LocationCard 
+                            key={place._id} 
+                            place={place} 
+                            isEntered={isEntered} 
+                            showButton={showButton}                
+                            isDisplayed={true} 
+                            />;
 
             return (
                 result
@@ -180,17 +184,26 @@ function HomePage(props) {
             if (place_name.toUpperCase().indexOf(search_string) > -1) {
                 setShownPlaces(prevState => {
                     let newState = prevState;
-                    newState[i] = <LocationCard key={newState[i].props.place._id} place={newState[i].props.place}
-                                                isEntered={newState[i].props.isEntered}
-                                                showButton={newState[i].props.showButton} isDisplayed={true}/>;
+                    newState[i] = <LocationCard 
+                                    key={newState[i].props.place._id} 
+                                    place={newState[i].props.place}                     
+                                    isEntered={newState[i].props.isEntered}              
+                                    showButton={newState[i].props.showButton} 
+                                    isDisplayed={true}
+                                    />;
+
                     return (newState)
                 })
             } else {
                 setShownPlaces(prevState => {
                     let newState = prevState;
-                    newState[i] = <LocationCard key={newState[i].props.place._id} place={newState[i].props.place}
-                                                isEntered={newState[i].props.isEntered}
-                                                showButton={newState[i].props.showButton} isDisplayed={false}/>;
+                    newState[i] = <LocationCard 
+                                    key={newState[i].props.place._id} 
+                                    place={newState[i].props.place}                     
+                                    isEntered={newState[i].props.isEntered}              
+                                    showButton={newState[i].props.showButton} 
+                                    isDisplayed={false}
+                                    />;
                     return (newState)
                 })
             }
@@ -200,7 +213,7 @@ function HomePage(props) {
 
     return (
         <div className={classes.root}>
-            <Navbar/>
+            <Navbar />
             <LocationAlert/>
             <Box className={classes.mainGrid}>
                 <Paper className={classes.mainContainer} elevation={3}>

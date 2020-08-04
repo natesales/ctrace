@@ -31,7 +31,10 @@ export default auth0.requireAuthentication(async function me(req, res) {
 
         if (person.log.length > 0 && !("time_out" in person.log[person.log.length - 1])) {
             response.current_location = await Location.findOne({_id: mongoose.Types.ObjectId(person.log[person.log.length - 1].location)});
+        } else {
+             response.current_location = null;
         }
+
         response.locations = await Location.find({});
 
         console.log(response, 'RESPONSE FROM ME');
