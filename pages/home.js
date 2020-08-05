@@ -189,7 +189,7 @@ function HomePage(props) {
         .then(response => response.json())
         .then(data => console.log(data))
         .then(props.handleUserUpdate)
-        .catch(error => {console.log(error);});
+        .catch(error => {console.log(error)});
     }
 
 
