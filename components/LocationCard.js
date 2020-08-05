@@ -45,11 +45,11 @@ export default function LocationCard(props) {
 
             {props.showButton ?
                 props.isEntered ?
-                    <Button variant="outlined" className={classes.actionButton}>
+                    <Button variant="outlined" className={classes.actionButton} onClick={props.handleLocationLeave} id={props.place._id}>
                         Leave
                     </Button>
                     :
-                    <Button variant="outlined" className={classes.actionButton}>
+                    <Button variant="outlined" className={classes.actionButton} onClick={props.handleLocationEnter} id={props.place._id}>
                         Enter
                     </Button>
                 :

@@ -6,7 +6,7 @@ import LocationCard from "@components/LocationCard";
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search'
 import LocationAlert from "@components/LocationAlert";
-import {useFetchUser} from "../lib/user";
+import {useFetchUser, fetchUser} from "../lib/user";
 import QrCode from 'qrcode-reader';
 import { ReactSortable } from "react-sortablejs";
 
@@ -147,6 +147,53 @@ function HomePage(props) {
     useEffect(() => {
     }, []);
 
+    const handleLocationEnter = (event) => {
+        let locationId;
+        if (event.target.parentElement.id !== "") {
+            locationId = event.target.parentElement.id
+        } else {
+            locationId = event.currentTarget.id
+        }
+
+        fetch('http://localhost:3000/api/checkin', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                "location": locationId,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .then(props.handleUserUpdate)
+        .catch(error => {console.log(error);});
+        
+    }
+
+    const handleLocationLeave = (event) => {
+        let locationId;
+        if (event.target.parentElement.id !== "") {
+            locationId = event.target.parentElement.id
+        } else {
+            locationId = event.currentTarget.id
+        }
+
+        fetch('http://localhost:3000/api/checkout', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                "location": locationId,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .then(props.handleUserUpdate)
+        .catch(error => {console.log(error);});
+    }
+
+
+
     const places = props.user.locations;
 
     const [shownPlaces, setShownPlaces] = useState(
@@ -168,6 +215,8 @@ function HomePage(props) {
                             isEntered={isEntered}
                             showButton={showButton}
                             isDisplayed={true}
+                            handleLocationEnter={handleLocationEnter}
+                            handleLocationLeave={handleLocationLeave}
                             />;
 
             return (
@@ -196,6 +245,8 @@ function HomePage(props) {
                             isEntered={isEntered}
                             showButton={showButton}
                             isDisplayed={true}
+                            handleLocationEnter={handleLocationEnter}
+                            handleLocationLeave={handleLocationLeave}
                             />;
 
             return (
@@ -224,6 +275,8 @@ function HomePage(props) {
                                     isEntered={newState[i].props.isEntered}
                                     showButton={newState[i].props.showButton}
                                     isDisplayed={true}
+                                    handleLocationEnter={handleLocationEnter}
+                                    handleLocationLeave={handleLocationLeave}
                                     />;
 
                     return (newState)
@@ -237,11 +290,117 @@ function HomePage(props) {
                                     isEntered={newState[i].props.isEntered}
                                     showButton={newState[i].props.showButton}
                                     isDisplayed={false}
+                                    handleLocationEnter={handleLocationEnter}
+                                    handleLocationLeave={handleLocationLeave}
                                     />;
                     return (newState)
                 })
             }
         }
+    }
+
+    const handlePinnedLocation = () => {
+        setEditPinnedLocations(prevState => {
+            return (
+                !prevState
+            )
+        })
+
+    }
+
+    return (
+        <div className={classes.root}>
+            <Box className={classes.mainGrid}>
+                <Paper className={classes.mainContainer} elevation={3}>
+                    <Box className={classes.cardFlex}>
+                        <Box className={classes.columnTitleBox}>
+                            <Typography variant="h6" className={classes.columnTitleText}>
+                                Pinned Locations
+                            </Typography>
+                            <IconButton aria-label="add a pinned location" className={classes.addPinnedButton} onClick={handlePinnedLocation}>
+                                <AddIcon/>
+                            </IconButton>
+                        </Box>
+
+                        {props.buttonLoadState ? null :
+                        <Box className={classes.cardContainer} style={{margin: '0px 0px 10px 10px'}}>
+                        {editPinnedLocations ? 
+                            <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: 'shared'}} style={{height: '100%', width: '100%'}}>
+                                {pinnedPlaces}
+                            </ReactSortable> 
+                            :
+                            pinnedPlaces}
+                        </Box>}
+                    </Box>
+                    <Box className={classes.cardFlex}>
+                        <Box className={classes.columnTitleBox} style={{height: '28px'}}>
+                            <Typography variant="h6" className={classes.columnTitleText}>
+                                Location Search
+                            </Typography>
+                        </Box>
+                        <Box className={classes.searchContainer}>
+                            <div className={classes.search}>
+                                <div className={classes.searchIcon}>
+                                    <SearchIcon/>
+                                </div>
+                                <InputBase
+                                    placeholder="Search…"
+                                    classes={{
+                                        root: classes.inputRoot,
+                                        input: classes.inputInput,
+                                    }}
+                                    inputProps={{'aria-label': 'search'}}
+                                    onChange={handleSearch}
+                                    value={searchState}
+                                />
+                            </div>
+                        </Box>
+                        {props.buttonLoadState ? null :
+                        <Box className={classes.cardContainer} id="test"
+                            style={{margin: '0px 0px 10px 10px', maxHeight: 'calc(410px - 58px - 10px)'}}>
+                            {editPinnedLocations ? 
+                            <ReactSortable list={shownPlaces} setList={setShownPlaces} group={{name: 'shared', pull: 'clone', put: false}} sort={false} onEnd={(event) => {
+                                for (let i = 0; i < pinnedPlaces.length; i++) {
+                                    if (pinnedPlaces[i].props.place._id === shownPlaces[event.oldIndex].props.place._id && i !== event.newIndex) {
+                                        console.log('ALREWADY HERE')
+                                        pinnedPlaces.splice(i, 1);
+                                        break;
+                                    }
+                                }
+
+                            }}>
+                                {shownPlaces}
+                            </ReactSortable> 
+                            :
+                            shownPlaces}
+                        </Box>}
+                    </Box>
+                </Paper>
+            </Box>
+        </div>
+    )
+}
+
+export default function Home() {
+    const classes = useStyles();
+
+    const [ userState, setUserState] = useState(null);
+    const [loadingState, setLoadingState] = useState(true);
+    const [ buttonLoadState, setButtonLoadState] = useState(false);
+
+    
+    useEffect(() => {
+        fetchUser().then(data => {setUserState(data)}).then(() => {setLoadingState(false); console.log(userState)})
+    }, [])
+
+    const handleUserUpdate = () => {
+        setLoadingState(true);
+
+        fetch('http://localhost:3000/api/me', {
+            credentials: 'include',
+        }).then(response => response.json()).then(data => setUserState(data)).then(() => {setLoadingState(false)})
+
+        console.log('updated!', userState)
     }
 
     const handleQRCode = (event) => {
@@ -270,94 +429,14 @@ function HomePage(props) {
             throw new Error("Error uploading image.");
         }
     };
-
-    const handlePinnedLocation = () => {
-        setEditPinnedLocations(prevState => {
-            return (
-                !prevState
-            )
-        })
-
-    }
-
-    return (
-        <div className={classes.root}>
-            <Navbar handleQRCode={handleQRCode}/>
-            <LocationAlert/>
-            <Box className={classes.mainGrid}>
-                <Paper className={classes.mainContainer} elevation={3}>
-                    <Box className={classes.cardFlex}>
-                        <Box className={classes.columnTitleBox}>
-                            <Typography variant="h6" className={classes.columnTitleText}>
-                                Pinned Locations
-                            </Typography>
-                            <IconButton aria-label="add a pinned location" className={classes.addPinnedButton} onClick={handlePinnedLocation}>
-                                <AddIcon/>
-                            </IconButton>
-                        </Box>
-                        <Box className={classes.cardContainer} style={{margin: '0px 0px 10px 10px'}}>
-                        {editPinnedLocations ? 
-                            <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: 'shared'}} style={{height: '100%', width: '100%'}}>
-                                {pinnedPlaces}
-                            </ReactSortable> 
-                            :
-                            pinnedPlaces}
-                        </Box>
-                    </Box>
-                    <Box className={classes.cardFlex}>
-                        <Box className={classes.columnTitleBox} style={{height: '28px'}}>
-                            <Typography variant="h6" className={classes.columnTitleText}>
-                                Location Search
-                            </Typography>
-                        </Box>
-                        <Box className={classes.searchContainer}>
-                            <div className={classes.search}>
-                                <div className={classes.searchIcon}>
-                                    <SearchIcon/>
-                                </div>
-                                <InputBase
-                                    placeholder="Search…"
-                                    classes={{
-                                        root: classes.inputRoot,
-                                        input: classes.inputInput,
-                                    }}
-                                    inputProps={{'aria-label': 'search'}}
-                                    onChange={handleSearch}
-                                    value={searchState}
-                                />
-                            </div>
-                        </Box>
-                        <Box className={classes.cardContainer} id="test"
-                            style={{margin: '0px 0px 10px 10px', maxHeight: 'calc(410px - 58px - 10px)'}}>
-                            {editPinnedLocations ? 
-                            <ReactSortable list={shownPlaces} setList={setShownPlaces} group={{name: 'shared', pull: 'clone', put: false}} sort={false} onEnd={(event) => {
-                                for (let i = 0; i < pinnedPlaces.length; i++) {
-                                    if (pinnedPlaces[i].props.place._id === shownPlaces[event.oldIndex].props.place._id && i !== event.newIndex) {
-                                        console.log('ALREWADY HERE')
-                                        pinnedPlaces.splice(i, 1);
-                                        break;
-                                    }
-                                }
-
-                            }}>
-                                {shownPlaces}
-                            </ReactSortable> 
-                            :
-                            shownPlaces}
-                        </Box>
-                    </Box>
-                </Paper>
-            </Box>
-        </div>
-    )
-}
-
-export default function Home() {
-    const {user, loading} = useFetchUser({required: true});
+    
 
     return (
         <ThemeProvider theme={theme}>
-            {loading ? <div>Loading...</div> : <HomePage user={user} loading={loading}/>}
+            <Navbar handleQRCode={handleQRCode}/>
+            <LocationAlert/>
+            {loadingState ? <div>Loading...</div> :
+            <HomePage user={userState} handleUserUpdate={handleUserUpdate} buttonLoadState={buttonLoadState}/>}
         </ThemeProvider>
     )
 }

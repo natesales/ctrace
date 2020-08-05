@@ -2,9 +2,8 @@ import dbConnect from '../../utils/dbConnect';
 import Person from '../../models/Person';
 import auth0 from '../../lib/auth0'
 
-export default async function handler(req, res) {
-    // auth0.requireAuthentication(
-    // const {user} = auth0.getSession(req);
+export default auth0.requireAuthentication(async function handler(req, res) {
+    const {user} = await auth0.getSession(req);
 
     const {method} = req;
 
@@ -12,7 +11,7 @@ export default async function handler(req, res) {
 
     switch (method) {
         case 'POST':
-            const person = await Person.findOne({"uid": req.body.uid});
+            const person = await Person.findOne({"uid": user.nickname});
             if (person == null) {
                 return res.status(400).json({success: false, message: "Person with this UID doesn't exist"});
             }
@@ -23,17 +22,17 @@ export default async function handler(req, res) {
             }
 
             // Set the time_out
-            const updated_person = await Person.findOne({uid: req.body.uid}).then(async function (doc) {
-                let entry = doc.log[doc.log.length - 1];
-                entry["time_out"] = Date.now();
-                doc.markModified('log');
-                await doc.save();
-                console.log(entry);
-            });
+            const person_to_update = await Person.findOne({uid: user.nickname})
+            
+            let entry = person_to_update.log[doc.log.length - 1];
+            entry["time_out"] = Date.now();
+            person_to_update.markModified('log');
+            await person_to_update.save();
+            console.log(entry);
 
-            console.log(updated_person);
+            console.log(person_to_update, 'Updated person');
 
-            if (!updated_person) {
+            if (!person_to_update) {
                 return res.status(400).json({success: false});
             }
 
@@ -43,4 +42,4 @@ export default async function handler(req, res) {
             res.status(400).json({success: false});
             break
     }
-}
+})
