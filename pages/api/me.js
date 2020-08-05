@@ -35,6 +35,16 @@ export default auth0.requireAuthentication(async function me(req, res) {
              response.current_location = null;
         }
 
+        if (person.pinned_locations.length > 0) {
+            response.pinned_locations = [];
+            for (let i = 0; i < person.pinned_locations.length - 1; i++) {
+                pinnedLocation = await Location.findOne({_id: mongoose.Types.ObjectId(person.pinned_locations[i])})
+                response.pinned_locations.push(pinnedLocation)
+            }
+        } else {
+            response.pinned_locations = null;
+        }
+
         response.locations = await Location.find({});
 
         console.log(response, 'RESPONSE FROM ME');

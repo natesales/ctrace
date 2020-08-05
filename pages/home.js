@@ -8,6 +8,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import LocationAlert from "@components/LocationAlert";
 import {useFetchUser} from "../lib/user";
 import QrCode from 'qrcode-reader';
+import { ReactSortable } from "react-sortablejs";
 
 const theme = createMuiTheme({
     palette: {
@@ -174,7 +175,39 @@ function HomePage(props) {
             )
         }));
 
+    const [pinnedPlaces, setPinnedPlaces] = useState(
+        
+        props.user.pinned_locations !== null ?
+        props.user.pinned_locations.map(place => {
+            let isEntered = false;
+            let showButton = true;
+
+            if (props.user.current_location != null) {
+                showButton = false;
+                if (place._id === props.user.current_location._id) {
+                    isEntered = true;
+                    showButton = true;
+                }
+            }
+
+            const result = <LocationCard
+                            key={place._id}
+                            place={place}
+                            isEntered={isEntered}
+                            showButton={showButton}
+                            isDisplayed={true}
+                            />;
+
+            return (
+                result
+            )
+        })
+            :
+            []
+        );
+
     const [searchState, setSearchState] = useState('');
+    const [editPinnedLocations, setEditPinnedLocations] = useState(false);
 
     function handleSearch(event) {
         setSearchState(event.target.value);
@@ -238,6 +271,15 @@ function HomePage(props) {
         }
     };
 
+    const handlePinnedLocation = () => {
+        setEditPinnedLocations(prevState => {
+            return (
+                !prevState
+            )
+        })
+
+    }
+
     return (
         <div className={classes.root}>
             <Navbar handleQRCode={handleQRCode}/>
@@ -249,12 +291,17 @@ function HomePage(props) {
                             <Typography variant="h6" className={classes.columnTitleText}>
                                 Pinned Locations
                             </Typography>
-                            <IconButton aria-label="add a pinned location" className={classes.addPinnedButton}>
+                            <IconButton aria-label="add a pinned location" className={classes.addPinnedButton} onClick={handlePinnedLocation}>
                                 <AddIcon/>
                             </IconButton>
                         </Box>
                         <Box className={classes.cardContainer} style={{margin: '0px 0px 10px 10px'}}>
-
+                        {editPinnedLocations ? 
+                            <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: 'shared'}} style={{height: '100%', width: '100%'}}>
+                                {pinnedPlaces}
+                            </ReactSortable> 
+                            :
+                            pinnedPlaces}
                         </Box>
                     </Box>
                     <Box className={classes.cardFlex}>
@@ -280,9 +327,23 @@ function HomePage(props) {
                                 />
                             </div>
                         </Box>
-                        <Box className={classes.cardContainer}
-                             style={{margin: '0px 0px 10px 10px', maxHeight: 'calc(410px - 58px - 10px)'}}>
-                            {props.loading ? null : shownPlaces}
+                        <Box className={classes.cardContainer} id="test"
+                            style={{margin: '0px 0px 10px 10px', maxHeight: 'calc(410px - 58px - 10px)'}}>
+                            {editPinnedLocations ? 
+                            <ReactSortable list={shownPlaces} setList={setShownPlaces} group={{name: 'shared', pull: 'clone', put: false}} sort={false} onEnd={(event) => {
+                                for (let i = 0; i < pinnedPlaces.length; i++) {
+                                    if (pinnedPlaces[i].props.place._id === shownPlaces[event.oldIndex].props.place._id && i !== event.newIndex) {
+                                        console.log('ALREWADY HERE')
+                                        pinnedPlaces.splice(i, 1);
+                                        break;
+                                    }
+                                }
+
+                            }}>
+                                {shownPlaces}
+                            </ReactSortable> 
+                            :
+                            shownPlaces}
                         </Box>
                     </Box>
                 </Paper>
