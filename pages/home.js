@@ -8,7 +8,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import LocationAlert from "@components/LocationAlert";
 import {useFetchUser, fetchUser} from "../lib/user";
 import QrCode from 'qrcode-reader';
-import { ReactSortable } from "react-sortablejs";
+import {ReactSortable} from "react-sortablejs";
 
 const theme = createMuiTheme({
     palette: {
@@ -163,11 +163,13 @@ function HomePage(props) {
                 "location": locationId,
             }),
         })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .then(props.handleUserUpdate)
-        .catch(error => {console.log(error);});
-        
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .then(props.handleUserUpdate)
+            .catch(error => {
+                console.log(error);
+            });
+
     }
 
     const handleLocationLeave = (event) => {
@@ -186,13 +188,18 @@ function HomePage(props) {
                 "location": locationId,
             }),
         })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .then(props.handleUserUpdate)
-        .catch(error => {console.log(error)});
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .then(props.handleUserUpdate)
+            .catch(error => {
+                console.log(error)
+            });
     }
 
 
+    if (props.user == null) {
+        console.log("User not signed in.") // TODO: Redirect to login
+    }
 
     const places = props.user.locations;
 
@@ -210,14 +217,14 @@ function HomePage(props) {
             }
 
             const result = <LocationCard
-                            key={place._id}
-                            place={place}
-                            isEntered={isEntered}
-                            showButton={showButton}
-                            isDisplayed={true}
-                            handleLocationEnter={handleLocationEnter}
-                            handleLocationLeave={handleLocationLeave}
-                            />;
+                key={place._id}
+                place={place}
+                isEntered={isEntered}
+                showButton={showButton}
+                isDisplayed={true}
+                handleLocationEnter={handleLocationEnter}
+                handleLocationLeave={handleLocationLeave}
+            />;
 
             return (
                 result
@@ -225,37 +232,36 @@ function HomePage(props) {
         }));
 
     const [pinnedPlaces, setPinnedPlaces] = useState(
-        
         props.user.pinned_locations !== null ?
-        props.user.pinned_locations.map(place => {
-            let isEntered = false;
-            let showButton = true;
+            props.user.pinned_locations.map(place => {
+                let isEntered = false;
+                let showButton = true;
 
-            if (props.user.current_location != null) {
-                showButton = false;
-                if (place._id === props.user.current_location._id) {
-                    isEntered = true;
-                    showButton = true;
+                if (props.user.current_location != null) {
+                    showButton = false;
+                    if (place._id === props.user.current_location._id) {
+                        isEntered = true;
+                        showButton = true;
+                    }
                 }
-            }
 
-            const result = <LocationCard
-                            key={place._id}
-                            place={place}
-                            isEntered={isEntered}
-                            showButton={showButton}
-                            isDisplayed={true}
-                            handleLocationEnter={handleLocationEnter}
-                            handleLocationLeave={handleLocationLeave}
-                            />;
+                const result = <LocationCard
+                    key={place._id}
+                    place={place}
+                    isEntered={isEntered}
+                    showButton={showButton}
+                    isDisplayed={true}
+                    handleLocationEnter={handleLocationEnter}
+                    handleLocationLeave={handleLocationLeave}
+                />;
 
-            return (
-                result
-            )
-        })
+                return (
+                    result
+                )
+            })
             :
             []
-        );
+    );
 
     const [searchState, setSearchState] = useState('');
     const [editPinnedLocations, setEditPinnedLocations] = useState(false);
@@ -270,14 +276,14 @@ function HomePage(props) {
                 setShownPlaces(prevState => {
                     let newState = prevState;
                     newState[i] = <LocationCard
-                                    key={newState[i].props.place._id}
-                                    place={newState[i].props.place}
-                                    isEntered={newState[i].props.isEntered}
-                                    showButton={newState[i].props.showButton}
-                                    isDisplayed={true}
-                                    handleLocationEnter={handleLocationEnter}
-                                    handleLocationLeave={handleLocationLeave}
-                                    />;
+                        key={newState[i].props.place._id}
+                        place={newState[i].props.place}
+                        isEntered={newState[i].props.isEntered}
+                        showButton={newState[i].props.showButton}
+                        isDisplayed={true}
+                        handleLocationEnter={handleLocationEnter}
+                        handleLocationLeave={handleLocationLeave}
+                    />;
 
                     return (newState)
                 })
@@ -285,14 +291,14 @@ function HomePage(props) {
                 setShownPlaces(prevState => {
                     let newState = prevState;
                     newState[i] = <LocationCard
-                                    key={newState[i].props.place._id}
-                                    place={newState[i].props.place}
-                                    isEntered={newState[i].props.isEntered}
-                                    showButton={newState[i].props.showButton}
-                                    isDisplayed={false}
-                                    handleLocationEnter={handleLocationEnter}
-                                    handleLocationLeave={handleLocationLeave}
-                                    />;
+                        key={newState[i].props.place._id}
+                        place={newState[i].props.place}
+                        isEntered={newState[i].props.isEntered}
+                        showButton={newState[i].props.showButton}
+                        isDisplayed={false}
+                        handleLocationEnter={handleLocationEnter}
+                        handleLocationLeave={handleLocationLeave}
+                    />;
                     return (newState)
                 })
             }
@@ -323,14 +329,14 @@ function HomePage(props) {
                         </Box>
 
                         {props.buttonLoadState ? null :
-                        <Box className={classes.cardContainer} style={{margin: '0px 0px 10px 10px'}}>
-                        {editPinnedLocations ? 
-                            <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: 'shared'}} style={{height: '100%', width: '100%'}}>
-                                {pinnedPlaces}
-                            </ReactSortable> 
-                            :
-                            pinnedPlaces}
-                        </Box>}
+                            <Box className={classes.cardContainer} style={{margin: '0px 0px 10px 10px'}}>
+                                {editPinnedLocations ?
+                                    <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: 'shared'}} style={{height: '100%', width: '100%'}}>
+                                        {pinnedPlaces}
+                                    </ReactSortable>
+                                    :
+                                    pinnedPlaces}
+                            </Box>}
                     </Box>
                     <Box className={classes.cardFlex}>
                         <Box className={classes.columnTitleBox} style={{height: '28px'}}>
@@ -356,24 +362,24 @@ function HomePage(props) {
                             </div>
                         </Box>
                         {props.buttonLoadState ? null :
-                        <Box className={classes.cardContainer} id="test"
-                            style={{margin: '0px 0px 10px 10px', maxHeight: 'calc(410px - 58px - 10px)'}}>
-                            {editPinnedLocations ? 
-                            <ReactSortable list={shownPlaces} setList={setShownPlaces} group={{name: 'shared', pull: 'clone', put: false}} sort={false} onEnd={(event) => {
-                                for (let i = 0; i < pinnedPlaces.length; i++) {
-                                    if (pinnedPlaces[i].props.place._id === shownPlaces[event.oldIndex].props.place._id && i !== event.newIndex) {
-                                        console.log('ALREWADY HERE')
-                                        pinnedPlaces.splice(i, 1);
-                                        break;
-                                    }
-                                }
+                            <Box className={classes.cardContainer} id="test"
+                                 style={{margin: '0px 0px 10px 10px', maxHeight: 'calc(410px - 58px - 10px)'}}>
+                                {editPinnedLocations ?
+                                    <ReactSortable list={shownPlaces} setList={setShownPlaces} group={{name: 'shared', pull: 'clone', put: false}} sort={false} onEnd={(event) => {
+                                        for (let i = 0; i < pinnedPlaces.length; i++) {
+                                            if (pinnedPlaces[i].props.place._id === shownPlaces[event.oldIndex].props.place._id && i !== event.newIndex) {
+                                                console.log('ALREWADY HERE')
+                                                pinnedPlaces.splice(i, 1);
+                                                break;
+                                            }
+                                        }
 
-                            }}>
-                                {shownPlaces}
-                            </ReactSortable> 
-                            :
-                            shownPlaces}
-                        </Box>}
+                                    }}>
+                                        {shownPlaces}
+                                    </ReactSortable>
+                                    :
+                                    shownPlaces}
+                            </Box>}
                     </Box>
                 </Paper>
             </Box>
@@ -384,13 +390,18 @@ function HomePage(props) {
 export default function Home() {
     const classes = useStyles();
 
-    const [ userState, setUserState] = useState(null);
+    const [userState, setUserState] = useState(null);
     const [loadingState, setLoadingState] = useState(true);
-    const [ buttonLoadState, setButtonLoadState] = useState(false);
+    const [buttonLoadState, setButtonLoadState] = useState(false);
 
-    
+
     useEffect(() => {
-        fetchUser().then(data => {setUserState(data)}).then(() => {setLoadingState(false); console.log(userState)})
+        fetchUser().then(data => {
+            setUserState(data)
+        }).then(() => {
+            setLoadingState(false);
+            console.log(userState)
+        })
     }, [])
 
     const handleUserUpdate = () => {
@@ -398,13 +409,14 @@ export default function Home() {
 
         fetch('/api/me', {
             credentials: 'include',
-        }).then(response => response.json()).then(data => setUserState(data)).then(() => {setLoadingState(false)})
+        }).then(response => response.json()).then(data => setUserState(data)).then(() => {
+            setLoadingState(false)
+        })
 
         console.log('updated!', userState)
     }
 
     const handleQRCode = (event) => {
-        console.log("Calling handleQR")
         if (event.currentTarget.files && event.currentTarget.files[0]) {
             const FR = new FileReader();
 
@@ -418,7 +430,23 @@ export default function Home() {
                     const location_id = result["result"].split("?loc=")[1];
                     console.log(location_id);
 
-                    // TODO: Check user in with `location_id` if not null
+                    if (!location_id) {
+                        console.log("Checking in with location_id: ", location_id)
+                        fetch('/api/checkin', {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                "location": location_id,
+                            }),
+                        })
+                            .then(response => response.json())
+                            .then(data => console.log(data))
+                            .then(props.handleUserUpdate)
+                            .catch(error => {
+                                console.log(error);
+                            });
+                    }
                 }
                 qr.decode(e.target.result);
             });
@@ -429,14 +457,14 @@ export default function Home() {
             throw new Error("Error uploading image.");
         }
     };
-    
+
 
     return (
         <ThemeProvider theme={theme}>
             <Navbar handleQRCode={handleQRCode}/>
             <LocationAlert/>
             {loadingState ? <div>Loading...</div> :
-            <HomePage user={userState} handleUserUpdate={handleUserUpdate} buttonLoadState={buttonLoadState}/>}
+                <HomePage user={userState} handleUserUpdate={handleUserUpdate} buttonLoadState={buttonLoadState}/>}
         </ThemeProvider>
     )
 }
