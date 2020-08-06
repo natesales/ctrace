@@ -4,7 +4,7 @@ export default function QRCodes() {
     const [images, setImages] = useState(null);
 
     async function getQRCodes() {
-        const res = await fetch("http://localhost:3000/api/admin/qrcodes", {method: 'GET'})
+        await fetch("/api/admin/qrcodes", {method: "GET"})
             .then(response => response.json())
             .then(data => setImages(data.data))
             .catch(error => console.log(error));
