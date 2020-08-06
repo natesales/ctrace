@@ -22,19 +22,17 @@ export default auth0.requireAuthentication(async function handler(req, res) {
             }
 
             // Set the time_out
-            const person_to_update = await Person.findOne({uid: user.nickname})
-            
-            let entry = person_to_update.log[person_to_update.log.length - 1];
-            entry["time_out"] = Date.now();
-            person_to_update.markModified('log');
-            await person_to_update.save();
-            console.log(entry);
+            const updated_person = await Person.findOne({uid: user.nickname}).then(async (doc) => {
+                let entry = doc.log[doc.log.length - 1];
+                entry["time_out"] = Date.now();
+                doc.markModified('log');
+                await doc.save();
+                console.log(entry);
+            });
 
-            console.log(person_to_update, 'Updated person');
-
-            if (!person_to_update) {
-                return res.status(400).json({success: false});
-            }
+            // if (!updated_person) {
+            //     return res.status(400).json({success: false});
+            // }
 
             res.status(200).json({success: true});
             break;

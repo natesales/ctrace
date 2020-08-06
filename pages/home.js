@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useState, useRef} from "react"
 import {Box, IconButton, InputBase, Paper, Typography} from '@material-ui/core';
 import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles'
 import Navbar from "@components/Navbar";
@@ -143,9 +143,52 @@ const useStyles = makeStyles((theme) => ({
 
 function HomePage(props) {
     const classes = useStyles();
+    
+    const [ userState, setUserState ] = useState(props.user);
+    const [shownPlaces, setShownPlaces] = useState(null);
+    const [pinnedPlaces, setPinnedPlaces] = useState(null);
 
+    const mounted = useRef();
     useEffect(() => {
-    }, []);
+    if (!mounted.current) {
+        // do componentDidMount logic
+        mounted.current = true;
+    } else {
+        if (userState !== props.user) {
+        setUserState(props.user)
+            console.log('UPDATED ON USE EFFECT', props.user)
+
+            setShownPlaces(
+                userState.locations.map(place => {
+                    let isEntered = false;
+                    let showButton = true;
+        
+                    if (userState.current_location != null) {
+                        showButton = false;
+                        if (place._id === userState.current_location._id) {
+                            isEntered = true;
+                            showButton = true;
+                        }
+                    }
+        
+                    const result = <LocationCard
+                        key={place._id}
+                        place={place}
+                        isEntered={isEntered}
+                        showButton={showButton}
+                        isDisplayed={true}
+                        handleLocationEnter={handleLocationEnter}
+                        handleLocationLeave={handleLocationLeave}
+                    />;
+        
+                    return (
+                        result
+                    )
+                })
+            )
+        }
+    }
+    });
 
     const handleLocationEnter = (event) => {
         let locationId;
@@ -189,55 +232,55 @@ function HomePage(props) {
         })
             .then(response => response.json())
             .then(data => console.log(data))
+            .then(props.handleUserUpdate)
             .catch(error => console.log(error));
 
         // TODO: if (!response.success) { show fail dialog }
     }
 
 
-    if (props.user == null) {
+    if (userState == null) {
         console.log("User not signed in.") // TODO: Redirect to login
     }
 
-    const places = props.user.locations;
-
-    const [shownPlaces, setShownPlaces] = useState(
-        places.map(place => {
-            let isEntered = false;
-            let showButton = true;
-
-            if (props.user.current_location != null) {
-                showButton = false;
-                if (place._id === props.user.current_location._id) {
-                    isEntered = true;
-                    showButton = true;
+    useEffect(() => {
+        setShownPlaces(
+            userState.locations.map(place => {
+                let isEntered = false;
+                let showButton = true;
+    
+                if (userState.current_location != null) {
+                    showButton = false;
+                    if (place._id === userState.current_location._id) {
+                        isEntered = true;
+                        showButton = true;
+                    }
                 }
-            }
+    
+                const result = <LocationCard
+                    key={place._id}
+                    place={place}
+                    isEntered={isEntered}
+                    showButton={showButton}
+                    isDisplayed={true}
+                    handleLocationEnter={handleLocationEnter}
+                    handleLocationLeave={handleLocationLeave}
+                />;
+    
+                return (
+                    result
+                )
+            }));
 
-            const result = <LocationCard
-                key={place._id}
-                place={place}
-                isEntered={isEntered}
-                showButton={showButton}
-                isDisplayed={true}
-                handleLocationEnter={handleLocationEnter}
-                handleLocationLeave={handleLocationLeave}
-            />;
-
-            return (
-                result
-            )
-        }));
-
-    const [pinnedPlaces, setPinnedPlaces] = useState(
-        props.user.pinned_locations !== null ?
-            props.user.pinned_locations.map(place => {
+        setPinnedPlaces(
+            userState.pinned_locations !== null ?
+            userState.pinned_locations.map(place => {
                 let isEntered = false;
                 let showButton = true;
 
-                if (props.user.current_location != null) {
+                if (userState.current_location != null) {
                     showButton = false;
-                    if (place._id === props.user.current_location._id) {
+                    if (place._id === userState.current_location._id) {
                         isEntered = true;
                         showButton = true;
                     }
@@ -259,7 +302,8 @@ function HomePage(props) {
             })
             :
             []
-    );
+        )
+    }, [userState])
 
     const [searchState, setSearchState] = useState('');
     const [editPinnedLocations, setEditPinnedLocations] = useState(false);
@@ -403,15 +447,11 @@ export default function Home() {
     }, [])
 
     const handleUserUpdate = () => {
-        setLoadingState(true);
-
         fetch('/api/me', {
             credentials: 'include',
-        }).then(response => response.json()).then(data => setUserState(data)).then(() => {
-            setLoadingState(false)
-        })
+        }).then(response => response.json()).then((data) => {setUserState(data); console.log(data, 'DATA IN HANDLE USER UPDATE')})
 
-        console.log('updated!', userState)
+        // console.log('updated!', userState)
     }
 
     const handleQRCode = (event) => {
