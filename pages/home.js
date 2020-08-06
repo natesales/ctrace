@@ -155,7 +155,7 @@ function HomePage(props) {
             locationId = event.currentTarget.id
         }
 
-        fetch('http://localhost:3000/api/checkin', {
+        fetch('/api/checkin', {
             method: 'POST',
             credentials: 'include',
             headers: {'Content-Type': 'application/json'},
@@ -178,7 +178,7 @@ function HomePage(props) {
             locationId = event.currentTarget.id
         }
 
-        fetch('http://localhost:3000/api/checkout', {
+        fetch('/api/checkout', {
             method: 'POST',
             credentials: 'include',
             headers: {'Content-Type': 'application/json'},
@@ -396,7 +396,7 @@ export default function Home() {
     const handleUserUpdate = () => {
         setLoadingState(true);
 
-        fetch('http://localhost:3000/api/me', {
+        fetch('/api/me', {
             credentials: 'include',
         }).then(response => response.json()).then(data => setUserState(data)).then(() => {setLoadingState(false)})
 
