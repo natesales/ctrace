@@ -13,13 +13,19 @@ export default async function handler(req, res) {
                 return res.status(400).json({success: false, message: "Location with this name already exists"});
             }
 
-            await Location.create({ // TODO: insert
+            const location_create = await Location.create({
                 name: req.body["name"],
                 max_occupancy: req.body["max_occupancy"],
             });
 
-            // TODO: Check if this actually succeed and return as success variable
-            res.status(200).json({success: true});
+            console.log(location_create)
+
+            if (location_create) {
+                res.status(200).json({success: true});
+            } else {
+                res.status(200).json({success: false});
+            }
+
             break;
         default:
             res.status(400).json({success: false});
