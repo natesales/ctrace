@@ -166,10 +166,9 @@ function HomePage(props) {
             .then(response => response.json())
             .then(data => console.log(data))
             .then(props.handleUserUpdate)
-            .catch(error => {
-                console.log(error);
-            });
+            .catch(error => console.log(error));
 
+            // TODO: if (!response.success) { show fail dialog }
     }
 
     const handleLocationLeave = (event) => {
@@ -190,10 +189,9 @@ function HomePage(props) {
         })
             .then(response => response.json())
             .then(data => console.log(data))
-            .then(props.handleUserUpdate)
-            .catch(error => {
-                console.log(error)
-            });
+            .catch(error => console.log(error));
+
+        // TODO: if (!response.success) { show fail dialog }
     }
 
 
@@ -443,9 +441,9 @@ export default function Home() {
                             .then(response => response.json())
                             .then(data => console.log(data))
                             .then(props.handleUserUpdate)
-                            .catch(error => {
-                                console.log(error);
-                            });
+                            .catch(error => console.log(error));
+
+                            // TODO: if (!response.success) { show fail dialog }
                     }
                 }
                 qr.decode(e.target.result);
