@@ -1,9 +1,12 @@
 import React, {useEffect, useState, useRef} from "react"
-import {Box, IconButton, InputBase, Paper, Typography} from '@material-ui/core';
+import {Box, IconButton, InputBase, Paper, Typography, Snackbar} from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles'
+import {SpeedDial, SpeedDialIcon, SpeedDialAction} from '@material-ui/lab/'
 import Navbar from "@components/Navbar";
 import LocationCard from "@components/LocationCard";
 import AddIcon from '@material-ui/icons/Add';
+import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search'
 import LocationAlert from "@components/LocationAlert";
 import {useFetchUser, fetchUser} from "../lib/user";
@@ -67,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
     cardContainer: {
         maxHeight: '410px',
         [theme.breakpoints.down(864)]: {
-            maxHeight: 'none',
+            maxHeight: 'none', //TODO: Decide if this is a good idea.
             marginBottom: '0px',
         },
         overflow: 'scroll',
@@ -141,12 +144,22 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
 function HomePage(props) {
     const classes = useStyles();
     
     const [ userState, setUserState ] = useState(props.user);
-    const [shownPlaces, setShownPlaces] = useState(null);
-    const [pinnedPlaces, setPinnedPlaces] = useState(null);
+    const [ shownPlaces, setShownPlaces ] = useState(null);
+    const [ pinnedPlaces, setPinnedPlaces ] = useState(null);
+    const [ isLoading, setIsLoading ] = useState(false);
+    const [ showResponseSnackbar, setShowResponseSnackbar ] = useState(false);
+    const [ responseSnackbarBody, setResponseSnackbarBody ] = useState('');
+    const [ responseSnackbarType, setResponseSnackbarType ] = useState('');
+    const [ searchState, setSearchState ] = useState('');
+    const [ editPinnedLocations, setEditPinnedLocations ] = useState(false);
 
     const mounted = useRef();
     useEffect(() => {
@@ -156,7 +169,7 @@ function HomePage(props) {
     } else {
         if (userState !== props.user) {
         setUserState(props.user)
-            console.log('UPDATED ON USE EFFECT', props.user)
+        setIsLoading(false);
 
             setShownPlaces(
                 userState.locations.map(place => {
@@ -186,11 +199,27 @@ function HomePage(props) {
                     )
                 })
             )
+
+        
         }
     }
     });
 
+    const handleResponseSnackbarOpen = (success, body) => {
+        setResponseSnackbarBody(body);
+        setResponseSnackbarType(() => {
+            if (success) {
+                return 'success';
+            } else {
+                return 'error'
+            }
+        })
+        setShowResponseSnackbar(true);
+
+    }
+
     const handleLocationEnter = (event) => {
+        setIsLoading(true);
         let locationId;
         if (event.target.parentElement.id !== "") {
             locationId = event.target.parentElement.id
@@ -207,14 +236,15 @@ function HomePage(props) {
             }),
         })
             .then(response => response.json())
-            .then(data => console.log(data))
+            .then(data => {handleResponseSnackbarOpen(data.success, data.message)})
             .then(props.handleUserUpdate)
-            .catch(error => console.log(error));
+            .catch(error => handleResponseSnackbarClose(false, data.message));
 
             // TODO: if (!response.success) { show fail dialog }
     }
 
     const handleLocationLeave = (event) => {
+        setIsLoading(true);
         let locationId;
         if (event.target.parentElement.id !== "") {
             locationId = event.target.parentElement.id
@@ -231,16 +261,17 @@ function HomePage(props) {
             }),
         })
             .then(response => response.json())
-            .then(data => console.log(data))
+            .then(data => handleResponseSnackbarOpen(data.success, data.message))
             .then(props.handleUserUpdate)
-            .catch(error => console.log(error));
+            .catch(error => handleResponseSnackbarClose(false, data.message));
 
         // TODO: if (!response.success) { show fail dialog }
     }
 
 
     if (userState == null) {
-        console.log("User not signed in.") // TODO: Redirect to login
+        window.location.href = '/api/login';
+        // TODO: Redirect to login
     }
 
     useEffect(() => {
@@ -305,9 +336,6 @@ function HomePage(props) {
         )
     }, [userState])
 
-    const [searchState, setSearchState] = useState('');
-    const [editPinnedLocations, setEditPinnedLocations] = useState(false);
-
     function handleSearch(event) {
         setSearchState(event.target.value);
         let search_string = event.target.value.toUpperCase();
@@ -356,6 +384,14 @@ function HomePage(props) {
 
     }
 
+    const handleResponseSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setShowResponseSnackbar(false);
+      };
+
     return (
         <div className={classes.root}>
             <Box className={classes.mainGrid}>
@@ -366,16 +402,21 @@ function HomePage(props) {
                                 Pinned Locations
                             </Typography>
                             <IconButton aria-label="add a pinned location" className={classes.addPinnedButton} onClick={handlePinnedLocation}>
-                                <AddIcon/>
+                                {editPinnedLocations ? <CloseIcon /> : <AddIcon/>}
                             </IconButton>
                         </Box>
 
                         {props.buttonLoadState ? null :
                             <Box className={classes.cardContainer} style={{margin: '0px 0px 10px 10px'}}>
                                 {editPinnedLocations ?
-                                    <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: 'shared'}} style={{height: '100%', width: '100%'}}>
-                                        {pinnedPlaces}
-                                    </ReactSortable>
+                                    <React.Fragment>
+                                        <Typography variant="h6" gutterBottom className={classes.columnTitleText}>
+                                            Drag a location from the right to pin it.
+                                        </Typography>                                    
+                                        <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: 'shared'}} style={{minHeight: '100px', width: '100%'}}>
+                                            {pinnedPlaces}
+                                        </ReactSortable>
+                                    </React.Fragment>
                                     :
                                     pinnedPlaces}
                             </Box>}
@@ -422,6 +463,12 @@ function HomePage(props) {
                                     :
                                     shownPlaces}
                             </Box>}
+
+                            <Snackbar open={showResponseSnackbar} autoHideDuration={6000} onClose={handleResponseSnackbarClose}>
+                                <Alert onClose={handleResponseSnackbarClose} severity={responseSnackbarType}>
+                                    {responseSnackbarBody}
+                                </Alert>
+                            </Snackbar>
                     </Box>
                 </Paper>
             </Box>
@@ -442,16 +489,13 @@ export default function Home() {
             setUserState(data)
         }).then(() => {
             setLoadingState(false);
-            console.log(userState)
         })
     }, [])
 
     const handleUserUpdate = () => {
         fetch('/api/me', {
             credentials: 'include',
-        }).then(response => response.json()).then((data) => {setUserState(data); console.log(data, 'DATA IN HANDLE USER UPDATE')})
-
-        // console.log('updated!', userState)
+        }).then(response => response.json()).then((data) => {setUserState(data)});
     }
 
     const handleQRCode = (event) => {

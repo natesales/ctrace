@@ -48,7 +48,7 @@ export default auth0.requireAuthentication(async function me(req, res) {
 
         response.locations = await Location.find({});
 
-        console.log(response, 'RESPONSE FROM ME');
+        // console.log(response, 'RESPONSE FROM ME');
         res.json(response);
     } catch (error) {
         console.error(error);

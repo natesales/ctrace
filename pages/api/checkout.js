@@ -28,13 +28,16 @@ export default auth0.requireAuthentication(async function handler(req, res) {
                 doc.markModified('log');
                 await doc.save();
                 console.log(entry);
+                
             });
 
             // if (!updated_person) {
             //     return res.status(400).json({success: false});
             // }
 
-            res.status(200).json({success: true});
+            //TODO: Fix the updated person so it actually responds with a good error. Also we need to insert the name below.
+
+            res.status(200).json({success: true, message: 'Checked out of INSERT NAME HERE'});
             break;
         default:
             res.status(400).json({success: false});
