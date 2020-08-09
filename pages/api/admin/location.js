@@ -18,8 +18,6 @@ export default async function handler(req, res) {
                 max_occupancy: req.body["max_occupancy"],
             });
 
-            console.log(location_create)
-
             if (location_create) {
                 res.status(200).json({success: true});
             } else {
