@@ -35,7 +35,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
             //     return res.status(400).json({success: false});
             // }
 
-            //TODO: Fix the updated person so it actually responds with a good error. Also we need to insert the name below.
+            //TODO: Fix the updated person so it actually responds with a good error.
 
             const location_name = await Location.findOne({_id: person.log[person.log.length - 1].location});
 
