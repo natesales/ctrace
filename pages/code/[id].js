@@ -1,11 +1,20 @@
 import {useRouter} from 'next/router'
-import {useFetchUser} from '../../lib/user'
-import {useEffect} from "react";
+import {useFetchUser, fetchUser} from '../../lib/user'
+import {useEffect, useState} from "react";
 
 const CodeHandler = () => {
     const router = useRouter()
     const {id} = router.query
-    const {user, loading} = useFetchUser({required: true});
+    
+    const [ userState, setUserState ] = useState(null)
+
+
+    useEffect(() => {
+        fetchUser().then(data => {
+            setUserState(data)
+        }).then(() => {
+        })
+    }, [])
 
     async function testApi() {
         const testcall = await fetch('/api/checkin', {

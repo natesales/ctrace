@@ -12,23 +12,7 @@ import LocationAlert from "@components/LocationAlert";
 import {useFetchUser, fetchUser} from "../lib/user";
 import QrCode from 'qrcode-reader';
 import {ReactSortable} from "react-sortablejs";
-
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            light: "#636363",
-            main: "#575757",
-            dark: "#202020",
-            contrastText: "#fff",
-        },
-        secondary: {
-            light: "#fff",
-            main: "#969696",
-            dark: "#6E6E6E",
-            contrastText: "#000"
-        }
-    }
-});
+import theme from "@components/MainTheme"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -160,6 +144,7 @@ function HomePage(props) {
     const [ responseSnackbarType, setResponseSnackbarType ] = useState('');
     const [ searchState, setSearchState ] = useState('');
     const [ editPinnedLocations, setEditPinnedLocations ] = useState(false);
+    const [ showFreePeriodSnackbar, setShowFreePeriodSnackbar ] = useState(true); //To be changed after testing.
 
     const mounted = useRef();
     useEffect(() => {
