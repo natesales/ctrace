@@ -1,127 +1,127 @@
 import React, {useEffect, useState, useRef} from "react"
-import {Box, IconButton, InputBase, Paper, Typography, Snackbar} from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
-import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles'
-import {SpeedDial, SpeedDialIcon, SpeedDialAction} from '@material-ui/lab/'
+import {Box, IconButton, InputBase, Paper, Typography, Snackbar} from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
+import {createMuiTheme, makeStyles, ThemeProvider} from "@material-ui/core/styles"
+import {SpeedDial, SpeedDialIcon, SpeedDialAction} from "@material-ui/lab/"
 import Navbar from "@components/Navbar";
 import LocationCard from "@components/LocationCard";
-import AddIcon from '@material-ui/icons/Add';
-import CloseIcon from '@material-ui/icons/Close';
-import SearchIcon from '@material-ui/icons/Search'
+import AddIcon from "@material-ui/icons/Add";
+import CloseIcon from "@material-ui/icons/Close";
+import SearchIcon from "@material-ui/icons/Search"
 import LocationAlert from "@components/LocationAlert";
 import {useFetchUser, fetchUser} from "../lib/user";
-import QrCode from 'qrcode-reader';
+import QrCode from "qrcode-reader";
 import {ReactSortable} from "react-sortablejs";
 import theme from "@components/MainTheme"
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        height: '100vh',
+        height: "100vh",
         background: theme.palette.primary.main,
     },
     mainGrid: {
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
     },
     mainContainer: {
-        width: 'clamp(0px, 95%, 840px)',
+        width: "clamp(0px, 95%, 840px)",
         background: theme.palette.primary.light,
-        color: '#fff',
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        maxHeight: '467px',
-        position: 'relative',
-        top: '190px',
-        borderRadius: '10px',
+        color: "#fff",
+        display: "flex",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        maxHeight: "467px",
+        position: "relative",
+        top: "190px",
+        borderRadius: "10px",
         [theme.breakpoints.down(864)]: {
-            maxHeight: 'none',
+            maxHeight: "none",
         },
-        [theme.breakpoints.down('xs')]: {
-            top: '175px',
+        [theme.breakpoints.down("xs")]: {
+            top: "175px",
         },
     },
     cardFlex: {
-        flex: '1 1 410px',
-        maxHeight: '100%',
-        borderRadius: '10px',
+        flex: "1 1 410px",
+        maxHeight: "100%",
+        borderRadius: "10px",
         background: theme.palette.primary.light,
         [theme.breakpoints.down(864)]: {
-            width: '100%',
+            width: "100%",
         },
     },
     cardContainer: {
-        maxHeight: '410px',
+        maxHeight: "410px",
         [theme.breakpoints.down(864)]: {
-            maxHeight: 'none', //TODO: Decide if this is a good idea.
-            marginBottom: '0px',
+            maxHeight: "none", //TODO: Decide if this is a good idea.
+            marginBottom: "0px",
         },
-        overflow: 'scroll',
-        '&::-webkit-scrollbar': {
-            width: '5px',
+        overflow: "scroll",
+        "&::-webkit-scrollbar": {
+            width: "5px",
         },
-        '&::-webkit-scrollbar-track': {
-            background: '#636363',
+        "&::-webkit-scrollbar-track": {
+            background: "#636363",
         },
-        '&::-webkit-scrollbar-thumb': {
-            backgroundColor: '#fff',
-            borderRadius: '20px',
+        "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "#fff",
+            borderRadius: "20px",
         },
-        scrollbarWidth: 'thin',
-        overflowX: 'hidden',
-        scrollbarColor: '#fff #636363'
+        scrollbarWidth: "thin",
+        overflowX: "hidden",
+        scrollbarColor: "#fff #636363"
     },
     columnTitleBox: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        margin: '10px',
-        alignItems: 'center'
+        display: "flex",
+        justifyContent: "space-between",
+        margin: "10px",
+        alignItems: "center"
     },
     columnTitleText: {
-        fontSize: '14px',
+        fontSize: "14px",
     },
     addPinnedButton: {
-        padding: '2px',
+        padding: "2px",
         color: theme.palette.primary.contrastText,
     },
     searchContainer: {
-        height: '58px',
-        display: 'flex',
-        alignItems: 'center',
-        margin: '10px',
+        height: "58px",
+        display: "flex",
+        alignItems: "center",
+        margin: "10px",
     },
     search: {
-        position: 'relative',
+        position: "relative",
         borderRadius: theme.shape.borderRadius,
         backgroundColor: theme.palette.secondary.main,
-        '&:hover': {
-            backgroundColor: '#9B9B9B',
+        "&:hover": {
+            backgroundColor: "#9B9B9B",
         },
-        width: '100%',
-        height: '80%',
+        width: "100%",
+        height: "80%",
     },
     searchIcon: {
         padding: theme.spacing(0, 1),
-        height: '100%',
-        position: 'absolute',
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        height: "100%",
+        position: "absolute",
+        pointerEvents: "none",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
     },
     inputRoot: {
-        color: 'inherit',
-        width: '100%',
+        color: "inherit",
+        width: "100%",
     },
     inputInput: {
         padding: theme.spacing(1.7, 1, 1, 0),
         paddingLeft: `calc(1em + ${theme.spacing(3)}px)`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
+        transition: theme.transitions.create("width"),
+        width: "100%",
     },
     placeList: {
-        listStyleType: 'none',
+        listStyleType: "none",
         padding: 0,
         margin: 0
     }
@@ -140,9 +140,9 @@ function HomePage(props) {
     const [ pinnedPlaces, setPinnedPlaces ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(false);
     const [ showResponseSnackbar, setShowResponseSnackbar ] = useState(false);
-    const [ responseSnackbarBody, setResponseSnackbarBody ] = useState('');
-    const [ responseSnackbarType, setResponseSnackbarType ] = useState('');
-    const [ searchState, setSearchState ] = useState('');
+    const [ responseSnackbarBody, setResponseSnackbarBody ] = useState("");
+    const [ responseSnackbarType, setResponseSnackbarType ] = useState("");
+    const [ searchState, setSearchState ] = useState("");
     const [ editPinnedLocations, setEditPinnedLocations ] = useState(false);
     const [ showFreePeriodSnackbar, setShowFreePeriodSnackbar ] = useState(true); //To be changed after testing.
 
@@ -194,9 +194,9 @@ function HomePage(props) {
         setResponseSnackbarBody(body);
         setResponseSnackbarType(() => {
             if (success) {
-                return 'success';
+                return "success";
             } else {
-                return 'error'
+                return "error"
             }
         })
         setShowResponseSnackbar(true);
@@ -212,10 +212,10 @@ function HomePage(props) {
             locationId = event.currentTarget.id
         }
 
-        fetch('/api/checkin', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+        fetch("/api/checkin", {
+            method: "POST",
+            credentials: "include",
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 "location": locationId,
             }),
@@ -237,10 +237,10 @@ function HomePage(props) {
             locationId = event.currentTarget.id
         }
 
-        fetch('/api/checkout', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {'Content-Type': 'application/json'},
+        fetch("/api/checkout", {
+            method: "POST",
+            credentials: "include",
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 "location": locationId,
             }),
@@ -255,7 +255,7 @@ function HomePage(props) {
 
 
     if (userState == null) {
-        window.location.href = '/api/login';
+        window.location.href = "/api/login";
         // TODO: Redirect to login
     }
 
@@ -370,7 +370,7 @@ function HomePage(props) {
     }
 
     const handleResponseSnackbarClose = (event, reason) => {
-        if (reason === 'clickaway') {
+        if (reason === "clickaway") {
           return;
         }
     
@@ -392,13 +392,13 @@ function HomePage(props) {
                         </Box>
 
                         {props.buttonLoadState ? null :
-                            <Box className={classes.cardContainer} style={{margin: '0px 0px 10px 10px'}}>
+                            <Box className={classes.cardContainer} style={{margin: "0px 0px 10px 10px"}}>
                                 {editPinnedLocations ?
                                     <React.Fragment>
                                         <Typography variant="h6" gutterBottom className={classes.columnTitleText}>
                                             Drag a location from the right to pin it.
                                         </Typography>                                    
-                                        <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: 'shared'}} style={{minHeight: '100px', width: '100%'}}>
+                                        <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: "shared"}} style={{minHeight: "100px", width: "100%"}}>
                                             {pinnedPlaces}
                                         </ReactSortable>
                                     </React.Fragment>
@@ -407,7 +407,7 @@ function HomePage(props) {
                             </Box>}
                     </Box>
                     <Box className={classes.cardFlex}>
-                        <Box className={classes.columnTitleBox} style={{height: '28px'}}>
+                        <Box className={classes.columnTitleBox} style={{height: "28px"}}>
                             <Typography variant="h6" className={classes.columnTitleText}>
                                 Location Search
                             </Typography>
@@ -423,7 +423,7 @@ function HomePage(props) {
                                         root: classes.inputRoot,
                                         input: classes.inputInput,
                                     }}
-                                    inputProps={{'aria-label': 'search'}}
+                                    inputProps={{"aria-label": "search"}}
                                     onChange={handleSearch}
                                     value={searchState}
                                 />
@@ -431,12 +431,12 @@ function HomePage(props) {
                         </Box>
                         {props.buttonLoadState ? null :
                             <Box className={classes.cardContainer} id="test"
-                                 style={{margin: '0px 0px 10px 10px', maxHeight: 'calc(410px - 58px - 10px)'}}>
+                                 style={{margin: "0px 0px 10px 10px", maxHeight: "calc(410px - 58px - 10px)"}}>
                                 {editPinnedLocations ?
-                                    <ReactSortable list={shownPlaces} setList={setShownPlaces} group={{name: 'shared', pull: 'clone', put: false}} sort={false} onEnd={(event) => {
+                                    <ReactSortable list={shownPlaces} setList={setShownPlaces} group={{name: "shared", pull: "clone", put: false}} sort={false} onEnd={(event) => {
                                         for (let i = 0; i < pinnedPlaces.length; i++) {
                                             if (pinnedPlaces[i].props.place._id === shownPlaces[event.oldIndex].props.place._id && i !== event.newIndex) {
-                                                console.log('ALREWADY HERE')
+                                                console.log("ALREWADY HERE")
                                                 pinnedPlaces.splice(i, 1);
                                                 break;
                                             }
@@ -478,8 +478,8 @@ export default function Home() {
     }, [])
 
     const handleUserUpdate = () => {
-        fetch('/api/me', {
-            credentials: 'include',
+        fetch("/api/me", {
+            credentials: "include",
         }).then(response => response.json()).then((data) => {setUserState(data)});
     }
 
@@ -499,10 +499,10 @@ export default function Home() {
 
                     if (!location_id) {
                         console.log("Checking in with location_id: ", location_id)
-                        fetch('/api/checkin', {
-                            method: 'POST',
-                            credentials: 'include',
-                            headers: {'Content-Type': 'application/json'},
+                        fetch("/api/checkin", {
+                            method: "POST",
+                            credentials: "include",
+                            headers: {"Content-Type": "application/json"},
                             body: JSON.stringify({
                                 "location": location_id,
                             }),

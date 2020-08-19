@@ -1,42 +1,42 @@
-import React from 'react';
-import {Button, Paper, Typography} from '@material-ui/core';
-import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles'
+import React from "react";
+import {Button, Paper, Typography} from "@material-ui/core";
+import {createMuiTheme, makeStyles, ThemeProvider} from "@material-ui/core/styles"
 import Box from "@material-ui/core/Box";
 import theme from "@components/MainTheme"
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        height: '100vh',
+        height: "100vh",
         background: theme.palette.primary.light,
     },
     mainGrid: {
-        height: '100vh',
-        display: 'grid',
-        placeItems: 'center',
+        height: "100vh",
+        display: "grid",
+        placeItems: "center",
     },
     loginContainer: {
-        width: 'clamp(0ch, 95%, 46ch)',
-        background: '#F5F5F5',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        width: "clamp(0ch, 95%, 46ch)",
+        background: "#F5F5F5",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
     },
     oAuthContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        padding: '10px',
-        marginBottom: '30px',
-        textTransform: 'none',
-        textDecoration: 'none',
+        display: "flex",
+        alignItems: "center",
+        padding: "10px",
+        marginBottom: "30px",
+        textTransform: "none",
+        textDecoration: "none",
     },
     oAuthText: {
         color: theme.palette.primary.main,
-        fontSize: '1rem',
-        paddingLeft: '10px',
+        fontSize: "1rem",
+        paddingLeft: "10px",
     },
     googleLogo: {
-        height: '30px',
-        width: '30px',
+        height: "30px",
+        width: "30px",
     }
 
 }));

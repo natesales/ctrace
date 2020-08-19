@@ -1,8 +1,8 @@
-import dbConnect from '../../../utils/dbConnect';
-import Location from '../../../models/Location';
-import Person from '../../../models/Person';
-import stringify from 'csv-stringify';
-import strftime from 'strftime';
+import dbConnect from "../../../utils/dbConnect";
+import Location from "../../../models/Location";
+import Person from "../../../models/Person";
+import stringify from "csv-stringify";
+import strftime from "strftime";
 
 function getLocationName(id, locations) {
     for (const location in locations) {
@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     await dbConnect()
 
     switch (method) {
-        case 'GET':
+        case "GET":
             const locations = await Location.find({});
 
             let export_object = [["Name", "Location", "Time In", "Time Out"]];
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
                 for (const entry in person.log) {
                     const location_name = await getLocationName(person.log[entry].location, locations);
                     console.log(location_name)
-                    export_object.push([person.name, location_name, strftime("%I:%M %p %B %d, %Y", new Date(person.log[entry].time_in)), person.log[entry].time_out ? strftime("%I:%M %p %B-%d-%Y", new Date(person.log[entry].time_in)) : 'Not checked out'])
+                    export_object.push([person.name, location_name, strftime("%I:%M %p %B %d, %Y", new Date(person.log[entry].time_in)), person.log[entry].time_out ? strftime("%I:%M %p %B-%d-%Y", new Date(person.log[entry].time_in)) : "Not checked out"])
                 }
             }
 
