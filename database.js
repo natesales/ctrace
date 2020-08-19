@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 async function connect() {
     const db = await mongoose.connect(config.database, {useUnifiedTopology: true, useNewUrlParser: true});
