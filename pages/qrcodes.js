@@ -3,15 +3,11 @@ import {useEffect, useState} from "react";
 export default function QRCodes() {
     const [images, setImages] = useState(null);
 
-    async function getQRCodes() {
-        await fetch("/api/admin/qrcodes", {method: "GET"})
+    useEffect(() => {
+        fetch("/api/admin/qrcodes", {method: "GET"})
             .then(response => response.json())
             .then(data => setImages(data.data))
             .catch(error => console.log(error));
-    }
-
-    useEffect(() => {
-        getQRCodes();
     }, []);
 
     return (
@@ -22,6 +18,7 @@ export default function QRCodes() {
                         <div key={image.name} className="pageBreak">
                             <h1>{image.name}</h1>
                             <img src={image.image} alt={image.name}/>
+                            <h2>{image.ref}</h2>
                         </div>
                     )
                 }) : <h1>Loading...</h1>}
