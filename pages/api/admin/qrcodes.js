@@ -16,11 +16,13 @@ export default async function handler(req, res) {
 
             for await (const location of Location.find()) {
                 const name = location.name;
-                const image = await QRCode.toDataURL(process.env.BASE_URL + "?loc=" + location._id);
+                const ref = process.env.BASE_URL + "code/" + location._id;
+                const image = await QRCode.toDataURL(ref);
 
                 qrcodes.push({
                     name: name,
-                    image: image
+                    image: image,
+                    ref: ref
                 })
             }
 
