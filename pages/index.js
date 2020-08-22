@@ -1,8 +1,8 @@
 import React from "react";
 import {Button, Paper, Typography} from "@material-ui/core";
-import {makeStyles, ThemeProvider} from "@material-ui/core/styles"
+import {makeStyles, ThemeProvider} from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
-import theme from "@components/MainTheme"
+import theme from "@components/MainTheme";
 
 const useStyles = makeStyles((theme) => ({
     root: {

@@ -1,9 +1,9 @@
-import React from "react"
-import Document, { Html, Head, Main, NextScript } from "next/document"
-import { ServerStyleSheets } from "@material-ui/styles"
-import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles"
+import React from "react";
+import Document, { Html, Head, Main, NextScript } from "next/document";
+import { ServerStyleSheets } from "@material-ui/styles";
+import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 
-const theme = responsiveFontSizes(createMuiTheme())
+const theme = responsiveFontSizes(createMuiTheme());
 
 class MyDocument extends Document {
     render() {
@@ -35,6 +35,7 @@ class MyDocument extends Document {
               }
             `}
                     </style>
+                    <title>cTrace</title>
                 </Head>
                 <body>
                 <Main />
@@ -53,9 +54,9 @@ MyDocument.getInitialProps = async ctx => {
     ctx.renderPage = () =>
         originalRenderPage({
             enhanceApp: App => props => sheets.collect(<App {...props} />)
-        })
+        });
 
-    const initialProps = await Document.getInitialProps(ctx)
+    const initialProps = await Document.getInitialProps(ctx);
 
     return {
         ...initialProps,

@@ -1,17 +1,17 @@
-import React, {useEffect, useRef, useState} from "react"
+import React, {useEffect, useRef, useState} from "react";
 import {Box, IconButton, InputBase, Paper, Snackbar, Typography} from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
-import {makeStyles, ThemeProvider} from "@material-ui/core/styles"
-import {SpeedDial, SpeedDialAction, SpeedDialIcon} from "@material-ui/lab/"
+import {makeStyles, ThemeProvider} from "@material-ui/core/styles";
+import {SpeedDial, SpeedDialAction, SpeedDialIcon} from "@material-ui/lab/";
 import Navbar from "@components/Navbar";
 import LocationCard from "@components/LocationCard";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
-import SearchIcon from "@material-ui/icons/Search"
+import SearchIcon from "@material-ui/icons/Search";
 import {fetchUser} from "../lib/user";
 import {ReactSortable} from "react-sortablejs";
-import theme from "@components/MainTheme"
-import LocationAlert from "@components/LocationAlert"
+import theme from "@components/MainTheme";
+import LocationAlert from "@components/LocationAlert";
 
 // Styles for use on the page.
 const useStyles = makeStyles((theme) => ({
@@ -143,8 +143,7 @@ const useStyles = makeStyles((theme) => ({
     currentLocationTitleText: {
         fontSize: "16px",
     },
-    LocationAlertContainer: {
-    }
+    LocationAlertContainer: {}
 
 }));
 
@@ -170,7 +169,7 @@ function HomePage(props) {
     const [editPinnedLocations, setEditPinnedLocations] = useState(false);
     const [showFreePeriodSnackbar, setShowFreePeriodSnackbar] = useState(true); //To be changed after testing.
     const [canAddPinnedLocation, setCanAddPinnedLocation] = useState(true);
-    const [pinnedPlacesLength, setPinnedPlacesLength] = useState(0)
+    const [pinnedPlacesLength, setPinnedPlacesLength] = useState(0);
 
     const mounted = useRef(); // Used to update userState after re-fetching /me. Not perfect but react seems to only work well this way.
     useEffect(() => {
@@ -193,7 +192,7 @@ function HomePage(props) {
             if (success) {
                 return "success";
             } else {
-                return "error"
+                return "error";
             }
         })
         setShowResponseSnackbar(true);
@@ -205,9 +204,9 @@ function HomePage(props) {
         setIsLoading(true);
         let locationId;
         if (event.target.parentElement.id !== "") {
-            locationId = event.target.parentElement.id
+            locationId = event.target.parentElement.id;
         } else {
-            locationId = event.currentTarget.id
+            locationId = event.currentTarget.id;
         }
 
         fetch("/api/checkin", {
@@ -220,7 +219,7 @@ function HomePage(props) {
         })
             .then(response => response.json())
             .then(data => {
-                handleResponseSnackbarOpen(data.success, data.message)
+                handleResponseSnackbarOpen(data.success, data.message);
             })
             .then(props.handleUserUpdate)
             .catch(error => handleResponseSnackbarOpen(false, data.message));
@@ -231,9 +230,9 @@ function HomePage(props) {
         setIsLoading(true);
         let locationId;
         if (event.target.parentElement.id !== "") {
-            locationId = event.target.parentElement.id
+            locationId = event.target.parentElement.id;
         } else {
-            locationId = event.currentTarget.id
+            locationId = event.currentTarget.id;
         }
 
         fetch("/api/checkout", {
@@ -273,7 +272,7 @@ function HomePage(props) {
                     }
                 }
 
-                const result = {
+                return {
                     key: place._id,
                     place: place,
                     isEntered: isEntered,
@@ -281,11 +280,7 @@ function HomePage(props) {
                     isDisplayed: true,
                     handleLocationEnter: handleLocationEnter,
                     handleLocationLeave: handleLocationLeave,
-                }
-
-                return (
-                    result
-                )
+                };
             }));
 
         setPinnedPlaces(
@@ -302,7 +297,7 @@ function HomePage(props) {
                         }
                     }
 
-                    const result = {
+                    return {
                         key: place._id,
                         place: place,
                         isEntered: isEntered,
@@ -310,11 +305,7 @@ function HomePage(props) {
                         isDisplayed: true,
                         handleLocationEnter: handleLocationEnter,
                         handleLocationLeave: handleLocationLeave,
-                    }
-
-                    return (
-                        result
-                    )
+                    };
                 })
                 :
                 []
@@ -340,7 +331,7 @@ function HomePage(props) {
                         handleLocationEnter: newState[i].handleLocationEnter,
                         handleLocationLeave: newState[i].handleLocationLeave,
                     }
-                    return (newState)
+                    return newState;
                 })
             } else {
                 setShownPlaces(prevState => {
@@ -354,7 +345,7 @@ function HomePage(props) {
                         handleLocationEnter: newState[i].handleLocationEnter,
                         handleLocationLeave: newState[i].handleLocationLeave,
                     }
-                    return (newState)
+                    return newState;
                 })
             }
         }
@@ -369,21 +360,19 @@ function HomePage(props) {
                 })
             }
         }
-    }, [pinnedPlaces])
+    }, [pinnedPlaces]);
 
     async function handlePinnedLocation() {
 
         if (editPinnedLocations) {
             setEditPinnedLocations(prevState => {
-                return (
-                    !prevState
-                )
-            })
+                return !prevState;
+            });
 
             if (pinnedPlaces !== null) {
                 const pinned_locations = pinnedPlaces.map(place => {
-                    return (place.key)
-                })
+                    return place.key;
+                });
 
                 await fetch("/api/pin", {
                     method: "POST",
@@ -394,30 +383,24 @@ function HomePage(props) {
                     }),
                 }).then(response => response.json()).then(data => {
                     handleResponseSnackbarOpen(data.success, data.message)
-                }).catch(error => handleResponseSnackbarOpen(false, data.message))
+                }).catch(error => handleResponseSnackbarOpen(false, data.message)) // TODO: Should this be error.message?
             }
 
         } else {
             setEditPinnedLocations(prevState => {
-                return (
-                    !prevState
-                )
-            })
+                return !prevState;
+            });
         }
-
-
     }
 
     const handlePinnedLocationDelete = (event) => {
-        const id = event.currentTarget.id
+        const id = event.currentTarget.id;
 
         setPinnedPlaces(prevState => {
-                const newArray = prevState.filter((location) => {
-                    return location.key !== id
-                })
-                return (newArray)
-            })
-
+            return prevState.filter((location) => {
+                return location.key !== id;
+            });
+        });
     }
 
     const handleResponseSnackbarClose = (event, reason) => {
@@ -431,34 +414,34 @@ function HomePage(props) {
     return (
         <div className={classes.root}>
             <Box className={classes.mainGrid}>
-            {userState.current_location ? null : 
-            <Box className={classes.LocationAlertContainer}>
-                <LocationAlert/>
-            </Box>
-            }
+                {userState.current_location ? null :
+                    <Box className={classes.LocationAlertContainer}>
+                        <LocationAlert/>
+                    </Box>
+                }
                 <Paper className={classes.mainContainer} elevation={3} style={{marginTop: userState.current_location ? "0px" : "115px", maxHeight: userState.current_location ? "671px" : "557px"}}>
-                    {userState.current_location ?   
-                    <Box className={classes.currentLocationFlex}>
-                        <Box className={classes.currentLocationTitleBox}>
-                            <Typography variant="h6" className={classes.currentLocationTitleText}>
-                                Current Location
-                            </Typography>
-                            <Box className={classes.currentLocationCardContainer}>
-                                <LocationCard
-                                    key={userState.current_location.id}
-                                    place={userState.current_location}
-                                    isEntered={true}
-                                    showButton={true}
-                                    isDisplayed={true}
-                                    canDelete={false}
-                                    handleLocationEnter={handleLocationEnter}
-                                    handleLocationLeave={handleLocationLeave}
-                                />
+                    {userState.current_location ?
+                        <Box className={classes.currentLocationFlex}>
+                            <Box className={classes.currentLocationTitleBox}>
+                                <Typography variant="h6" className={classes.currentLocationTitleText}>
+                                    Current Location
+                                </Typography>
+                                <Box className={classes.currentLocationCardContainer}>
+                                    <LocationCard
+                                        key={userState.current_location.id}
+                                        place={userState.current_location}
+                                        isEntered={true}
+                                        showButton={true}
+                                        isDisplayed={true}
+                                        canDelete={false}
+                                        handleLocationEnter={handleLocationEnter}
+                                        handleLocationLeave={handleLocationLeave}
+                                    />
+
+                                </Box>
 
                             </Box>
-
-                        </Box>
-                    </Box> : null}
+                        </Box> : null}
 
                     <Box className={classes.columns}>
                         <Box className={classes.cardFlex}>
@@ -542,7 +525,7 @@ function HomePage(props) {
                             </Box>
                             {props.buttonLoadState ? null :
                                 <Box className={classes.cardContainer} id="test"
-                                    style={{margin: "0px 0px 10px 10px", maxHeight: "calc(410px - 58px - 10px)"}}>
+                                     style={{margin: "0px 0px 10px 10px", maxHeight: "calc(410px - 58px - 10px)"}}>
                                     {editPinnedLocations ?
                                         <ReactSortable list={shownPlaces} setList={setShownPlaces} group={{name: "shared", pull: "clone", put: false}} sort={false}>
                                             {shownPlaces.map(place => {
@@ -615,7 +598,7 @@ export default function Home() {
         fetch("/api/me", {
             credentials: "include",
         }).then(response => response.json()).then((data) => {
-            setUserState(data)
+            setUserState(data);
         });
     }
 

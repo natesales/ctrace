@@ -6,7 +6,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
     const {user} = await auth0.getSession(req);
     await dbConnect();
 
-    const {method} = req
+    const {method} = req;
 
     switch (method) {
         case 'POST':
@@ -22,13 +22,13 @@ export default auth0.requireAuthentication(async function handler(req, res) {
                 })
                 .catch(error => {
                     res.status(400).json({success: false, message: error.message});
-                })
+                });
 
             break;
         default:
             res.status(400).json({success: false});
-            console.log('Response was default')
-            break
+            console.log('Response was default');
+            break;
     }
 
 })
