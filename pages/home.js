@@ -547,53 +547,10 @@ export default function Home() {
         }).then(response => response.json()).then((data) => {setUserState(data)});
     }
 
-    const handleQRCode = (event) => {
-        if (event.currentTarget.files && event.currentTarget.files[0]) {
-            const FR = new FileReader();
-
-            FR.addEventListener("load", function (e) {
-                const qr = new QrCode();
-                qr.callback = function (error, result) {
-                    if (error) {
-                        console.log(error)
-                        return;
-                    }
-                    const location_id = result["result"].split("?loc=")[1];
-                    console.log(location_id);
-
-                    if (!location_id) {
-                        console.log("Checking in with location_id: ", location_id)
-                        fetch("/api/checkin", {
-                            method: "POST",
-                            credentials: "include",
-                            headers: {"Content-Type": "application/json"},
-                            body: JSON.stringify({
-                                "location": location_id,
-                            }),
-                        })
-                            .then(response => response.json())
-                            .then(data => console.log(data))
-                            .then(props.handleUserUpdate)
-                            .catch(error => console.log(error));
-
-                            // TODO: if (!response.success) { show fail dialog }
-                    }
-                }
-                qr.decode(e.target.result);
-            });
-
-            FR.readAsDataURL(event.currentTarget.files[0]);
-        } else {
-            alert("Error uploading image.");
-            throw new Error("Error uploading image.");
-        }
-    };
-
-
     return (
         <ThemeProvider theme={theme}>
-            <Navbar handleQRCode={handleQRCode}/>
-            <LocationAlert/>
+            <Navbar/>
+            {/*<LocationAlert/>*/}
             {loadingState ? <div>Loading...</div> :
                 <HomePage user={userState} handleUserUpdate={handleUserUpdate} buttonLoadState={buttonLoadState}/>}
         </ThemeProvider>

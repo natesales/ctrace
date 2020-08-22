@@ -50,12 +50,7 @@ function Nav(props) {
                     cTrace
                 </Typography>
 
-                <input id="qrCodeInput" type="file" onChange={props.handleQRCode} style={{display: "none"}}/>
-
-                <IconButton edge="end" className={classes.profileButton} color="inherit" aria-label="menu" htmlFor="qrCodeInput" component="label">
-                    <CropFreeIcon/>
-                </IconButton>
-
+                {/* TODO: Do we need this button? Maybe for logout? */}
                 <IconButton edge="end" className={classes.profileButton} color="inherit" aria-label="menu">
                     <AccountCircleIcon/>
                 </IconButton>
@@ -64,10 +59,10 @@ function Nav(props) {
     )
 }
 
-export default function Navbar(props) {
+export default function Navbar() {
     return (
         <ThemeProvider theme={theme}>
-            <Nav handleQRCode={props.handleQRCode}/>
+            <Nav/>
         </ThemeProvider>
     )
 }
