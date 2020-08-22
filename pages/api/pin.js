@@ -1,6 +1,6 @@
-import dbConnect from '../../utils/dbConnect';
-import Person from '../../models/Person';
-import auth0 from '../../lib/auth0';
+import dbConnect from "../../utils/dbConnect";
+import Person from "../../models/Person";
+import auth0 from "../../lib/auth0";
 
 export default auth0.requireAuthentication(async function handler(req, res) {
     const {user} = await auth0.getSession(req);

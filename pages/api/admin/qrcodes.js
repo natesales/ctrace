@@ -1,7 +1,7 @@
-import dbConnect from '../../../utils/dbConnect';
-import Location from '../../../models/Location';
-import QRCode from 'qrcode';
-import dotenv from 'dotenv';
+import dbConnect from "../../../utils/dbConnect";
+import Location from "../../../models/Location";
+import QRCode from "qrcode";
+import dotenv from "dotenv";
 
 dotenv.config();
 

@@ -46,7 +46,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
             res.status(200).json({success: true, message: "Checked in to '" + location.name + "'"});
             break;
         default:
-            res.status(400).json({success: false});
+            res.status(400).json({success: false, message: "Default"});
             break
     }
 })

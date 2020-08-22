@@ -1,5 +1,5 @@
-import dbConnect from '../../../utils/dbConnect';
-import Location from '../../../models/Location';
+import dbConnect from "../../../utils/dbConnect";
+import Location from "../../../models/Location";
 
 export default async function handler(req, res) {
     const {method} = req;
