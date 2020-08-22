@@ -1,5 +1,6 @@
 import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles'
 
+// BASIC BLACK AND WHITE 🖤🤍⬛⬜
 const theme = createMuiTheme({
     palette: {
         primary: {
@@ -16,5 +17,23 @@ const theme = createMuiTheme({
         }
     }
 });
+
+// PURPLE OVERLOAD 👾🔮
+// const theme = createMuiTheme({
+//     palette: {
+//         primary: {
+//             light: "#810FC2",
+//             main: "#540A80",
+//             dark: "#220433",
+//             contrastText: "#fff",
+//         },
+//         secondary: {
+//             light: "#904FC2",
+//             main: "#2A0540",
+//             dark: "#220433",
+//             contrastText: "#fff"
+//         }
+//     }
+// });
 
 export default theme
