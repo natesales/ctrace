@@ -1,6 +1,7 @@
 import React from 'react';
 import {makeStyles} from "@material-ui/core/styles";
-import {Box, Button, Paper, Typography} from '@material-ui/core';
+import {Box, Button, Paper, Typography, IconButton} from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles((theme) => ({
     placePaper: {
@@ -26,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
     },
     actionButton: {
         margin: '8px',
+    },
+    trashButton: {
+        marginRight: "5px",
     }
 }));
 
@@ -43,7 +47,7 @@ export default function LocationCard(props) {
                 </Typography>
             </Box>
 
-            {props.showButton ?
+            {props.showButton && !props.canDelete ?
                 props.isEntered ?
                     <Button variant="outlined" className={classes.actionButton} onClick={props.handleLocationLeave} id={props.place._id}>
                         Leave
@@ -55,6 +59,11 @@ export default function LocationCard(props) {
                 :
                 null
             }
+
+            {props.canDelete ? 
+            <IconButton className={classes.trashButton} onClick={props.handleDelete} id={props.place._id}>
+                <DeleteIcon />
+            </IconButton> : null}
         </Paper>
     )
 }

@@ -8,8 +8,6 @@ export default auth0.requireAuthentication(async function handler(req, res) {
 
     const {method} = req
 
-    console.log(req.body)
-
     switch (method) {
         case 'POST':
             const person = await Person.findOne({"uid": user.nickname});
