@@ -38,7 +38,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
                     }
                 }
             });
-            
+
             if (!updated_person) {
                 return res.status(400).json({success: false});
             }

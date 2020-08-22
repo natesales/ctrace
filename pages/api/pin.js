@@ -1,6 +1,5 @@
 import dbConnect from '../../utils/dbConnect';
 import Person from '../../models/Person';
-import Location from '../../models/Location';
 import auth0 from '../../lib/auth0';
 
 export default auth0.requireAuthentication(async function handler(req, res) {
@@ -19,11 +18,13 @@ export default auth0.requireAuthentication(async function handler(req, res) {
             }
 
             //Add the pinned locations, should be in an array of object ids in string format.
-            await Person.findOneAndUpdate({ uid: user.nickname }, { pinned_locations: req.body.pinned_locations }, {new: true})
-            .then(() => {res.status(200).json({success: true, message: "Updated your pinned locations."})})
-            .catch(error => {
-                res.status(400).json({success: false, message: error.message});
-            })
+            await Person.findOneAndUpdate({uid: user.nickname}, {pinned_locations: req.body.pinned_locations}, {new: true})
+                .then(() => {
+                    res.status(200).json({success: true, message: "Updated your pinned locations."})
+                })
+                .catch(error => {
+                    res.status(400).json({success: false, message: error.message});
+                })
 
             break;
         default:

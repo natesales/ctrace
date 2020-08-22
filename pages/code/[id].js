@@ -1,6 +1,6 @@
 import {useRouter} from "next/router"
-import {useFetchUser, fetchUser} from "../../lib/user"
-import {useEffect, useState} from "react";
+import {fetchUser} from "../../lib/user"
+import {useEffect} from "react";
 
 const CodeHandler = () => {
     const router = useRouter()

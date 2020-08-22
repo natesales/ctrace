@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Paper, Typography} from "@material-ui/core";
-import {createMuiTheme, makeStyles, ThemeProvider} from "@material-ui/core/styles"
+import {makeStyles, ThemeProvider} from "@material-ui/core/styles"
 import Box from "@material-ui/core/Box";
 import theme from "@components/MainTheme"
 
@@ -51,8 +51,8 @@ function Login() {
                     <Typography variant="h2" gutterBottom className={classes.title}>
                         cTrace
                     </Typography>
-                    <Button variant="contained" className={classes.oAuthContainer} href="/api/login/" >
-                        <img alt="google logo" src="https://cdn.discordapp.com/attachments/473705436793798676/738834931219693588/google.png" className={classes.googleLogo} />
+                    <Button variant="contained" className={classes.oAuthContainer} href="/api/login/">
+                        <img alt="google logo" src="https://cdn.discordapp.com/attachments/473705436793798676/738834931219693588/google.png" className={classes.googleLogo}/>
                         <Typography variant="h6" className={classes.oAuthText}>
                             Sign in with Google
                         </Typography>
@@ -60,13 +60,13 @@ function Login() {
                 </Paper>
             </Box>
         </div>
-)
+    )
 }
 
 export default function Index() {
-    return(
+    return (
         <ThemeProvider theme={theme}>
-            <Login />
+            <Login/>
         </ThemeProvider>
     )
 }

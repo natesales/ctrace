@@ -33,7 +33,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
                 const location_name = await Location.findOne({_id: person.log[person.log.length - 1].location});
                 res.status(200).json({success: true, message: "Checked out of '" + location_name["name"] + "'"})
             })
-            
+
             break;
         default:
             res.status(400).json({success: false});

@@ -33,7 +33,7 @@ export default auth0.requireAuthentication(async function me(req, res) {
             console.log("Found the checked in location")
             response.current_location = await Location.findById(person.log[person.log.length - 1].location);
         } else {
-             response.current_location = null;
+            response.current_location = null;
         }
 
         if (person.pinned_locations.length > 0) {
