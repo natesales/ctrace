@@ -49,9 +49,9 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     cardContainer: {
-        maxHeight: "410px",
+        maxHeight: "430px !important",
         [theme.breakpoints.down(864)]: {
-            maxHeight: "none", //TODO: Decide if this is a good idea.
+            maxHeight: "none !important", //TODO: Decide if this is a good idea.
             marginBottom: "0px",
         },
         overflow: "scroll",
@@ -139,6 +139,7 @@ const useStyles = makeStyles((theme) => ({
     },
     currentLocationTitleBox: {
         width: "100%",
+        paddingBottom: "4.5px",
     },
     currentLocationTitleText: {
         fontSize: "16px",
