@@ -12,7 +12,7 @@ const CodeHandler = () => {
 
             if (id !== undefined) {
                 if (data === null) {
-                    window.location.href = "/api/login";
+                    window.location.href = "/api/login?redirectTo=/code?id=" + id;
                 }
 
                 if (data["current_location"] === null) { // If not checked in
