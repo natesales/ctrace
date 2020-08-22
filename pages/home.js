@@ -11,6 +11,7 @@ import SearchIcon from "@material-ui/icons/Search"
 import {fetchUser} from "../lib/user";
 import {ReactSortable} from "react-sortablejs";
 import theme from "@components/MainTheme"
+import LocationAlert from "@components/LocationAlert"
 
 // Styles for use on the page.
 const useStyles = makeStyles((theme) => ({
@@ -27,18 +28,15 @@ const useStyles = makeStyles((theme) => ({
         width: "clamp(0px, 95%, 840px)",
         background: theme.palette.primary.light,
         color: "#fff",
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        maxHeight: "467px",
+        maxHeight: "557px",
         position: "relative",
-        top: "190px",
+        top: "80px",
         borderRadius: "10px",
         [theme.breakpoints.down(864)]: {
             maxHeight: "none",
         },
         [theme.breakpoints.down("xs")]: {
-            top: "175px",
+            top: "65px",
         },
     },
     cardFlex: {
@@ -123,6 +121,29 @@ const useStyles = makeStyles((theme) => ({
         listStyleType: "none",
         padding: 0,
         margin: 0
+    },
+    columns: {
+        display: "flex",
+        flexWrap: "wrap",
+        justifyContent: "center",
+    },
+    currentLocationFlex: {
+        display: "flex",
+        justifyContent: "space-between",
+        margin: "10px",
+        alignItems: "center"
+    },
+    currentLocationCardContainer: {
+        width: "100%",
+        flex: "1 1 410px",
+    },
+    currentLocationTitleBox: {
+        width: "100%",
+    },
+    currentLocationTitleText: {
+        fontSize: "16px",
+    },
+    LocationAlertContainer: {
     }
 
 }));
@@ -398,27 +419,119 @@ function HomePage(props) {
     return (
         <div className={classes.root}>
             <Box className={classes.mainGrid}>
-                <Paper className={classes.mainContainer} elevation={3}>
-                    <Box className={classes.cardFlex}>
-                        <Box className={classes.columnTitleBox}>
-                            <Typography variant="h6" className={classes.columnTitleText}>
-                                Pinned Locations
+            {userState.current_location ? null : 
+            <Box className={classes.LocationAlertContainer}>
+                <LocationAlert/>
+            </Box>
+            }
+                <Paper className={classes.mainContainer} elevation={3} style={{marginTop: userState.current_location ? "0px" : "115px"}}>
+                    {userState.current_location ?   
+                    <Box className={classes.currentLocationFlex}>
+                        <Box className={classes.currentLocationTitleBox}>
+                            <Typography variant="h6" className={classes.currentLocationTitleText}>
+                                Current Location
                             </Typography>
-                            <IconButton aria-label="add a pinned location" className={classes.addPinnedButton} onClick={handlePinnedLocation}>
-                                {editPinnedLocations ? <CloseIcon/> : <AddIcon/>}
-                            </IconButton>
-                        </Box>
+                            <Box className={classes.currentLocationCardContainer}>
+                                <LocationCard
+                                    key={userState.current_location.id}
+                                    place={userState.current_location}
+                                    isEntered={true}
+                                    showButton={true}
+                                    isDisplayed={true}
+                                    handleLocationEnter={handleLocationEnter}
+                                    handleLocationLeave={handleLocationLeave}
+                                />
 
-                        {props.buttonLoadState ? null :
-                            <Box className={classes.cardContainer} style={{margin: "0px 0px 10px 10px"}}>
-                                {editPinnedLocations ?
-                                    <React.Fragment>
-                                        <Typography variant="h6" gutterBottom className={classes.columnTitleText}>
-                                            Drag a location from the right to pin it.
-                                        </Typography>
-                                        <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: "shared", put: canAddPinnedLocation}} style={{minHeight: "100px", width: "100%"}}>
-                                            {pinnedPlaces.map(place => {
+                            </Box>
+
+                        </Box>
+                    </Box> : null}
+
+                    <Box className={classes.columns}>
+                        <Box className={classes.cardFlex}>
+                            <Box className={classes.columnTitleBox}>
+                                <Typography variant="h6" className={classes.columnTitleText}>
+                                    Pinned Locations
+                                </Typography>
+                                <IconButton aria-label="add a pinned location" className={classes.addPinnedButton} onClick={handlePinnedLocation}>
+                                    {editPinnedLocations ? <CloseIcon/> : <AddIcon/>}
+                                </IconButton>
+                            </Box>
+
+                            {props.buttonLoadState ? null :
+                                <Box className={classes.cardContainer} style={{margin: "0px 0px 10px 10px"}}>
+                                    {editPinnedLocations ?
+                                        <React.Fragment>
+                                            <Typography variant="h6" gutterBottom className={classes.columnTitleText}>
+                                                Drag a location from the right to pin it.
+                                            </Typography>
+                                            <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: "shared", put: canAddPinnedLocation}} style={{minHeight: "100px", width: "100%"}}>
+                                                {pinnedPlaces.map(place => {
+                                                    return (
+                                                        <LocationCard
+                                                            key={place.key}
+                                                            id={place.key}
+                                                            place={place.place}
+                                                            isEntered={place.isEntered}
+                                                            showButton={place.showButton}
+                                                            isDisplayed={place.isDisplayed}
+                                                            handleLocationEnter={place.handleLocationEnter}
+                                                            handleLocationLeave={place.handleLocationLeave}
+                                                        />
+                                                    )
+                                                })}
+                                            </ReactSortable>
+                                        </React.Fragment>
+                                        :
+
+                                        pinnedPlaces == null ? null :
+                                            pinnedPlaces.map(place => {
                                                 return (
+                                                    <LocationCard
+                                                        key={place.key}
+                                                        id={place.key}
+                                                        place={place.place}
+                                                        isEntered={place.isEntered}
+                                                        showButton={place.showButton}
+                                                        isDisplayed={place.isDisplayed}
+                                                        handleLocationEnter={handleLocationEnter}
+                                                        handleLocationLeave={place.handleLocationLeave}
+                                                    />
+                                                )
+                                            })}
+                                </Box>}
+                        </Box>
+                        <Box className={classes.cardFlex}>
+                            <Box className={classes.columnTitleBox} style={{height: "28px"}}>
+                                <Typography variant="h6" className={classes.columnTitleText}>
+                                    Location Search
+                                </Typography>
+                            </Box>
+                            <Box className={classes.searchContainer}>
+                                <div className={classes.search}>
+                                    <div className={classes.searchIcon}>
+                                        <SearchIcon/>
+                                    </div>
+                                    <InputBase
+                                        placeholder="Search…"
+                                        classes={{
+                                            root: classes.inputRoot,
+                                            input: classes.inputInput,
+                                        }}
+                                        inputProps={{"aria-label": "search"}}
+                                        onChange={handleSearch}
+                                        value={searchState}
+                                    />
+                                </div>
+                            </Box>
+                            {props.buttonLoadState ? null :
+                                <Box className={classes.cardContainer} id="test"
+                                    style={{margin: "0px 0px 10px 10px", maxHeight: "calc(410px - 58px - 10px)"}}>
+                                    {editPinnedLocations ?
+                                        <ReactSortable list={shownPlaces} setList={setShownPlaces} group={{name: "shared", pull: "clone", put: false}} sort={false}>
+                                            {shownPlaces.map(place => {
+                                                return (
+
                                                     <LocationCard
                                                         key={place.key}
                                                         id={place.key}
@@ -432,94 +545,31 @@ function HomePage(props) {
                                                 )
                                             })}
                                         </ReactSortable>
-                                    </React.Fragment>
-                                    :
+                                        :
 
-                                    pinnedPlaces == null ? null :
-                                        pinnedPlaces.map(place => {
-                                            return (
-                                                <LocationCard
-                                                    key={place.key}
-                                                    id={place.key}
-                                                    place={place.place}
-                                                    isEntered={place.isEntered}
-                                                    showButton={place.showButton}
-                                                    isDisplayed={place.isDisplayed}
-                                                    handleLocationEnter={handleLocationEnter}
-                                                    handleLocationLeave={place.handleLocationLeave}
-                                                />
-                                            )
-                                        })}
-                            </Box>}
-                    </Box>
-                    <Box className={classes.cardFlex}>
-                        <Box className={classes.columnTitleBox} style={{height: "28px"}}>
-                            <Typography variant="h6" className={classes.columnTitleText}>
-                                Location Search
-                            </Typography>
+                                        shownPlaces == null ? null :
+                                            shownPlaces.map(place => {
+                                                return (
+                                                    <LocationCard
+                                                        key={place.key}
+                                                        id={place.key}
+                                                        place={place.place}
+                                                        isEntered={place.isEntered}
+                                                        showButton={place.showButton}
+                                                        isDisplayed={place.isDisplayed}
+                                                        handleLocationEnter={place.handleLocationEnter}
+                                                        handleLocationLeave={place.handleLocationLeave}
+                                                    />
+                                                )
+                                            })}
+                                </Box>}
+
+                            <Snackbar open={showResponseSnackbar} autoHideDuration={6000} onClose={handleResponseSnackbarClose}>
+                                <Alert onClose={handleResponseSnackbarClose} severity={responseSnackbarType}>
+                                    {responseSnackbarBody}
+                                </Alert>
+                            </Snackbar>
                         </Box>
-                        <Box className={classes.searchContainer}>
-                            <div className={classes.search}>
-                                <div className={classes.searchIcon}>
-                                    <SearchIcon/>
-                                </div>
-                                <InputBase
-                                    placeholder="Search…"
-                                    classes={{
-                                        root: classes.inputRoot,
-                                        input: classes.inputInput,
-                                    }}
-                                    inputProps={{"aria-label": "search"}}
-                                    onChange={handleSearch}
-                                    value={searchState}
-                                />
-                            </div>
-                        </Box>
-                        {props.buttonLoadState ? null :
-                            <Box className={classes.cardContainer} id="test"
-                                 style={{margin: "0px 0px 10px 10px", maxHeight: "calc(410px - 58px - 10px)"}}>
-                                {editPinnedLocations ?
-                                    <ReactSortable list={shownPlaces} setList={setShownPlaces} group={{name: "shared", pull: "clone", put: false}} sort={false}>
-                                        {shownPlaces.map(place => {
-                                            return (
-
-                                                <LocationCard
-                                                    key={place.key}
-                                                    id={place.key}
-                                                    place={place.place}
-                                                    isEntered={place.isEntered}
-                                                    showButton={place.showButton}
-                                                    isDisplayed={place.isDisplayed}
-                                                    handleLocationEnter={place.handleLocationEnter}
-                                                    handleLocationLeave={place.handleLocationLeave}
-                                                />
-                                            )
-                                        })}
-                                    </ReactSortable>
-                                    :
-
-                                    shownPlaces == null ? null :
-                                        shownPlaces.map(place => {
-                                            return (
-                                                <LocationCard
-                                                    key={place.key}
-                                                    id={place.key}
-                                                    place={place.place}
-                                                    isEntered={place.isEntered}
-                                                    showButton={place.showButton}
-                                                    isDisplayed={place.isDisplayed}
-                                                    handleLocationEnter={place.handleLocationEnter}
-                                                    handleLocationLeave={place.handleLocationLeave}
-                                                />
-                                            )
-                                        })}
-                            </Box>}
-
-                        <Snackbar open={showResponseSnackbar} autoHideDuration={6000} onClose={handleResponseSnackbarClose}>
-                            <Alert onClose={handleResponseSnackbarClose} severity={responseSnackbarType}>
-                                {responseSnackbarBody}
-                            </Alert>
-                        </Snackbar>
                     </Box>
                 </Paper>
             </Box>
@@ -554,7 +604,6 @@ export default function Home() {
     return (
         <ThemeProvider theme={theme}>
             <Navbar/>
-            {/*<LocationAlert/>*/}
             {loadingState ? <div>Loading...</div> :
                 <HomePage user={userState} handleUserUpdate={handleUserUpdate} buttonLoadState={buttonLoadState}/>}
         </ThemeProvider>

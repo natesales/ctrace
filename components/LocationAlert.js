@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function LocationAlert() {
+export default function LocationAlert(props) {
     const classes = useStyles();
 
     return (
