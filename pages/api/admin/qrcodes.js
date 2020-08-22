@@ -16,7 +16,7 @@ export default async function handler(req, res) {
 
             for await (const location of Location.find()) {
                 const name = location.name;
-                const ref = process.env.BASE_URL + "code/" + location._id;
+                const ref = process.env.BASE_URL + "code?id=" + location._id;
                 const image = await QRCode.toDataURL(ref);
 
                 qrcodes.push({
