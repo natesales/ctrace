@@ -163,37 +163,6 @@ function HomePage(props) {
         if (userState !== props.user) {
         setUserState(props.user)
         setIsLoading(false);
-
-            setShownPlaces(
-                userState.locations.map(place => {
-                    let isEntered = false;
-                    let showButton = true;
-        
-                    if (userState.current_location != null) {
-                        showButton = false;
-                        if (place._id === userState.current_location._id) {
-                            isEntered = true;
-                            showButton = true;
-                        }
-                    }
-        
-                    const result = <LocationCard
-                        key={place._id}
-                        place={place}
-                        isEntered={isEntered}
-                        showButton={showButton}
-                        isDisplayed={true}
-                        handleLocationEnter={handleLocationEnter}
-                        handleLocationLeave={handleLocationLeave}
-                    />;
-        
-                    return (
-                        result
-                    )
-                })
-            )
-
-        
         }
     }
     });
@@ -233,9 +202,7 @@ function HomePage(props) {
             .then(response => response.json())
             .then(data => {handleResponseSnackbarOpen(data.success, data.message)})
             .then(props.handleUserUpdate)
-            .catch(error => handleResponseSnackbarClose(false, data.message));
-
-            // TODO: if (!response.success) { show fail dialog }
+            .catch(error => handleResponseSnackbarOpen(false, data.message));
     }
 
     // Calls /checkout when needed.
@@ -259,7 +226,7 @@ function HomePage(props) {
             .then(response => response.json())
             .then(data => handleResponseSnackbarOpen(data.success, data.message))
             .then(props.handleUserUpdate)
-            .catch(error => handleResponseSnackbarClose(false, data.message));
+            .catch(error => handleResponseSnackbarOpen(false, data.message));
 
         // TODO: if (!response.success) { show fail dialog }
     }
@@ -383,12 +350,38 @@ function HomePage(props) {
         }
     }, [pinnedPlaces])
 
-    const handlePinnedLocation = () => {
-        setEditPinnedLocations(prevState => {
-            return (
-                !prevState
-            )
-        })
+    async function handlePinnedLocation() {
+
+        if (editPinnedLocations) {
+            setEditPinnedLocations(prevState => {
+                return (
+                    !prevState
+                )
+            })
+
+            if (pinnedPlaces !== null) {
+                const pinned_locations = pinnedPlaces.map(place => {
+                    return (place.key)
+                })
+    
+                await fetch("/api/pin", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        "pinned_locations": pinned_locations,
+                    }),
+                }).then(response => response.json()).then(data => {handleResponseSnackbarOpen(data.success, data.message)}).catch(error => handleResponseSnackbarOpen(false, data.message))
+            }
+
+        } else {
+            setEditPinnedLocations(prevState => {
+                return (
+                    !prevState
+                )
+            })
+        }
+        
 
     }
 
@@ -432,7 +425,7 @@ function HomePage(props) {
                                                 showButton={place.showButton}
                                                 isDisplayed={place.isDisplayed}
                                                 handleLocationEnter={place.handleLocationEnter}
-                                                handleLocationLeave={place.callbackhandleLocationLeave}
+                                                handleLocationLeave={place.handleLocationLeave}
                                             />
                                         )
                                     })}
@@ -450,8 +443,8 @@ function HomePage(props) {
                                                 isEntered={place.isEntered}
                                                 showButton={place.showButton}
                                                 isDisplayed={place.isDisplayed}
-                                                handleLocationEnter={place.handleLocationEnter}
-                                                handleLocationLeave={place.callbackhandleLocationLeave}
+                                                handleLocationEnter={handleLocationEnter}
+                                                handleLocationLeave={place.handleLocationLeave}
                                             />
                                         )
                                     })}
@@ -496,7 +489,7 @@ function HomePage(props) {
                                                 showButton={place.showButton}
                                                 isDisplayed={place.isDisplayed}
                                                 handleLocationEnter={place.handleLocationEnter}
-                                                handleLocationLeave={place.callbackhandleLocationLeave}
+                                                handleLocationLeave={place.handleLocationLeave}
                                             />
                                         )
                                     })}
@@ -514,7 +507,7 @@ function HomePage(props) {
                                                 showButton={place.showButton}
                                                 isDisplayed={place.isDisplayed}
                                                 handleLocationEnter={place.handleLocationEnter}
-                                                handleLocationLeave={place.callbackhandleLocationLeave}
+                                                handleLocationLeave={place.handleLocationLeave}
                                             />
                                         )
                                     })}

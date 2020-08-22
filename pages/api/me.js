@@ -38,10 +38,11 @@ export default auth0.requireAuthentication(async function me(req, res) {
 
         if (person.pinned_locations.length > 0) {
             response.pinned_locations = [];
-            for (let i = 0; i < person.pinned_locations.length - 1; i++) {
-                pinnedLocation = await Location.findOne({_id: mongoose.Types.ObjectId(person.pinned_locations[i])})
+            await person.pinned_locations.forEach(async (location) => {
+                console.log(location)
+                const pinnedLocation = await Location.findOne({_id: mongoose.Types.ObjectId(location)})
                 response.pinned_locations.push(pinnedLocation)
-            }
+            })
         } else {
             response.pinned_locations = null;
         }
@@ -51,7 +52,7 @@ export default auth0.requireAuthentication(async function me(req, res) {
         // console.log(response, 'RESPONSE FROM ME');
         res.json(response);
     } catch (error) {
-        console.error(error);
+        // console.error(error);
         res.status(error.status || 500).end(error.message)
     }
 })
