@@ -15,29 +15,35 @@ const CodeHandler = () => {
                     window.location.href = "/api/login";
                 }
 
-                if (data["current_location"]["time_out"] === undefined) { // If checked in
-                    console.log("You are trying to check out from " + id)
-                    if (data["current_location"]["_id"] === id) {
-                        fetch("/api/checkin", {
-                            method: "POST",
-                            credentials: "include",
-                            headers: {"Content-Type": "application/json"},
-                            body: JSON.stringify({
-                                "location": id,
-                            })
-                        }).then(response => console.log(response))
-                    } else { // TODO: Display this on screen
-                        console.log("You are trying to check out from a location that you aren't checked into.")
-                    }
-                } else { // If not checked in
-                    fetch("/api/checkout", {
+                if (data["current_location"] === null) { // If not checked in
+                    console.log("Checking you into " + id)
+
+                    fetch("/api/checkin", {
                         method: "POST",
                         credentials: "include",
                         headers: {"Content-Type": "application/json"},
                         body: JSON.stringify({
                             "location": id,
                         })
-                    }).then(response => console.log(response))
+                    }).then(response => {
+                        console.log(response)
+                        window.location.href = "/home";
+                    })
+                } else { // If checked in
+                    if (data["current_location"]["_id"] === id) {
+                        console.log("Checking you out of " + id);
+
+                        fetch("/api/checkout", {
+                            method: "POST",
+                            credentials: "include",
+                            headers: {"Content-Type": "application/json"}
+                        }).then(response => {
+                            console.log(response)
+                            window.location.href = "/home";
+                        })
+                    } else {
+                        console.log("You aren't checked into this location!")
+                    }
                 }
             }
         });
@@ -45,7 +51,7 @@ const CodeHandler = () => {
 
     return (
         <div>
-            <p>Test</p>
+            <p>Loading...</p>
         </div>
     )
 }
