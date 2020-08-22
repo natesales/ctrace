@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
         top: "80px",
         borderRadius: "10px",
         [theme.breakpoints.down(864)]: {
-            maxHeight: "none",
+            maxHeight: "none !important",
         },
         [theme.breakpoints.down("xs")]: {
             top: "65px",
@@ -408,6 +408,18 @@ function HomePage(props) {
 
     }
 
+    const handlePinnedLocationDelete = (event) => {
+        const id = event.currentTarget.id
+
+        setPinnedPlaces(prevState => {
+                const newArray = prevState.filter((location) => {
+                    return location.key !== id
+                })
+                return (newArray)
+            })
+
+    }
+
     const handleResponseSnackbarClose = (event, reason) => {
         if (reason === "clickaway") {
             return;
@@ -438,6 +450,7 @@ function HomePage(props) {
                                     isEntered={true}
                                     showButton={true}
                                     isDisplayed={true}
+                                    canDelete={false}
                                     handleLocationEnter={handleLocationEnter}
                                     handleLocationLeave={handleLocationLeave}
                                 />
@@ -475,6 +488,8 @@ function HomePage(props) {
                                                             isEntered={place.isEntered}
                                                             showButton={place.showButton}
                                                             isDisplayed={place.isDisplayed}
+                                                            canDelete={true}
+                                                            handleDelete={handlePinnedLocationDelete}
                                                             handleLocationEnter={place.handleLocationEnter}
                                                             handleLocationLeave={place.handleLocationLeave}
                                                         />
@@ -494,6 +509,7 @@ function HomePage(props) {
                                                         isEntered={place.isEntered}
                                                         showButton={place.showButton}
                                                         isDisplayed={place.isDisplayed}
+                                                        canDelete={false}
                                                         handleLocationEnter={handleLocationEnter}
                                                         handleLocationLeave={place.handleLocationLeave}
                                                     />
@@ -539,6 +555,7 @@ function HomePage(props) {
                                                         isEntered={place.isEntered}
                                                         showButton={place.showButton}
                                                         isDisplayed={place.isDisplayed}
+                                                        canDelete={false}
                                                         handleLocationEnter={place.handleLocationEnter}
                                                         handleLocationLeave={place.handleLocationLeave}
                                                     />
@@ -557,6 +574,7 @@ function HomePage(props) {
                                                         isEntered={place.isEntered}
                                                         showButton={place.showButton}
                                                         isDisplayed={place.isDisplayed}
+                                                        canDelete={false}
                                                         handleLocationEnter={place.handleLocationEnter}
                                                         handleLocationLeave={place.handleLocationLeave}
                                                     />

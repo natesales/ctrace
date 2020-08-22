@@ -4,6 +4,7 @@ import {useRouter} from "next/router";
 
 const CodeHandler = () => {
     const router = useRouter();
+    console.log(router.query)
 
     useEffect(() => {
         fetchUser().then(data => {
