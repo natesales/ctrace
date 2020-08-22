@@ -557,7 +557,7 @@ export default function Home() {
     return (
         <ThemeProvider theme={theme}>
             <Navbar/>
-            <LocationAlert/>
+            {/*<LocationAlert/>*/}
             {loadingState ? <div>Loading...</div> :
                 <HomePage user={userState} handleUserUpdate={handleUserUpdate} buttonLoadState={buttonLoadState}/>}
         </ThemeProvider>
