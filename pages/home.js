@@ -150,6 +150,8 @@ function HomePage(props) {
     const [ searchState, setSearchState ] = useState("");
     const [ editPinnedLocations, setEditPinnedLocations ] = useState(false);
     const [ showFreePeriodSnackbar, setShowFreePeriodSnackbar ] = useState(true); //To be changed after testing.
+    const [ canAddPinnedLocation, setCanAddPinnedLocation ] = useState(true);
+    const [ pinnedPlacesLength, setPinnedPlacesLength ] = useState(0)
 
     const mounted = useRef(); // Used to update userState after re-fetching /me. Not perfect but react seems to only work well this way.
     useEffect(() => {
@@ -370,6 +372,17 @@ function HomePage(props) {
         }
     }
 
+    useEffect(() => {
+        if (pinnedPlaces != null) {
+            if (pinnedPlaces.length !== pinnedPlacesLength) {
+                setPinnedPlacesLength(pinnedPlaces.length)
+                setPinnedPlaces(prevState => {
+                    return (prevState.filter((v,i,a)=>prevState.findIndex(t=>(t.key === v.key))===i))
+                })
+            }
+        }
+    }, [pinnedPlaces])
+
     const handlePinnedLocation = () => {
         setEditPinnedLocations(prevState => {
             return (
@@ -408,11 +421,12 @@ function HomePage(props) {
                                         <Typography variant="h6" gutterBottom className={classes.columnTitleText}>
                                             Drag a location from the right to pin it.
                                         </Typography>                                    
-                                        <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: "shared"}} style={{minHeight: "100px", width: "100%"}}>
+                                        <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: "shared", put: canAddPinnedLocation}} style={{minHeight: "100px", width: "100%"}}>
                                             {pinnedPlaces.map(place => {
                                         return (
                                             <LocationCard
                                                 key={place.key}
+                                                id={place.key}
                                                 place={place.place}
                                                 isEntered={place.isEntered}
                                                 showButton={place.showButton}
@@ -431,6 +445,7 @@ function HomePage(props) {
                                         return (
                                             <LocationCard
                                                 key={place.key}
+                                                id={place.key}
                                                 place={place.place}
                                                 isEntered={place.isEntered}
                                                 showButton={place.showButton}
@@ -469,20 +484,13 @@ function HomePage(props) {
                             <Box className={classes.cardContainer} id="test"
                                  style={{margin: "0px 0px 10px 10px", maxHeight: "calc(410px - 58px - 10px)"}}>
                                 {editPinnedLocations ?
-                                    <ReactSortable list={shownPlaces} setList={setShownPlaces} group={{name: "shared", pull: "clone", put: false}} sort={false} onEnd={(event) => {
-                                        // for (let i = 0; i < pinnedPlaces.length; i++) {
-                                        //     if (pinnedPlaces[i].key === shownPlaces[event.oldIndex].key && i !== event.newIndex) {
-                                        //         console.log("ALREWADY HERE")
-                                        //         pinnedPlaces.splice(i, 1);
-                                        //         break;
-                                        //     }
-                                        // }
-
-                                    }}>
+                                    <ReactSortable list={shownPlaces} setList={setShownPlaces} group={{name: "shared", pull: "clone", put: false}} sort={false}>
                                         {shownPlaces.map(place => {
                                         return (
+
                                             <LocationCard
                                                 key={place.key}
+                                                id={place.key}
                                                 place={place.place}
                                                 isEntered={place.isEntered}
                                                 showButton={place.showButton}
@@ -500,6 +508,7 @@ function HomePage(props) {
                                         return (
                                             <LocationCard
                                                 key={place.key}
+                                                id={place.key}
                                                 place={place.place}
                                                 isEntered={place.isEntered}
                                                 showButton={place.showButton}

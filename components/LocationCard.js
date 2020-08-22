@@ -32,12 +32,8 @@ const useStyles = makeStyles((theme) => ({
 export default function LocationCard(props) {
     const classes = useStyles();
 
-    const test = () => {
-        console.log('funciton works')
-    }
-
     return (
-        <Paper className={classes.placePaper} style={{display: props.isDisplayed ? '' : 'none'}}>
+        <Paper className={classes.placePaper} style={{display: props.isDisplayed ? '' : 'none'}} id={props.id}>
             <Box className={classes.cardType}>
                 <Typography variant="h4" className={classes.locationName}>
                     {props.place.name}
