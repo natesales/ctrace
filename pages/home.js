@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
         width: "clamp(0px, 95%, 840px)",
         background: theme.palette.primary.light,
         color: "#fff",
-        maxHeight: "557px",
         position: "relative",
         top: "80px",
         borderRadius: "10px",
@@ -425,7 +424,7 @@ function HomePage(props) {
                 <LocationAlert/>
             </Box>
             }
-                <Paper className={classes.mainContainer} elevation={3} style={{marginTop: userState.current_location ? "0px" : "115px"}}>
+                <Paper className={classes.mainContainer} elevation={3} style={{marginTop: userState.current_location ? "0px" : "115px", maxHeight: userState.current_location ? "671px" : "557px"}}>
                     {userState.current_location ?   
                     <Box className={classes.currentLocationFlex}>
                         <Box className={classes.currentLocationTitleBox}>
