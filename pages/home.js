@@ -257,58 +257,39 @@ function HomePage(props) {
         window.location.href = "/api/login";
     }
 
+    function checkLocations() {
+        userState.locations.map(place => {
+            let isEntered = false;
+            let showButton = true;
+
+            if (userState.current_location != null) {
+                showButton = false;
+                if (place._id === userState.current_location._id) {
+                    isEntered = true;
+                    showButton = true;
+                }
+            }
+
+            return {
+                key: place._id,
+                place: place,
+                isEntered: isEntered,
+                showButton: showButton,
+                isDisplayed: true,
+                handleLocationEnter: handleLocationEnter,
+                handleLocationLeave: handleLocationLeave,
+            };
+        });
+    }
+
     // Sets the shown places and the pinned places assuming the /me route has been returned and the user is not null.
     useEffect(() => {
         setShownPlaces(
-            userState.locations.map(place => {
-                let isEntered = false;
-                let showButton = true;
-
-                if (userState.current_location != null) {
-                    showButton = false;
-                    if (place._id === userState.current_location._id) {
-                        isEntered = true;
-                        showButton = true;
-                    }
-                }
-
-                return {
-                    key: place._id,
-                    place: place,
-                    isEntered: isEntered,
-                    showButton: showButton,
-                    isDisplayed: true,
-                    handleLocationEnter: handleLocationEnter,
-                    handleLocationLeave: handleLocationLeave,
-                };
-            }));
+            checkLocations()
+        );
 
         setPinnedPlaces(
-            userState.pinned_locations !== null ?
-                userState.pinned_locations.map(place => {
-                    let isEntered = false;
-                    let showButton = true;
-
-                    if (userState.current_location != null) {
-                        showButton = false;
-                        if (place._id === userState.current_location._id) {
-                            isEntered = true;
-                            showButton = true;
-                        }
-                    }
-
-                    return {
-                        key: place._id,
-                        place: place,
-                        isEntered: isEntered,
-                        showButton: showButton,
-                        isDisplayed: true,
-                        handleLocationEnter: handleLocationEnter,
-                        handleLocationLeave: handleLocationLeave,
-                    };
-                })
-                :
-                []
+            userState.pinned_locations !== null ? checkLocations() : []
         )
     }, [userState])
 
