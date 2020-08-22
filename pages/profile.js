@@ -1,6 +1,6 @@
 //This page is for testing auth connections. We can delete this when we have integrated it into the main page.
 
-import {useFetchUser} from "../lib/user"
+import {useFetchUser} from "../lib/user";
 import {useEffect} from "react";
 
 function ProfileCard({user}) {

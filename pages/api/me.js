@@ -1,4 +1,4 @@
-import auth0 from '../../lib/auth0'
+import auth0 from "../../lib/auth0";
 import dbConnect from "../../utils/dbConnect";
 import Person from "../../models/Person";
 import Location from "../../models/Location"
@@ -21,11 +21,9 @@ export default auth0.requireAuthentication(async function me(req, res) {
             });
 
             newPerson.save((error) => {
-
                 if (error) {
                     res.status(500).end(error.message)
                 }
-
             });
         }
 
@@ -40,10 +38,7 @@ export default auth0.requireAuthentication(async function me(req, res) {
             response.pinned_locations = [];          
 
             response.pinned_locations = await Promise.all(person.pinned_locations.map(async (location) => {
-                const pinnedLocation = await Location.findOne({_id: mongoose.Types.ObjectId(location)})
-                return (
-                    pinnedLocation
-                )
+                return await Location.findOne({_id: mongoose.Types.ObjectId(location)});
             }))
         } else {
             response.pinned_locations = null;
@@ -55,6 +50,6 @@ export default auth0.requireAuthentication(async function me(req, res) {
         res.json(response);
     } catch (error) {
         // console.error(error);
-        res.status(error.status || 500).end(error.message)
+        res.status(error.status || 500).end(error.message);
     }
 })

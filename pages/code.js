@@ -1,18 +1,18 @@
-import {fetchUser} from "../lib/user";
-import {useEffect} from "react";
-import {useRouter} from "next/router";
+import {fetchUser} from "../lib/user"
+import {useEffect} from "react"
+import {useRouter} from "next/router"
 
 const CodeHandler = () => {
-    const router = useRouter();
+    const router = useRouter()
     console.log(router.query)
 
     useEffect(() => {
         fetchUser().then(data => {
-            const id = router.query.id;
+            const id = router.query.id
 
             if (id !== undefined) {
                 if (data === null) {
-                    window.location.href = "/api/login?redirectTo=/code?id=" + id;
+                    window.location.href = "/api/login?redirectTo=/code?id=" + id
                 }
 
                 if (data["current_location"] === null) { // If not checked in
@@ -31,7 +31,7 @@ const CodeHandler = () => {
                     })
                 } else { // If checked in
                     if (data["current_location"]["_id"] === id) {
-                        console.log("Checking you out of " + id);
+                        console.log("Checking you out of " + id)
 
                         fetch("/api/checkout", {
                             method: "POST",
