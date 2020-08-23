@@ -10,6 +10,11 @@ const LocationSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    log: {
+        type: Array,
+        required: false,
+        default: []
+    },
     current_occupancy: {
         type: Number,
         default: 0
