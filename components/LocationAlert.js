@@ -34,9 +34,9 @@ export default function LocationAlert(props) {
                     <Typography variant="h6" className={classes.alertTitle}>
                         You need to choose a location!
                     </Typography>
-                    <Typography variant="h6" className={classes.alertTime}>
-                        Current Free Period: 10:30 - 11:15
-                    </Typography>
+                    {/*<Typography variant="h6" className={classes.alertTime}>*/}
+                    {/*    Current Free Period: 10:30 - 11:15*/}
+                    {/*</Typography>*/}
                     <Typography variant="h6" className={classes.alertInfo}>
                         Select a location to make this notification disappear.
                     </Typography>

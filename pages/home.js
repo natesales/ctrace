@@ -291,7 +291,7 @@ function HomePage(props) {
         setPinnedPlaces(
             userState.pinned_locations !== null ? checkLocations() : []
         )
-    }, [userState])
+    }, [userState]);
 
     // Handles searching. Replaces each list, and breaks the page if you edit the pinned locations while searching.
     function handleSearch(event) {
