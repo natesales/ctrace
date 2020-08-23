@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     },
     cardFlex: {
         flex: "1 1 410px",
-        maxHeight: "100%",
+        maxHeight: "500px !important",
         borderRadius: "10px",
         background: theme.palette.primary.light,
         [theme.breakpoints.down(864)]: {
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     cardContainer: {
-        maxHeight: "430px !important",
+        maxHeight: "495px",
         [theme.breakpoints.down(864)]: {
             maxHeight: "none !important", //TODO: Decide if this is a good idea.
             marginBottom: "0px",
@@ -58,15 +58,15 @@ const useStyles = makeStyles((theme) => ({
             width: "5px",
         },
         "&::-webkit-scrollbar-track": {
-            background: "#636363",
+            background: theme.palette.primary.light,
         },
         "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "#fff",
+            backgroundColor: theme.palette.secondary.light,
             borderRadius: "20px",
         },
         scrollbarWidth: "thin",
         overflowX: "hidden",
-        scrollbarColor: "#fff #636363"
+        scrollbarColor: theme.palette.secondary.light + theme.palette.primary.light,
     },
     columnTitleBox: {
         display: "flex",
@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: theme.shape.borderRadius,
         backgroundColor: theme.palette.secondary.main,
         "&:hover": {
-            backgroundColor: "#9B9B9B",
+            opacity: '0.6'
         },
         width: "100%",
         height: "80%",
@@ -251,13 +251,8 @@ function HomePage(props) {
         // TODO: if (!response.success) { show fail dialog }
     }
 
-    // Redirects you to login if the user doesn't exist yet.
-    // TODO: See whether this is a good idea, as the user could maybe (?) return null for not login-related reasons.
-    if (userState == null) {
-        window.location.href = "/api/login";
-    }
-
     function checkLocations() {
+        return (
         userState.locations.map(place => {
             let isEntered = false;
             let showButton = true;
@@ -279,7 +274,8 @@ function HomePage(props) {
                 handleLocationEnter: handleLocationEnter,
                 handleLocationLeave: handleLocationLeave,
             };
-        });
+        })
+        )
     }
 
     // Sets the shown places and the pinned places assuming the /me route has been returned and the user is not null.
@@ -436,7 +432,7 @@ function HomePage(props) {
                             </Box>
 
                             {props.buttonLoadState ? null :
-                                <Box className={classes.cardContainer} style={{margin: "0px 0px 10px 10px"}}>
+                                <Box className={classes.cardContainer} style={{margin: "0px 0px 10px 10px", height: "490px !important"}}>
                                     {editPinnedLocations ?
                                         <React.Fragment>
                                             <Typography variant="h6" gutterBottom className={classes.columnTitleText}>
@@ -505,8 +501,8 @@ function HomePage(props) {
                                 </div>
                             </Box>
                             {props.buttonLoadState ? null :
-                                <Box className={classes.cardContainer} id="test"
-                                     style={{margin: "0px 0px 10px 10px", maxHeight: "calc(410px - 58px - 10px)"}}>
+                                <Box className={classes.cardContainer}
+                                    style={{margin: "0px 0px 10px 10px", maxHeight: "calc(495px - 58px - 10px)"}}>
                                     {editPinnedLocations ?
                                         <ReactSortable list={shownPlaces} setList={setShownPlaces} group={{name: "shared", pull: "clone", put: false}} sort={false}>
                                             {shownPlaces.map(place => {
@@ -569,6 +565,9 @@ export default function Home() {
 
     useEffect(() => {
         fetchUser().then(data => {
+            if (data === null) {
+                window.location.href = "/api/login?redirectTo=/home"
+            }
             setUserState(data)
         }).then(() => {
             setLoadingState(false);
@@ -585,7 +584,7 @@ export default function Home() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Navbar/>
+            {loadingState ? null : <Navbar user={userState} />}
             {loadingState ? <div>Loading...</div> :
                 <HomePage user={userState} handleUserUpdate={handleUserUpdate} buttonLoadState={buttonLoadState}/>}
         </ThemeProvider>

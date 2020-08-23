@@ -11,15 +11,17 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'space-between',
         marginBottom: '7px',
         marginRight: '5px',
+        background: theme.palette.secondary.light,
     },
     locationName: {
         fontSize: '17px',
         margin: '10px 0px 5px, 10px',
-        color: 'rgb(0, 0, 0, .87)',
+        color: theme.palette.secondary.contrastText,
+        opacity: ".87",
     },
     locationPopulation: {
         fontSize: '12px',
-        color: theme.palette.secondary.dark,
+        color: theme.palette.secondary.contrastText,
         opacity: '.87',
     },
     cardType: {
@@ -27,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
     },
     actionButton: {
         margin: '8px',
+        color: theme.palette.secondary.contrastText,
     },
     trashButton: {
         marginRight: "5px",
