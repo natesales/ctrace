@@ -12,6 +12,7 @@ import {fetchUser} from "../lib/user";
 import {ReactSortable} from "react-sortablejs";
 import theme from "@components/MainTheme";
 import LocationAlert from "@components/LocationAlert";
+import Fuse from 'fuse.js'
 
 // Styles for use on the page.
 const useStyles = makeStyles((theme) => ({
@@ -292,11 +293,11 @@ function HomePage(props) {
     // Handles searching. Replaces each list, and breaks the page if you edit the pinned locations while searching.
     function handleSearch(event) {
         setSearchState(event.target.value);
-        let search_string = event.target.value.toUpperCase();
 
-        for (let i = 0; i < shownPlaces.length; i++) {
-            const place_name = shownPlaces[i].place.name;
-            if (place_name.toUpperCase().indexOf(search_string) > -1) {
+        let search_string = event.target.value;
+
+        if (search_string === "") {
+            shownPlaces.forEach((shownPlace, i) => {
                 setShownPlaces(prevState => {
                     let newState = prevState;
                     newState[i] = {
@@ -310,7 +311,32 @@ function HomePage(props) {
                     }
                     return newState;
                 })
-            } else {
+            })
+        }
+        else {
+            let placeNames = shownPlaces.map(shownPlace => {
+                return shownPlace.place.name
+            })
+    
+            const options = {
+                includeScore: true
+            }
+            
+            const fuse = new Fuse(placeNames, options)
+            
+            const searchResults = fuse.search(search_string)
+    
+            shownPlaces.forEach((shownPlace, i) => {
+                let contains = false
+    
+                const place_name = shownPlace.place.name;
+    
+                searchResults.forEach(result => {
+                    if (result.item === place_name) {
+                        contains = true
+                    }
+                })
+                
                 setShownPlaces(prevState => {
                     let newState = prevState;
                     newState[i] = {
@@ -318,13 +344,13 @@ function HomePage(props) {
                         place: newState[i].place,
                         isEntered: newState[i].isEntered,
                         showButton: newState[i].showButton,
-                        isDisplayed: false,
+                        isDisplayed: contains,
                         handleLocationEnter: newState[i].handleLocationEnter,
                         handleLocationLeave: newState[i].handleLocationLeave,
                     }
                     return newState;
                 })
-            }
+            })   
         }
     }
 
