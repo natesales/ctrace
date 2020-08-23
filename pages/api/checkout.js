@@ -29,8 +29,10 @@ export default auth0.requireAuthentication(async function handler(req, res) {
                 doc.markModified('log');
                 await doc.save();
             }).then(async () => {
-                const location_name = await Location.findOne({_id: person.log[person.log.length - 1].location});
-                res.status(200).json({success: true, message: "Checked out of '" + location_name["name"] + "'"})
+                const location = await Location.findOne({_id: person.log[person.log.length - 1].location});
+                location.current_occupancy -= 1;
+                await location.save();
+                res.status(200).json({success: true, message: "Checked out of '" + location.name + "'"})
             })
 
             break;

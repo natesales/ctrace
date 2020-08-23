@@ -29,6 +29,9 @@ export default auth0.requireAuthentication(async function handler(req, res) {
                 return res.status(400).json({success: false, message: "Location doesn't exist"});
             }
 
+            location.current_occupancy += 1;
+            await location.save();
+
             // Push the new checkin
             const updated_person = await Person.update({uid: user.nickname}, {
                 $push: {
