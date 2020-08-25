@@ -249,41 +249,70 @@ function HomePage(props) {
             );
     }
 
-    function checkLocations() {
-        return (
-            userState.locations.map(place => {
-                let isEntered = false;
-                let showButton = true;
-
-                if (userState.current_location != null) {
-                    showButton = false;
-                    if (place._id === userState.current_location._id) {
-                        isEntered = true;
-                        showButton = true;
+    function checkLocations(state_ref) {
+        if (state_ref === "userState") {
+            return (
+                userState.locations.map(place => {
+                    let isEntered = false;
+                    let showButton = true;
+    
+                    if (userState.current_location != null) {
+                        showButton = false;
+                        if (place._id === userState.current_location._id) {
+                            isEntered = true;
+                            showButton = true;
+                        }
                     }
-                }
-
-                return {
-                    key: place._id,
-                    place: place,
-                    isEntered: isEntered,
-                    showButton: showButton,
-                    isDisplayed: true,
-                    handleLocationEnter: handleLocationEnter,
-                    handleLocationLeave: handleLocationLeave,
-                };
-            })
-        )
+    
+                    return {
+                        key: place._id,
+                        place: place,
+                        isEntered: isEntered,
+                        showButton: showButton,
+                        isDisplayed: true,
+                        handleLocationEnter: handleLocationEnter,
+                        handleLocationLeave: handleLocationLeave,
+                    };
+                })
+            )
+        } else if (state_ref === "pinnedPlaces") {
+            return (
+                userState.pinned_locations.map(place => {
+                    let isEntered = false;
+                    let showButton = true;
+    
+                    if (userState.current_location != null) {
+                        showButton = false;
+                        if (place._id === userState.current_location._id) {
+                            isEntered = true;
+                            showButton = true;
+                        }
+                    }
+    
+                    return {
+                        key: place._id,
+                        place: place,
+                        isEntered: isEntered,
+                        showButton: showButton,
+                        isDisplayed: true,
+                        handleLocationEnter: handleLocationEnter,
+                        handleLocationLeave: handleLocationLeave,
+                    };
+                })
+            )
+        }
+        
+        
     }
 
     // Sets the shown places and the pinned places assuming the /me route has been returned and the user is not null.
     useEffect(() => {
         setShownPlaces(
-            checkLocations()
+            checkLocations("userState")
         );
 
         setPinnedPlaces(
-            userState.pinned_locations !== null ? checkLocations() : []
+            userState.pinned_locations !== null ? checkLocations("pinnedPlaces") : []
         )
     }, [userState]);
 
@@ -333,17 +362,50 @@ function HomePage(props) {
                 setPinnedPlaces(prevState => {
                     return (prevState.filter((v, i) => prevState.findIndex(t => (t.key === v.key)) === i))
                 })
+                if (editPinnedLocations) {
+                    handlePinnedLocation(false)
+                }
             }
         }
     }, [pinnedPlaces]);
 
-    async function handlePinnedLocation() {
+    async function handlePinnedLocation(changeEdit) {
 
-        if (editPinnedLocations) {
-            setEditPinnedLocations(prevState => {
-                return !prevState;
-            });
+        // console.log(pinnedPlaces)
 
+        if (changeEdit) {
+            if (editPinnedLocations) {
+                setEditPinnedLocations(prevState => {
+                    return !prevState;
+                });
+    
+                if (pinnedPlaces !== null) {
+                    const pinned_locations = pinnedPlaces.map(place => {
+                        return place.key;
+                    });
+    
+                    await fetch("/api/pin", {
+                        method: "POST",
+                        credentials: "include",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify({
+                            "pinned_locations": pinned_locations,
+                        }),
+                    }).then(response => response.json()).then(data => {
+                        handleResponseSnackbarOpen(data.success, data.message)
+                    }).catch(error => {
+                        handleResponseSnackbarOpen(false, data.message);
+                        console.log(error);
+                    });
+                }
+    
+            } else {
+                setEditPinnedLocations(prevState => {
+                    return !prevState;
+                });
+            }
+        } else {
+            
             if (pinnedPlaces !== null) {
                 const pinned_locations = pinnedPlaces.map(place => {
                     return place.key;
@@ -363,12 +425,9 @@ function HomePage(props) {
                     console.log(error);
                 });
             }
-
-        } else {
-            setEditPinnedLocations(prevState => {
-                return !prevState;
-            });
         }
+
+        
     }
 
     const handlePinnedLocationDelete = (event) => {
@@ -379,6 +438,8 @@ function HomePage(props) {
                 return location.key !== id;
             });
         });
+
+        handlePinnedLocation(false);
     }
 
     const handleResponseSnackbarClose = (event, reason) => {
@@ -425,19 +486,19 @@ function HomePage(props) {
                                 <Typography variant="h6" className={classes.columnTitleText}>
                                     Pinned Locations
                                 </Typography>
-                                <IconButton aria-label="add a pinned location" className={classes.addPinnedButton} onClick={handlePinnedLocation}>
+                                <IconButton aria-label="add a pinned location" className={classes.addPinnedButton} onClick={() => {handlePinnedLocation(true)}}>
                                     {editPinnedLocations ? <CloseIcon/> : <AddIcon/>}
                                 </IconButton>
                             </Box>
-
-                            {props.buttonLoadState ? null :
                                 <Box className={classes.cardContainer} style={{margin: "0px 0px 10px 10px", height: "490px !important"}}>
                                     {editPinnedLocations ?
                                         <React.Fragment>
                                             <Typography variant="h6" gutterBottom className={classes.columnTitleText}>
                                                 Drag a location from the right to pin it.
                                             </Typography>
-                                            <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: "shared"}} style={{minHeight: "100px", width: "100%"}}>
+                                            <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: "shared"}} style={{minHeight: "100px", width: "100%"}} onAdd={() => {
+                                                handlePinnedLocation(false)
+                                            }}>
                                                 {pinnedPlaces.map(place => {
                                                     return (
                                                         <LocationCard
@@ -474,7 +535,7 @@ function HomePage(props) {
                                                     />
                                                 )
                                             })}
-                                </Box>}
+                                </Box>
                         </Box>
                         <Box className={classes.cardFlex}>
                             <Box className={classes.columnTitleBox} style={{height: "28px"}}>
@@ -499,47 +560,46 @@ function HomePage(props) {
                                     />
                                 </div>
                             </Box>
-                            {props.buttonLoadState ? null :
-                                <Box className={classes.cardContainer}
-                                     style={{margin: "0px 0px 10px 10px", maxHeight: "calc(495px - 58px - 10px)"}}>
-                                    {editPinnedLocations ?
-                                        <ReactSortable list={shownPlaces} setList={setShownPlaces} group={{name: "shared", pull: "clone", put: false}} sort={false}>
-                                            {shownPlaces.map(place => {
-                                                return (
+                            <Box className={classes.cardContainer}
+                                    style={{margin: "0px 0px 10px 10px", maxHeight: "calc(495px - 58px - 10px)"}}>
+                                {editPinnedLocations ?
+                                    <ReactSortable list={shownPlaces} setList={setShownPlaces} group={{name: "shared", pull: "clone", put: false}} sort={false}>
+                                        {shownPlaces.map(place => {
+                                            return (
 
-                                                    <LocationCard
-                                                        key={place.key}
-                                                        id={place.key}
-                                                        place={place.place}
-                                                        isEntered={place.isEntered}
-                                                        showButton={place.showButton}
-                                                        isDisplayed={place.isDisplayed}
-                                                        canDelete={false}
-                                                        handleLocationEnter={place.handleLocationEnter}
-                                                        handleLocationLeave={place.handleLocationLeave}
-                                                    />
-                                                )
-                                            })}
-                                        </ReactSortable>
-                                        :
+                                                <LocationCard
+                                                    key={place.key}
+                                                    id={place.key}
+                                                    place={place.place}
+                                                    isEntered={place.isEntered}
+                                                    showButton={place.showButton}
+                                                    isDisplayed={place.isDisplayed}
+                                                    canDelete={false}
+                                                    handleLocationEnter={place.handleLocationEnter}
+                                                    handleLocationLeave={place.handleLocationLeave}
+                                                />
+                                            )
+                                        })}
+                                    </ReactSortable>
+                                    :
 
-                                        shownPlaces == null ? null :
-                                            shownPlaces.map(place => {
-                                                return (
-                                                    <LocationCard
-                                                        key={place.key}
-                                                        id={place.key}
-                                                        place={place.place}
-                                                        isEntered={place.isEntered}
-                                                        showButton={place.showButton}
-                                                        isDisplayed={place.isDisplayed}
-                                                        canDelete={false}
-                                                        handleLocationEnter={place.handleLocationEnter}
-                                                        handleLocationLeave={place.handleLocationLeave}
-                                                    />
-                                                )
-                                            })}
-                                </Box>}
+                                    shownPlaces == null ? null :
+                                        shownPlaces.map(place => {
+                                            return (
+                                                <LocationCard
+                                                    key={place.key}
+                                                    id={place.key}
+                                                    place={place.place}
+                                                    isEntered={place.isEntered}
+                                                    showButton={place.showButton}
+                                                    isDisplayed={place.isDisplayed}
+                                                    canDelete={false}
+                                                    handleLocationEnter={place.handleLocationEnter}
+                                                    handleLocationLeave={place.handleLocationLeave}
+                                                />
+                                            )
+                                        })}
+                            </Box>
 
                             <Snackbar open={showResponseSnackbar} autoHideDuration={6000} onClose={handleResponseSnackbarClose}>
                                 <Alert onClose={handleResponseSnackbarClose} severity={responseSnackbarType}>
