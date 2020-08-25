@@ -1,9 +1,15 @@
 import "../styles/globals.css";
 import React from "react";
+import Head from "next/head"
 
 function MyApp({ Component, pageProps }) {
   return (
-        <Component {...pageProps} />
+    <>
+      <Head>
+        <title>cTrace</title>
+      </Head>
+      <Component {...pageProps} />
+    </>
   )
 }
 

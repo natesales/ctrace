@@ -2,7 +2,6 @@ import React, {useEffect, useRef, useState} from "react";
 import {Box, IconButton, InputBase, Paper, Snackbar, Typography} from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import {makeStyles, ThemeProvider} from "@material-ui/core/styles";
-import {SpeedDial, SpeedDialAction, SpeedDialIcon} from "@material-ui/lab/";
 import Navbar from "@components/Navbar";
 import LocationCard from "@components/LocationCard";
 import AddIcon from "@material-ui/icons/Add";

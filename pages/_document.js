@@ -35,7 +35,6 @@ class MyDocument extends Document {
               }
             `}
                     </style>
-                    <title>cTrace</title>
                 </Head>
                 <body>
                 <Main />

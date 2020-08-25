@@ -1,9 +1,6 @@
 import {AppBar, IconButton, Paper, Toolbar, Typography, Avatar} from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
-import CropFreeIcon from "@material-ui/icons/CropFree";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import Box from "@material-ui/core/Box";
 import React from "react";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import {makeStyles} from "@material-ui/core/styles";
 import {createMuiTheme, ThemeProvider} from '@material-ui/core/styles';
 import theme from '@components/MainTheme'
@@ -11,6 +8,7 @@ import theme from '@components/MainTheme'
 const useStyles = makeStyles((theme) => ({
     menuButton: {
         marginRight: theme.spacing(2),
+        transform: 'rotate(180deg)'
     },
     title: {
         margin: 'auto',
@@ -31,8 +29,8 @@ function Nav(props) {
     return (
         <AppBar position="fixed" className={classes.appBar}>
             <Toolbar>
-                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                    <MenuIcon/>
+                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" href="/api/logout?returnTo=/">
+                    <ExitToAppIcon />
                 </IconButton>
                 <Typography variant="h6" className={classes.title}>
                     cTrace
