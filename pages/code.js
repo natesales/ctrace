@@ -1,6 +1,6 @@
-import {fetchUser} from "../lib/user"
-import {useEffect} from "react"
-import {useRouter} from "next/router"
+import {fetchUser} from "../lib/user";
+import {useEffect} from "react";
+import {useRouter} from "next/router";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
 

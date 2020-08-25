@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Box, Button, IconButton, Paper, Typography} from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
