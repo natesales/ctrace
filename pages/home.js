@@ -362,7 +362,9 @@ function HomePage(props) {
                 setPinnedPlaces(prevState => {
                     return (prevState.filter((v, i) => prevState.findIndex(t => (t.key === v.key)) === i))
                 })
-                handlePinnedLocation(false)
+                if (editPinnedLocations) {
+                    handlePinnedLocation(false)
+                }
             }
         }
     }, [pinnedPlaces]);
