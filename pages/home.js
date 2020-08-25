@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     cardContainer: {
         maxHeight: "495px",
         [theme.breakpoints.down(864)]: {
-            maxHeight: "none !important", //TODO: Decide if this is a good idea.
+            maxHeight: "none !important",
             marginBottom: "0px",
         },
         overflow: "scroll",
@@ -161,14 +161,11 @@ function HomePage(props) {
     const [userState, setUserState] = useState(props.user);
     const [shownPlaces, setShownPlaces] = useState(null);
     const [pinnedPlaces, setPinnedPlaces] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
     const [showResponseSnackbar, setShowResponseSnackbar] = useState(false);
     const [responseSnackbarBody, setResponseSnackbarBody] = useState("");
     const [responseSnackbarType, setResponseSnackbarType] = useState("");
     const [searchState, setSearchState] = useState("");
     const [editPinnedLocations, setEditPinnedLocations] = useState(false);
-    const [showFreePeriodSnackbar, setShowFreePeriodSnackbar] = useState(true); //To be changed after testing.
-    const [canAddPinnedLocation, setCanAddPinnedLocation] = useState(true);
     const [pinnedPlacesLength, setPinnedPlacesLength] = useState(0);
 
     const mounted = useRef(); // Used to update userState after re-fetching /me. Not perfect but react seems to only work well this way.
@@ -180,7 +177,6 @@ function HomePage(props) {
             // Just after the component has updated.
             if (userState !== props.user) {
                 setUserState(props.user)
-                setIsLoading(false);
             }
         }
     });
@@ -201,7 +197,6 @@ function HomePage(props) {
 
     // Calls /checkin when needed.
     const handleLocationEnter = (event) => {
-        setIsLoading(true);
         let locationId;
         if (event.target.parentElement.id !== "") {
             locationId = event.target.parentElement.id;
@@ -222,12 +217,14 @@ function HomePage(props) {
                 handleResponseSnackbarOpen(data.success, data.message);
             })
             .then(props.handleUserUpdate)
-            .catch(error => handleResponseSnackbarOpen(false, data.message));
+            .catch(error => {
+                handleResponseSnackbarOpen(false, data.message);
+                console.log(error);
+            });
     }
 
     // Calls /checkout when needed.
     const handleLocationLeave = (event) => {
-        setIsLoading(true);
         let locationId;
         if (event.target.parentElement.id !== "") {
             locationId = event.target.parentElement.id;
@@ -246,35 +243,37 @@ function HomePage(props) {
             .then(response => response.json())
             .then(data => handleResponseSnackbarOpen(data.success, data.message))
             .then(props.handleUserUpdate)
-            .catch(error => handleResponseSnackbarOpen(false, data.message));
-
-        // TODO: if (!response.success) { show fail dialog }
+            .catch(error => {
+                    handleResponseSnackbarOpen(false, data.message)
+                    console.log(error);
+                }
+            );
     }
 
     function checkLocations() {
         return (
-        userState.locations.map(place => {
-            let isEntered = false;
-            let showButton = true;
+            userState.locations.map(place => {
+                let isEntered = false;
+                let showButton = true;
 
-            if (userState.current_location != null) {
-                showButton = false;
-                if (place._id === userState.current_location._id) {
-                    isEntered = true;
-                    showButton = true;
+                if (userState.current_location != null) {
+                    showButton = false;
+                    if (place._id === userState.current_location._id) {
+                        isEntered = true;
+                        showButton = true;
+                    }
                 }
-            }
 
-            return {
-                key: place._id,
-                place: place,
-                isEntered: isEntered,
-                showButton: showButton,
-                isDisplayed: true,
-                handleLocationEnter: handleLocationEnter,
-                handleLocationLeave: handleLocationLeave,
-            };
-        })
+                return {
+                    key: place._id,
+                    place: place,
+                    isEntered: isEntered,
+                    showButton: showButton,
+                    isDisplayed: true,
+                    handleLocationEnter: handleLocationEnter,
+                    handleLocationLeave: handleLocationLeave,
+                };
+            })
         )
     }
 
@@ -333,7 +332,7 @@ function HomePage(props) {
             if (pinnedPlaces.length !== pinnedPlacesLength) {
                 setPinnedPlacesLength(pinnedPlaces.length)
                 setPinnedPlaces(prevState => {
-                    return (prevState.filter((v, i, a) => prevState.findIndex(t => (t.key === v.key)) === i))
+                    return (prevState.filter((v, i) => prevState.findIndex(t => (t.key === v.key)) === i))
                 })
             }
         }
@@ -360,7 +359,10 @@ function HomePage(props) {
                     }),
                 }).then(response => response.json()).then(data => {
                     handleResponseSnackbarOpen(data.success, data.message)
-                }).catch(error => handleResponseSnackbarOpen(false, data.message)) // TODO: Should this be error.message?
+                }).catch(error => {
+                    handleResponseSnackbarOpen(false, data.message);
+                    console.log(error);
+                });
             }
 
         } else {
@@ -414,9 +416,7 @@ function HomePage(props) {
                                         handleLocationEnter={handleLocationEnter}
                                         handleLocationLeave={handleLocationLeave}
                                     />
-
                                 </Box>
-
                             </Box>
                         </Box> : null}
 
@@ -438,7 +438,7 @@ function HomePage(props) {
                                             <Typography variant="h6" gutterBottom className={classes.columnTitleText}>
                                                 Drag a location from the right to pin it.
                                             </Typography>
-                                            <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: "shared", put: canAddPinnedLocation}} style={{minHeight: "100px", width: "100%"}}>
+                                            <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: "shared"}} style={{minHeight: "100px", width: "100%"}}>
                                                 {pinnedPlaces.map(place => {
                                                     return (
                                                         <LocationCard
@@ -502,7 +502,7 @@ function HomePage(props) {
                             </Box>
                             {props.buttonLoadState ? null :
                                 <Box className={classes.cardContainer}
-                                    style={{margin: "0px 0px 10px 10px", maxHeight: "calc(495px - 58px - 10px)"}}>
+                                     style={{margin: "0px 0px 10px 10px", maxHeight: "calc(495px - 58px - 10px)"}}>
                                     {editPinnedLocations ?
                                         <ReactSortable list={shownPlaces} setList={setShownPlaces} group={{name: "shared", pull: "clone", put: false}} sort={false}>
                                             {shownPlaces.map(place => {
@@ -556,12 +556,8 @@ function HomePage(props) {
 }
 
 export default function Home() {
-    const classes = useStyles();
-
     const [userState, setUserState] = useState(null);
     const [loadingState, setLoadingState] = useState(true);
-    const [buttonLoadState, setButtonLoadState] = useState(false);
-
 
     useEffect(() => {
         fetchUser().then(data => {
@@ -584,9 +580,9 @@ export default function Home() {
 
     return (
         <ThemeProvider theme={theme}>
-            {loadingState ? null : <Navbar user={userState} />}
+            {loadingState ? null : <Navbar user={userState}/>}
             {loadingState ? <div>Loading...</div> :
-                <HomePage user={userState} handleUserUpdate={handleUserUpdate} buttonLoadState={buttonLoadState}/>}
+                <HomePage user={userState} handleUserUpdate={handleUserUpdate}/>}
         </ThemeProvider>
     )
 }

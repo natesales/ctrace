@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {makeStyles} from "@material-ui/core/styles";
-import { Snackbar, Paper, Typography, Box } from "@material-ui/core";
+import { Snackbar, Typography, Box } from "@material-ui/core";
 
+// TODO: Keeping theme for future
 const useStyles = makeStyles((theme) => ({
     alertContainer: {
         marginTop: '56px',
@@ -19,8 +20,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
-export default function LocationAlert(props) {
+export default function LocationAlert() {
     const classes = useStyles();
 
     return (
