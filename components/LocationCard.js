@@ -1,6 +1,6 @@
 import React from 'react';
 import {makeStyles} from "@material-ui/core/styles";
-import {Box, Button, Paper, Typography, IconButton} from '@material-ui/core';
+import {Box, Button, IconButton, Paper, Typography} from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles((theme) => ({
@@ -46,7 +46,11 @@ export default function LocationCard(props) {
                     {props.place.name}
                 </Typography>
                 <Typography variant="h6" className={classes.locationPopulation}>
-                    Currently: {props.place.current_occupancy} people
+                    {
+                        (props.place.current_occupancy === 1)
+                            ? <div>Currently: {props.place.current_occupancy} person</div>
+                            : <div>Currently: {props.place.current_occupancy} people</div>
+                    }
                 </Typography>
             </Box>
 
@@ -63,10 +67,10 @@ export default function LocationCard(props) {
                 null
             }
 
-            {props.canDelete ? 
-            <IconButton className={classes.trashButton} onClick={props.handleDelete} id={props.place._id}>
-                <DeleteIcon />
-            </IconButton> : null}
+            {props.canDelete ?
+                <IconButton className={classes.trashButton} onClick={props.handleDelete} id={props.place._id}>
+                    <DeleteIcon/>
+                </IconButton> : null}
         </Paper>
     )
 }
