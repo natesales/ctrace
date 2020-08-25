@@ -1,7 +1,7 @@
 import auth0 from "../../lib/auth0";
 import dbConnect from "../../utils/dbConnect";
 import Person from "../../models/Person";
-import Location from "../../models/Location"
+import Location from "../../models/Location";
 import mongoose from "mongoose";
 
 export default auth0.requireAuthentication(async function me(req, res) {
@@ -16,6 +16,7 @@ export default auth0.requireAuthentication(async function me(req, res) {
         if (person === null) {
             const newPerson = new Person({
                 _id: new mongoose.Types.ObjectId(),
+                createdAt: new Date(),
                 uid: user.nickname,
                 name: user.name
             });

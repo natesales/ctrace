@@ -8,8 +8,6 @@ const PersonSchema = new mongoose.Schema({
         required: [true, 'Please provide a UID for this Person.']
     },
     name: {
-        /* lastname+first_initial User ID */
-
         type: String,
         required: [true, 'Please provide a name for this Person.']
     },
@@ -22,6 +20,9 @@ const PersonSchema = new mongoose.Schema({
         type: Array,
         required: false,
         default: []
+    },
+    createdAt: {
+        type: Object
     }
 });
 
