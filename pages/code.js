@@ -1,6 +1,8 @@
 import {fetchUser} from "../lib/user"
 import {useEffect} from "react"
 import {useRouter} from "next/router"
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Grid from "@material-ui/core/Grid";
 
 const CodeHandler = () => {
     const router = useRouter()
@@ -51,7 +53,9 @@ const CodeHandler = () => {
 
     return (
         <div>
-            <p>Loading...</p>
+            <Grid container justify="center">
+                <CircularProgress/>
+            </Grid>
         </div>
     )
 }
