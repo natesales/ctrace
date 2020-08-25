@@ -362,19 +362,48 @@ function HomePage(props) {
                 setPinnedPlaces(prevState => {
                     return (prevState.filter((v, i) => prevState.findIndex(t => (t.key === v.key)) === i))
                 })
+                handlePinnedLocation(false)
             }
         }
     }, [pinnedPlaces]);
 
-    async function handlePinnedLocation() {
+    async function handlePinnedLocation(changeEdit) {
 
-        console.log(pinnedPlaces)
+        // console.log(pinnedPlaces)
 
-        if (editPinnedLocations) {
-            setEditPinnedLocations(prevState => {
-                return !prevState;
-            });
-
+        if (changeEdit) {
+            if (editPinnedLocations) {
+                setEditPinnedLocations(prevState => {
+                    return !prevState;
+                });
+    
+                if (pinnedPlaces !== null) {
+                    const pinned_locations = pinnedPlaces.map(place => {
+                        return place.key;
+                    });
+    
+                    await fetch("/api/pin", {
+                        method: "POST",
+                        credentials: "include",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify({
+                            "pinned_locations": pinned_locations,
+                        }),
+                    }).then(response => response.json()).then(data => {
+                        handleResponseSnackbarOpen(data.success, data.message)
+                    }).catch(error => {
+                        handleResponseSnackbarOpen(false, data.message);
+                        console.log(error);
+                    });
+                }
+    
+            } else {
+                setEditPinnedLocations(prevState => {
+                    return !prevState;
+                });
+            }
+        } else {
+            
             if (pinnedPlaces !== null) {
                 const pinned_locations = pinnedPlaces.map(place => {
                     return place.key;
@@ -394,12 +423,9 @@ function HomePage(props) {
                     console.log(error);
                 });
             }
-
-        } else {
-            setEditPinnedLocations(prevState => {
-                return !prevState;
-            });
         }
+
+        
     }
 
     const handlePinnedLocationDelete = (event) => {
@@ -410,6 +436,8 @@ function HomePage(props) {
                 return location.key !== id;
             });
         });
+
+        handlePinnedLocation(false);
     }
 
     const handleResponseSnackbarClose = (event, reason) => {
@@ -456,7 +484,7 @@ function HomePage(props) {
                                 <Typography variant="h6" className={classes.columnTitleText}>
                                     Pinned Locations
                                 </Typography>
-                                <IconButton aria-label="add a pinned location" className={classes.addPinnedButton} onClick={handlePinnedLocation}>
+                                <IconButton aria-label="add a pinned location" className={classes.addPinnedButton} onClick={() => {handlePinnedLocation(true)}}>
                                     {editPinnedLocations ? <CloseIcon/> : <AddIcon/>}
                                 </IconButton>
                             </Box>
@@ -466,7 +494,9 @@ function HomePage(props) {
                                             <Typography variant="h6" gutterBottom className={classes.columnTitleText}>
                                                 Drag a location from the right to pin it.
                                             </Typography>
-                                            <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: "shared"}} style={{minHeight: "100px", width: "100%"}}>
+                                            <ReactSortable list={pinnedPlaces} setList={setPinnedPlaces} group={{name: "shared"}} style={{minHeight: "100px", width: "100%"}} onAdd={() => {
+                                                handlePinnedLocation(false)
+                                            }}>
                                                 {pinnedPlaces.map(place => {
                                                     return (
                                                         <LocationCard
