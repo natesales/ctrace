@@ -36,6 +36,7 @@ function Nav(props) {
                     cTrace
                 </Typography>
 
+                {/*TODO: This errors on login but redirects super fast*/}
                 <Avatar alt={props.user.google_info.nickname} src={props.user.google_info.picture} className={classes.profilePhoto} />
             </Toolbar>
         </AppBar>
