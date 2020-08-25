@@ -18,7 +18,7 @@ export default function QRCodes() {
                         <div key={image.name} className="pageBreak">
                             <h1>{image.name}</h1>
                             <img src={image.image} alt={image.name}/>
-                            <h2>{image.ref}</h2>
+                            <h3>{image.ref}</h3>
                         </div>
                     )
                 }) : <h1>Loading...</h1>}
