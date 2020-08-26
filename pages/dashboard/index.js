@@ -32,7 +32,7 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
     root: {
         display: "flex",
-        background: theme.palette.primary.contrastText, // TODO: Why doesnt this work?
+        background: "#c3c3c3", // TODO: Why doesnt this work?
     },
     toolbar: {
         paddingRight: 24, // keep right padding when drawer closed
@@ -110,7 +110,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Dashboard() {
+function UnThemedDashboard() {
     const classes = useStyles();
 
     const [open, setOpen] = useState(false);
@@ -156,8 +156,6 @@ export default function Dashboard() {
                 }
             />
 
-            <ThemeProvider theme={theme}>
-                <CssBaseline/>
                 <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
                     <Toolbar className={classes.toolbar}>
                         <IconButton
@@ -196,7 +194,7 @@ export default function Dashboard() {
                         <Grid container spacing={3}>
                             {(locations === null) ? <CircularProgress/> : <NumberCard title="Locations" subtitle="places" value={locations.length}/>}
                             <Grid item xs={12}>
-                                <Paper className={classes.paper}>
+                                <Paper className={classes.paper} elevation={3}>
                                     <LocationTable locations={locations}/>
                                 </Paper>
                             </Grid>
@@ -204,7 +202,7 @@ export default function Dashboard() {
 
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
-                                <Paper className={classes.paper}>
+                                <Paper className={classes.paper} elevation={3}>
                                     <NewLocationForm/>
                                 </Paper>
                             </Grid>
@@ -215,7 +213,14 @@ export default function Dashboard() {
                         </Box>
                     </Container>
                 </main>
-            </ThemeProvider>
         </div>
     );
+}
+
+export default function Dashboard() {
+    return (
+        <ThemeProvider theme={theme}>
+            <UnThemedDashboard />
+        </ThemeProvider>
+    )
 }
