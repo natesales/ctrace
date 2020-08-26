@@ -27,7 +27,7 @@ export default function LocationTable(props) {
                     </TableRow>
                 </TableHead>
                 {
-                    (props.locations === undefined) ? <CircularProgress/> :
+                    (props.locations === undefined || props.locations === null) ? <CircularProgress/> :
                         <TableBody>
                             {props.locations.map((location) => (
                                 <TableRow key={location.name}>
