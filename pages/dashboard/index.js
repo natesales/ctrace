@@ -118,6 +118,10 @@ function UnThemedDashboard() {
     const [locations, setLocations] = useState(null);
 
     useEffect(() => {
+        getLocations();
+    }, [])
+
+    const getLocations = () => {
         fetch("/api/admin/locations", {
             method: "GET",
             // TODO: Authenticate this
@@ -131,7 +135,7 @@ function UnThemedDashboard() {
             .catch(error => {
                 console.log(error)
             })
-    }, [])
+    }
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -207,7 +211,7 @@ function UnThemedDashboard() {
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
                                 <Paper className={classes.paper} elevation={3}>
-                                    <NewLocationForm/>
+                                    <NewLocationForm updateLocations={getLocations} />
                                 </Paper>
                             </Grid>
                         </Grid>
