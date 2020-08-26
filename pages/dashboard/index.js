@@ -125,9 +125,13 @@ function UnThemedDashboard() {
             headers: {"Content-Type": "application/json"},
         }).then(response => response.json())
             .then(response => {
+                console.log(response)
                 setLocations(response.data.locations)
             })
-    })
+            .catch(error => {
+                console.log(error)
+            })
+    }, [])
 
     const handleDrawerOpen = () => {
         setOpen(true);
