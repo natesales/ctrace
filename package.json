@@ -12,6 +12,7 @@
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
+    "clsx": "^1.1.1",
     "csv-stringify": "^5.5.0",
     "dotenv": "^8.2.0",
     "mongoose": "^5.9.27",
