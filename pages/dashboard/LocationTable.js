@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "@material-ui/core/Link";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -12,11 +11,6 @@ export default function LocationTable(props) {
     return (
         <React.Fragment>
             <Typography component="h2" variant="h6" color="primary" gutterBottom>Locations</Typography>
-
-            {/*TODO: Open an add modal onclick*/}
-            <Link color="primary" href="#" onClick={() => console.log("TODO")}>
-                <Typography>Add a new location</Typography>
-            </Link>
 
             <Table size="small">
                 <TableHead>
