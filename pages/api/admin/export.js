@@ -36,6 +36,8 @@ export default async function handler(req, res) {
                 res.status(200).send(Buffer.from(output));
             });
 
+            
+
             break
         default:
             res.status(400).json({success: false})

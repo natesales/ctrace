@@ -6,7 +6,7 @@ import React from "react";
 
 export default function SidebarElement(props) {
     return (
-        <Link href={props.href}>
+        <Link href={props.href} target="_blank">
             <ListItem button onClick={props.onClickHandler}>
                 <ListItemIcon>
                     {props.icon}
