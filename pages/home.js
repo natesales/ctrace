@@ -15,7 +15,7 @@ import LocationAlert from "@components/LocationAlert";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Button} from "@material-ui/core";
-import {MuiPickersUtilsProvider, KeyboardTimePicker} from "@material-ui/pickers";
+import {MuiPickersUtilsProvider, KeyboardDateTimePicker} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 
 // Styles for use on the page.
@@ -150,7 +150,11 @@ const useStyles = makeStyles((theme) => ({
     currentLocationTitleText: {
         fontSize: "16px",
     },
-    LocationAlertContainer: {}
+    LocationAlertContainer: {},
+    timeEditFlex: {
+        display: "flex",
+        flexDirection: "column",
+    }
 
 }));
 
@@ -177,7 +181,8 @@ function HomePage(props) {
     const [showTimeDialog, setShowTimeDialog] = useState(false);
     const initTime = new Date();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const [timeDialogTime, setTimeDialogTime] = useState(initTime)
+    const [timeDialogEnterTime, setTimeDialogEnterTime] = useState(initTime)
+    const [timeDialogExitTime, setTimeDialogExitTime] = useState(new Date(new Date().setHours(0,0,0,0)))
 
     const mounted = useRef(); // Used to update userState after re-fetching /me. Not perfect but react seems to only work well this way.
     useEffect(() => {
@@ -202,8 +207,14 @@ function HomePage(props) {
 
     }
 
-    const handleDialogTimeChange = (date) => {
-        setTimeDialogTime(date);
+    const handleDialogEnterTimeChange = (date) => {
+        console.log(date, '<-- Enter Time')
+        setTimeDialogEnterTime(date);
+    }
+
+    const handleDialogExitTimeChange = (date) => {
+        console.log(date, '<-- Exit Time')
+        setTimeDialogExitTime(date);
     }
 
     // Handle the response snackbar. Takes a message and a success boolean.
@@ -486,26 +497,45 @@ function HomePage(props) {
                 aria-labelledby="time-dialog-title"
             >
                 <DialogTitle id="time-dialog-title">Enter a new time.</DialogTitle>
-                <DialogContent>
+                <DialogContent>              
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardTimePicker
-                            variant="dialog"
-                            margin="normal"
-                            id="time-picker"
-                            label="Time picker"
-                            value={timeDialogTime}
-                            onChange={handleDialogTimeChange}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change time',
-                            }}
-                        />
+                        <Box className={classes.timeEditFlex}>
+                            <KeyboardDateTimePicker
+                                variant="dialog"
+                                margin="normal"
+                                id="time-picker"
+                                label="Change enter time"
+                                minDate={new Date(new Date().setDate(new Date().getDate() - 2))}
+                                maxDate={new Date(new Date().setDate(new Date().getDate() + 2))}
+                                DialogProps={{fullScreen: fullScreen}}
+                                value={timeDialogEnterTime}
+                                onChange={handleDialogEnterTimeChange}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change time',
+                                }}
+                            />
+                            <KeyboardDateTimePicker
+                                variant="dialog"
+                                margin="normal"
+                                id="time-picker"
+                                label="Change exit time"
+                                minDate={new Date(new Date().setDate(new Date().getDate() - 2))}
+                                maxDate={new Date(new Date().setDate(new Date().getDate() + 2))}
+                                DialogProps={{fullScreen: fullScreen}}
+                                value={timeDialogExitTime}
+                                onChange={handleDialogExitTimeChange}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change time',
+                                }}
+                            />
+                        </Box>
                     </MuiPickersUtilsProvider>
                 </DialogContent>
                 <DialogActions>
                     <Button autoFocus onClick={handleTimeDialog}>
                         Cancel
                     </Button>
-                    <Button autoFocus onClick={handleTimeDialog} color="primary">
+                    <Button autoFocus id={userState.current_location._id}  onClick={handleTimeDialog} color="primary">
                         Confirm
                     </Button>
                 </DialogActions>
