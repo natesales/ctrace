@@ -154,6 +154,12 @@ const useStyles = makeStyles((theme) => ({
     timeEditFlex: {
         display: "flex",
         flexDirection: "column",
+    },
+    timeEditDialog: {
+        [theme.breakpoints.down('sm')]: {
+            height: "100%",
+            overflow: "hidden !important"
+        },
     }
 
 }));
@@ -180,7 +186,7 @@ function HomePage(props) {
     const [pinnedPlacesLength, setPinnedPlacesLength] = useState(0);
     const [showTimeDialog, setShowTimeDialog] = useState(false);
     const initTime = new Date();
-    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const fullScreen = useMediaQuery(theme.breakpoints.down('321'));
     const [timeDialogEnterTime, setTimeDialogEnterTime] = useState(initTime)
     const [timeDialogExitTime, setTimeDialogExitTime] = useState(new Date(new Date().setHours(0,0,0,0)))
 
@@ -487,8 +493,13 @@ function HomePage(props) {
         setShowResponseSnackbar(false);
     };
 
+    const cancelScroll = (event) => {
+        console.log('scrolled')
+        // event.preventDefault();
+    }
+
     return (
-        <div className={classes.root}>
+        <div className={classes.root} style={{position: showTimeDialog ? "fixed" : "initial"}}>
             {userState.current_location ? 
             <Dialog
                 fullScreen={fullScreen}
@@ -505,9 +516,10 @@ function HomePage(props) {
                                 margin="normal"
                                 id="time-picker"
                                 label="Change enter time"
+                                onOpen={() => {window.scrollTo(0, 1)}}
                                 minDate={new Date(new Date().setDate(new Date().getDate() - 2))}
-                                maxDate={new Date(new Date().setDate(new Date().getDate() + 2))}
-                                DialogProps={{fullScreen: fullScreen}}
+                                disableFuture={true}
+                                DialogProps={{fullScreen: fullScreen, className: classes.timeEditDialog}}
                                 value={timeDialogEnterTime}
                                 onChange={handleDialogEnterTimeChange}
                                 KeyboardButtonProps={{
@@ -519,9 +531,10 @@ function HomePage(props) {
                                 margin="normal"
                                 id="time-picker"
                                 label="Change exit time"
+                                onOpen={() => {window.scrollTo(0, 1)}}
                                 minDate={new Date(new Date().setDate(new Date().getDate() - 2))}
-                                maxDate={new Date(new Date().setDate(new Date().getDate() + 2))}
-                                DialogProps={{fullScreen: fullScreen}}
+                                disableFuture={true}
+                                DialogProps={{fullScreen: fullScreen, className: classes.timeEditDialog}}
                                 value={timeDialogExitTime}
                                 onChange={handleDialogExitTimeChange}
                                 KeyboardButtonProps={{
