@@ -2,6 +2,7 @@ import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Box, Button, IconButton, Paper, Typography} from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import HistoryIcon from '@material-ui/icons/History';
 
 const useStyles = makeStyles((theme) => ({
     placePaper: {
@@ -33,6 +34,9 @@ const useStyles = makeStyles((theme) => ({
     },
     trashButton: {
         marginRight: "5px",
+    },
+    timeButton: {
+        marginRight: "5px",
     }
 }));
 
@@ -53,19 +57,29 @@ export default function LocationCard(props) {
                     }
                 </Typography>
             </Box>
-
-            {props.showButton && !props.canDelete ?
-                props.isEntered ?
-                    <Button variant="outlined" className={classes.actionButton} onClick={props.handleLocationLeave} id={props.place._id}>
-                        Leave
-                    </Button>
-                    :
-                    <Button variant="outlined" className={classes.actionButton} onClick={props.handleLocationEnter} id={props.place._id}>
-                        Enter
-                    </Button>
+            
+            <div>
+                {props.showTimeButton && !props.canDelete ?
+                <IconButton className={classes.timeButton} onClick={props.handleTimeDialog} id={props.place._id}>
+                    <HistoryIcon />
+                </IconButton>
                 :
-                null
-            }
+                null}
+
+                {props.showButton && !props.canDelete ?
+                    props.isEntered ?
+                        <Button variant="outlined" className={classes.actionButton} onClick={props.handleLocationLeave} id={props.place._id}>
+                            Leave
+                        </Button>
+                        :
+                        <Button variant="outlined" className={classes.actionButton} onClick={props.handleLocationEnter} id={props.place._id}>
+                            Enter
+                        </Button>
+                    :
+                    null
+                }
+            </div>
+            
 
             {props.canDelete ?
                 <IconButton className={classes.trashButton} onClick={props.handleDelete} id={props.place._id}>

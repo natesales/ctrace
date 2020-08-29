@@ -1,3 +1,4 @@
+import "date-fns";
 import React, {useEffect, useRef, useState} from "react";
 import {Box, IconButton, InputBase, Paper, Snackbar, Typography} from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -13,6 +14,9 @@ import theme from "@components/MainTheme";
 import LocationAlert from "@components/LocationAlert";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
+import {Dialog, DialogActions, DialogContent, DialogTitle, Button} from "@material-ui/core";
+import {MuiPickersUtilsProvider, KeyboardTimePicker} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 
 // Styles for use on the page.
 const useStyles = makeStyles((theme) => ({
@@ -45,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: "10px",
         background: theme.palette.primary.light,
         [theme.breakpoints.down(864)]: {
+            maxHeight: "none !important",
             width: "100%",
         },
     },
@@ -92,8 +97,9 @@ const useStyles = makeStyles((theme) => ({
         position: "relative",
         borderRadius: theme.shape.borderRadius,
         backgroundColor: theme.palette.secondary.main,
+        opacity: 0.6,
         "&:hover": {
-            opacity: '0.6'
+            opacity: '1'
         },
         width: "100%",
         height: "80%",
@@ -168,6 +174,9 @@ function HomePage(props) {
     const [searchState, setSearchState] = useState("");
     const [editPinnedLocations, setEditPinnedLocations] = useState(false);
     const [pinnedPlacesLength, setPinnedPlacesLength] = useState(0);
+    const [showTimeDialog, setShowTimeDialog] = useState(false);
+    const initTime = new Date();
+    const [timeDialogTime, setTimeDialogTime] = useState(initTime)
 
     const mounted = useRef(); // Used to update userState after re-fetching /me. Not perfect but react seems to only work well this way.
     useEffect(() => {
@@ -181,6 +190,20 @@ function HomePage(props) {
             }
         }
     });
+
+    const handleTimeDialog = (event) => {
+        console.log(event.currentTarget.id)
+        if (showTimeDialog) {
+            setShowTimeDialog(false)
+        } else {
+            setShowTimeDialog(true)
+        }
+
+    }
+
+    const handleDialogTimeChange = (date) => {
+        setTimeDialogTime(date);
+    }
 
     // Handle the response snackbar. Takes a message and a success boolean.
     const handleResponseSnackbarOpen = (success, body) => {
@@ -454,6 +477,42 @@ function HomePage(props) {
 
     return (
         <div className={classes.root}>
+            {userState.current_location ? 
+            <Dialog
+                fullScreen={fullScreen}
+                open={showTimeDialog}
+                onClose={handleTimeDialog}
+                aria-labelledby="time-dialog-title"
+            >
+                <DialogTitle id="time-dialog-title">Enter a new time.</DialogTitle>
+                <DialogContent>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardTimePicker
+                            margin="normal"
+                            id="time-picker"
+                            label="Time picker"
+                            value={timeDialogTime}
+                            onChange={handleDialogTimeChange}
+                            KeyboardButtonProps={{
+                                'aria-label': 'change time',
+                            }}
+                        />
+                    </MuiPickersUtilsProvider>
+                </DialogContent>
+                <DialogActions>
+                    <Button autoFocus onClick={handleTimeDialog}>
+                        Cancel
+                    </Button>
+                    <Button autoFocus onClick={handleTimeDialog} color="primary">
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog> 
+            :
+            null}
+
+
+
             <Box className={classes.mainGrid}>
                 {userState.current_location ? null :
                     <Box className={classes.LocationAlertContainer}>
@@ -473,6 +532,8 @@ function HomePage(props) {
                                         place={userState.current_location}
                                         isEntered={true}
                                         showButton={true}
+                                        showTimeButton={true}
+                                        handleTimeDialog={handleTimeDialog}
                                         isDisplayed={true}
                                         canDelete={false}
                                         handleLocationEnter={handleLocationEnter}
@@ -481,7 +542,6 @@ function HomePage(props) {
                                 </Box>
                             </Box>
                         </Box> : null}
-
                     <Box className={classes.columns}>
                         <Box className={classes.cardFlex}>
                             <Box className={classes.columnTitleBox}>
@@ -562,6 +622,10 @@ function HomePage(props) {
                                         onChange={handleSearch}
                                         value={searchState}
                                     />
+                                    {/* TODO: Add a close icon to the search
+                                    <div className={classes.closeSearchIcon}>
+                                        <CloseIcon />
+                                    </div> */}
                                 </div>
                             </Box>
                             <Box className={classes.cardContainer}
