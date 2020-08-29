@@ -1,6 +1,6 @@
 import "date-fns";
 import React, {useEffect, useRef, useState} from "react";
-import {Box, IconButton, InputBase, Paper, Snackbar, Typography} from "@material-ui/core";
+import {Box, IconButton, InputBase, Paper, Snackbar, Typography, useMediaQuery} from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import {makeStyles, ThemeProvider} from "@material-ui/core/styles";
 import Navbar from "@components/Navbar";
@@ -176,6 +176,7 @@ function HomePage(props) {
     const [pinnedPlacesLength, setPinnedPlacesLength] = useState(0);
     const [showTimeDialog, setShowTimeDialog] = useState(false);
     const initTime = new Date();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [timeDialogTime, setTimeDialogTime] = useState(initTime)
 
     const mounted = useRef(); // Used to update userState after re-fetching /me. Not perfect but react seems to only work well this way.
@@ -488,6 +489,7 @@ function HomePage(props) {
                 <DialogContent>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardTimePicker
+                            variant="dialog"
                             margin="normal"
                             id="time-picker"
                             label="Time picker"
