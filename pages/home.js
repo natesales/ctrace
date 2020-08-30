@@ -158,7 +158,6 @@ const useStyles = makeStyles((theme) => ({
     timeEditDialog: {
         [theme.breakpoints.down('sm')]: {
             height: "100%",
-            overflow: "hidden !important"
         },
     }
 
@@ -499,7 +498,7 @@ function HomePage(props) {
     }
 
     return (
-        <div className={classes.root} style={{position: showTimeDialog ? "fixed" : "initial"}}>
+        <div className={classes.root} style={{position:  showTimeDialog && fullScreen ? "fixed" : "initial"}}>
             {userState.current_location ? 
             <Dialog
                 fullScreen={fullScreen}

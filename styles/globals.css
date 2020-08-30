@@ -16,6 +16,10 @@ a {
     box-sizing: border-box;
 }
 
+.MuiPickersModal-dialog {
+    overflow: hidden !important;
+}
+
 @media print {
     div.pageBreak {
         page-break-after: always;
