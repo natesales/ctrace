@@ -198,37 +198,46 @@ function HomePage(props) {
         }
     });
 
-    const handleTimeDialog = (event) => {
-        console.log(event.currentTarget.id)
-        if (showTimeDialog) {
+    const handleTimeDialog = (event, reason) => {
+        // console.log(event.currentTarget.id)
+        // console.log(reason)
+
+        if (reason == "backdropClick") {
             setShowTimeDialog(false)
-
-            if (timeDialogEnterTime.getTime() !== new Date(userState.time_in).getTime() || 
-            timeDialogExitTime.getTime() !== new Date(props.initTime).getTime()
-            ) {
-                fetch("/api/change", {
-                    method: "POST",
-                    credentials: "include",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({
-                        "time_in": timeDialogEnterTime.getTime() !== new Date(userState.time_in).getTime() ? timeDialogEnterTime : null,
-                        "time_out": timeDialogExitTime.getTime() !== new Date(props.initTime).getTime() ? timeDialogExitTime : null,
-                    }),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        handleResponseSnackbarOpen(data.success, data.message);
-                    })
-                    .then(props.handleUserUpdate)
-                    .catch(error => {
-                        handleResponseSnackbarOpen(false, data.message);
-                        console.log(error);
-                    });
-            }
+            setTimeDialogEnterTime(userState.time_in)
+            setTimeDialogExitTime(props.initTime)
+            setTimeDialogEnterError(false)
+            setTimeDialogExitError(false)
         } else {
-            setShowTimeDialog(true)
+            if (showTimeDialog) {
+                setShowTimeDialog(false)
+    
+                if (new Date(timeDialogEnterTime).getTime() !== new Date(userState.time_in).getTime() || 
+                new Date(timeDialogExitTime).getTime() !== new Date(props.initTime).getTime()
+                ) {
+                    fetch("/api/change", {
+                        method: "POST",
+                        credentials: "include",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify({
+                            "time_in": timeDialogEnterTime.getTime() !== new Date(userState.time_in).getTime() ? timeDialogEnterTime : null,
+                            "time_out": timeDialogExitTime.getTime() !== new Date(props.initTime).getTime() ? timeDialogExitTime : null,
+                        }),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            handleResponseSnackbarOpen(data.success, data.message);
+                        })
+                        .then(props.handleUserUpdate)
+                        .catch(error => {
+                            handleResponseSnackbarOpen(false, data.message);
+                            console.log(error);
+                        });
+                }
+            } else {
+                setShowTimeDialog(true)
+            }
         }
-
     }
 
     const handleDialogEnterTimeChange = (date) => {
@@ -573,6 +582,8 @@ function HomePage(props) {
                             setShowTimeDialog(false)
                             setTimeDialogEnterTime(userState.time_in)
                             setTimeDialogExitTime(props.initTime)
+                            setTimeDialogEnterError(false)
+                            setTimeDialogExitError(false)
                         }}>
                         Cancel
                     </Button>
