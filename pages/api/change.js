@@ -1,5 +1,6 @@
 import dbConnect from "../../utils/dbConnect";
 import Person from "../../models/Person";
+import Location from "../../models/Location"
 import auth0 from "../../lib/auth0";
 
 export default auth0.requireAuthentication(async function handler(req, res) {
@@ -20,6 +21,9 @@ export default auth0.requireAuthentication(async function handler(req, res) {
 
             if (req.body.time_out !== null) {
                 person.log[person.log.length - 1]["time_out"] = req.body.time_out;
+                const location = await Location.findOne({_id: person.log[person.log.length - 1].location })
+                location.current_occupancy -= 1;
+                await location.save();
             }
 
             // TODO: Maybe add person.hasEdited = true; so we can record the change was made

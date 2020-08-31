@@ -224,8 +224,8 @@ function HomePage(props) {
                             credentials: "include",
                             headers: {"Content-Type": "application/json"},
                             body: JSON.stringify({
-                                "time_in": timeDialogEnterTime.getTime() !== new Date(userState.time_in).getTime() ? timeDialogEnterTime : null,
-                                "time_out": timeDialogExitTime.getTime() !== new Date(props.initTime).getTime() ? timeDialogExitTime : null,
+                                "time_in": new Date(timeDialogEnterTime).getTime() !== new Date(userState.time_in).getTime() ? timeDialogEnterTime : null,
+                                "time_out": new Date(timeDialogExitTime).getMinutes() !== new Date(props.initTime).getMinutes() ? timeDialogExitTime : null,
                             }),
                         })
                             .then(response => response.json())
