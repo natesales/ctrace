@@ -210,30 +210,36 @@ function HomePage(props) {
             setTimeDialogExitError(false)
         } else {
             if (showTimeDialog) {
-                setShowTimeDialog(false)
-    
-                if (new Date(timeDialogEnterTime).getTime() !== new Date(userState.time_in).getTime() || 
-                new Date(timeDialogExitTime).getTime() !== new Date(props.initTime).getTime()
-                ) {
-                    fetch("/api/change", {
-                        method: "POST",
-                        credentials: "include",
-                        headers: {"Content-Type": "application/json"},
-                        body: JSON.stringify({
-                            "time_in": timeDialogEnterTime.getTime() !== new Date(userState.time_in).getTime() ? timeDialogEnterTime : null,
-                            "time_out": timeDialogExitTime.getTime() !== new Date(props.initTime).getTime() ? timeDialogExitTime : null,
-                        }),
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            handleResponseSnackbarOpen(data.success, data.message);
+                
+                // console.log(timeDialogExitTime, 'Dialog exit time')
+                // console.log(props.initTime, 'initTime from props')
+                if (!timeDialogEnterError && !timeDialogExitError) {
+                    setShowTimeDialog(false)
+
+                    if (new Date(timeDialogEnterTime).getTime() !== new Date(userState.time_in).getTime() || 
+                    new Date(timeDialogExitTime).getMinutes() !== new Date(props.initTime).getMinutes()
+                    ) {
+                        fetch("/api/change", {
+                            method: "POST",
+                            credentials: "include",
+                            headers: {"Content-Type": "application/json"},
+                            body: JSON.stringify({
+                                "time_in": timeDialogEnterTime.getTime() !== new Date(userState.time_in).getTime() ? timeDialogEnterTime : null,
+                                "time_out": timeDialogExitTime.getTime() !== new Date(props.initTime).getTime() ? timeDialogExitTime : null,
+                            }),
                         })
-                        .then(props.handleUserUpdate)
-                        .catch(error => {
-                            handleResponseSnackbarOpen(false, data.message);
-                            console.log(error);
-                        });
+                            .then(response => response.json())
+                            .then(data => {
+                                handleResponseSnackbarOpen(data.success, data.message);
+                            })
+                            .then(props.handleUserUpdate)
+                            .catch(error => {
+                                handleResponseSnackbarOpen(false, data.message);
+                                console.log(error);
+                            });
+                    }
                 }
+                
             } else {
                 setShowTimeDialog(true)
             }
@@ -243,7 +249,7 @@ function HomePage(props) {
     const handleDialogEnterTimeChange = (date) => {
         console.log(date, '<-- Enter Time')
         if (date !== timeDialogEnterTime) {
-            if (date.getTime() > new Date(userState.time_in).getTime()) {
+            if (date.getTime() > new Date(userState.time_in).getTime() || date.getTime() > new Date(timeDialogExitTime).getTime()) {
                 setTimeDialogEnterError(true)
             } else {
                 setTimeDialogEnterError(false)
@@ -255,7 +261,7 @@ function HomePage(props) {
     const handleDialogExitTimeChange = (date) => {
         console.log(date, '<-- Exit Time')
         if (date !== timeDialogExitTime) {
-            if (date.getTime() > new Date(props.initTime).getTime()) {
+            if (date.getTime() > new Date(props.initTime).getTime() || date.getTime() < new Date(timeDialogEnterTime).getTime()) {
                 setTimeDialogExitError(true)
             } else {
                 setTimeDialogExitError(false)
@@ -393,7 +399,7 @@ function HomePage(props) {
     useEffect(() => {
         // console.log(userState);
 
-        userState.time_in !== null ? setTimeDialogEnterTime(new Date(userState.time_in)) : null
+        setTimeDialogEnterTime(new Date(userState.time_in))
 
         setShownPlaces(
             checkLocations("userState")

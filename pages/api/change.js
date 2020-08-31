@@ -27,7 +27,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
             person.markModified('log');
             await person.save();
 
-            res.status(200).json({success: true, message: "Time updated to " + req.body.time_in});
+            res.status(200).json({success: true, message: "Time updated to " + req.body.time_in + req.body.time_out });
             break;
         default:
             res.status(400).json({success: false, message: "Default"});
