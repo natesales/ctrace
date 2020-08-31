@@ -2,11 +2,16 @@ import "date-fns";
 import React, {useEffect, useRef, useState} from "react";
 import {MuiPickersUtilsProvider, KeyboardDateTimePicker} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import { makeStyles } from "@material-ui/core";
+import { Box } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles"
 
-const useStyles = () => makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
     errorMessage: {
         color: "red",
+    },
+    containerRoot: {
+        display: "flex",
+        flexDirection: "column"
     }
 }))
 
@@ -14,7 +19,7 @@ export default function CustomTimePicker(props) {
     const classes = useStyles();
 
     return (
-        <div>
+        <Box className={classes.containerRoot}>
             <KeyboardDateTimePicker
                 variant="dialog"
                 margin="normal"
@@ -36,7 +41,7 @@ export default function CustomTimePicker(props) {
             {props.error ? <span className={classes.errorMessage}>{props.errorMessage}</span>
             : null}
 
-        </div>
+        </Box>
         
     )
 }

@@ -182,6 +182,8 @@ function HomePage(props) {
     const fullScreen = useMediaQuery(theme.breakpoints.down('321'));
     const [timeDialogEnterTime, setTimeDialogEnterTime] = useState(new Date())
     const [timeDialogExitTime, setTimeDialogExitTime] = useState(props.initTime)
+    const [timeDialogEnterError, setTimeDialogEnterError] = useState(false)
+    const [timeDialogExitError, setTimeDialogExitError] = useState(false)
 
     const mounted = useRef(); // Used to update userState after re-fetching /me. Not perfect but react seems to only work well this way.
     useEffect(() => {
@@ -232,13 +234,25 @@ function HomePage(props) {
     const handleDialogEnterTimeChange = (date) => {
         console.log(date, '<-- Enter Time')
         if (date !== timeDialogEnterTime) {
-            setTimeDialogEnterTime(date);
+            if (date.getTime() > new Date(userState.time_in).getTime()) {
+                setTimeDialogEnterError(true)
+            } else {
+                setTimeDialogEnterError(false)
+                setTimeDialogEnterTime(date);
+            }
         }
     }
 
     const handleDialogExitTimeChange = (date) => {
         console.log(date, '<-- Exit Time')
-        setTimeDialogExitTime(date);
+        if (date !== timeDialogExitTime) {
+            if (date.getTime() > new Date(props.initTime).getTime()) {
+                setTimeDialogExitError(true)
+            } else {
+                setTimeDialogExitError(false)
+                setTimeDialogExitTime(date);
+            }
+        }
     }
 
     // Handle the response snackbar. Takes a message and a success boolean.
@@ -539,7 +553,7 @@ function HomePage(props) {
                                 userState={userState}
                                 value={timeDialogEnterTime}
                                 onChange={handleDialogEnterTimeChange}
-                                error={false}
+                                error={timeDialogEnterError}
                                 errorMessage={"Future entrance times are not allowed."}
                             />
                             <CustomTimePicker
@@ -548,7 +562,7 @@ function HomePage(props) {
                                 userState={userState}
                                 value={timeDialogExitTime}
                                 onChange={handleDialogExitTimeChange}
-                                error={false}
+                                error={timeDialogExitError}
                                 errorMessage={"Future exit times are not allowed."}
                             />
                         </Box>
@@ -558,7 +572,7 @@ function HomePage(props) {
                     <Button autoFocus onClick={() => {
                             setShowTimeDialog(false)
                             setTimeDialogEnterTime(userState.time_in)
-                            setTimeDialogExitTime(initTime)
+                            setTimeDialogExitTime(props.initTime)
                         }}>
                         Cancel
                     </Button>
