@@ -25,7 +25,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
             // Set the time_out
             await Person.findOne({uid: user.nickname}).then(async (doc) => {
                 let entry = doc.log[doc.log.length - 1];
-                entry["time_out"] = Date.now();
+                entry["time_out"] = new Date();
                 doc.markModified('log');
                 await doc.save();
             }).then(async () => {

@@ -37,7 +37,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
                 $push: {
                     log: {
                         location: req.body.location,
-                        time_in: Date.now()
+                        time_in: new Date(),
                     }
                 }
             });

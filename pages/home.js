@@ -17,6 +17,7 @@ import Grid from "@material-ui/core/Grid";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Button} from "@material-ui/core";
 import {MuiPickersUtilsProvider, KeyboardDateTimePicker} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+import CustomTimePicker from "@components/CustomTimePicker"
 
 // Styles for use on the page.
 const useStyles = makeStyles((theme) => ({
@@ -155,12 +156,6 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         flexDirection: "column",
     },
-    timeEditDialog: {
-        [theme.breakpoints.down('sm')]: {
-            height: "100%",
-        },
-    }
-
 }));
 
 // Alert component for returning a success/error message at the bottom of the screen.
@@ -186,7 +181,7 @@ function HomePage(props) {
     const [showTimeDialog, setShowTimeDialog] = useState(false);
     const fullScreen = useMediaQuery(theme.breakpoints.down('321'));
     const [timeDialogEnterTime, setTimeDialogEnterTime] = useState(new Date())
-    const [timeDialogExitTime, setTimeDialogExitTime] = useState(new Date(new Date().setHours(0,0,0,0)))
+    const [timeDialogExitTime, setTimeDialogExitTime] = useState(props.initTime)
 
     const mounted = useRef(); // Used to update userState after re-fetching /me. Not perfect but react seems to only work well this way.
     useEffect(() => {
@@ -206,16 +201,16 @@ function HomePage(props) {
         if (showTimeDialog) {
             setShowTimeDialog(false)
 
-            console.log(timeDialogEnterTime.getTime())
-
-            if (timeDialogEnterTime.getTime() !== userState.time_in) {
+            if (timeDialogEnterTime.getTime() !== new Date(userState.time_in).getTime() || 
+            timeDialogExitTime.getTime() !== new Date(props.initTime).getTime()
+            ) {
                 fetch("/api/change", {
                     method: "POST",
                     credentials: "include",
                     headers: {"Content-Type": "application/json"},
                     body: JSON.stringify({
-                        "direction": "time_in",
-                        "time": timeDialogEnterTime.getTime(),
+                        "time_in": timeDialogEnterTime.getTime() !== new Date(userState.time_in).getTime() ? timeDialogEnterTime : null,
+                        "time_out": timeDialogExitTime.getTime() !== new Date(props.initTime).getTime() ? timeDialogExitTime : null,
                     }),
                 })
                     .then(response => response.json())
@@ -228,29 +223,6 @@ function HomePage(props) {
                         console.log(error);
                     });
             }
-
-            if (timeDialogExitTime.getTime() !== new Date(new Date().setHours(0,0,0,0)).getTime()) {
-                fetch("/api/change", {
-                    method: "POST",
-                    credentials: "include",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({
-                        "direction": "time_out",
-                        "time": timeDialogExitTime.getTime(),
-                    }),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        handleResponseSnackbarOpen(data.success, data.message);
-                    })
-                    .then(props.handleUserUpdate)
-                    .catch(error => {
-                        handleResponseSnackbarOpen(false, data.message);
-                        console.log(error);
-                    });
-            }
-
-
         } else {
             setShowTimeDialog(true)
         }
@@ -396,7 +368,7 @@ function HomePage(props) {
 
     // Sets the shown places and the pinned places assuming the /me route has been returned and the user is not null.
     useEffect(() => {
-        console.log(userState);
+        // console.log(userState);
 
         userState.time_in !== null ? setTimeDialogEnterTime(new Date(userState.time_in)) : null
 
@@ -561,41 +533,33 @@ function HomePage(props) {
                 <DialogContent>              
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <Box className={classes.timeEditFlex}>
-                            <KeyboardDateTimePicker
-                                variant="dialog"
-                                margin="normal"
-                                id="time-picker"
+                            <CustomTimePicker
                                 label="Change enter time"
-                                onOpen={() => {window.scrollTo(0, 1)}}
-                                minDate={new Date(new Date().setDate(new Date().getDate() - 2))}
-                                disableFuture={true}
-                                DialogProps={{fullScreen: fullScreen, className: classes.timeEditDialog}}
+                                fullScreen={fullScreen}
+                                userState={userState}
                                 value={timeDialogEnterTime}
                                 onChange={handleDialogEnterTimeChange}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change time',
-                                }}
+                                error={false}
+                                errorMessage={"Future entrance times are not allowed."}
                             />
-                            <KeyboardDateTimePicker
-                                variant="dialog"
-                                margin="normal"
-                                id="time-picker"
+                            <CustomTimePicker
                                 label="Change exit time"
-                                onOpen={() => {window.scrollTo(0, 1)}}
-                                minDate={new Date(new Date().setDate(new Date().getDate() - 2))}
-                                disableFuture={true}
-                                DialogProps={{fullScreen: fullScreen, className: classes.timeEditDialog}}
+                                fullScreen={fullScreen}
+                                userState={userState}
                                 value={timeDialogExitTime}
                                 onChange={handleDialogExitTimeChange}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change time',
-                                }}
+                                error={false}
+                                errorMessage={"Future exit times are not allowed."}
                             />
                         </Box>
                     </MuiPickersUtilsProvider>
                 </DialogContent>
                 <DialogActions>
-                    <Button autoFocus onClick={handleTimeDialog}>
+                    <Button autoFocus onClick={() => {
+                            setShowTimeDialog(false)
+                            setTimeDialogEnterTime(userState.time_in)
+                            setTimeDialogExitTime(initTime)
+                        }}>
                         Cancel
                     </Button>
                     <Button autoFocus id={userState.current_location._id}  onClick={handleTimeDialog} color="primary">
@@ -780,6 +744,8 @@ function HomePage(props) {
 export default function Home() {
     const [userState, setUserState] = useState(null);
     const [loadingState, setLoadingState] = useState(true);
+    
+    const initTime = new Date();
 
     useEffect(() => {
         fetchUser().then(data => {
@@ -806,7 +772,7 @@ export default function Home() {
             {loadingState ? <Grid container justify="center">
                     <CircularProgress/>
                 </Grid> :
-                <HomePage user={userState} handleUserUpdate={handleUserUpdate}/>}
+                <HomePage user={userState} handleUserUpdate={handleUserUpdate} initTime={initTime}/>}
         </ThemeProvider>
     )
 }
