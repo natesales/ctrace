@@ -184,9 +184,8 @@ function HomePage(props) {
     const [editPinnedLocations, setEditPinnedLocations] = useState(false);
     const [pinnedPlacesLength, setPinnedPlacesLength] = useState(0);
     const [showTimeDialog, setShowTimeDialog] = useState(false);
-    const initTime = new Date();
     const fullScreen = useMediaQuery(theme.breakpoints.down('321'));
-    const [timeDialogEnterTime, setTimeDialogEnterTime] = useState(initTime)
+    const [timeDialogEnterTime, setTimeDialogEnterTime] = useState(new Date())
     const [timeDialogExitTime, setTimeDialogExitTime] = useState(new Date(new Date().setHours(0,0,0,0)))
 
     const mounted = useRef(); // Used to update userState after re-fetching /me. Not perfect but react seems to only work well this way.
@@ -206,6 +205,52 @@ function HomePage(props) {
         console.log(event.currentTarget.id)
         if (showTimeDialog) {
             setShowTimeDialog(false)
+
+            console.log(timeDialogEnterTime.getTime())
+
+            if (timeDialogEnterTime.getTime() !== userState.time_in) {
+                fetch("/api/change", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        "direction": "time_in",
+                        "time": timeDialogEnterTime.getTime(),
+                    }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        handleResponseSnackbarOpen(data.success, data.message);
+                    })
+                    .then(props.handleUserUpdate)
+                    .catch(error => {
+                        handleResponseSnackbarOpen(false, data.message);
+                        console.log(error);
+                    });
+            }
+
+            if (timeDialogExitTime.getTime() !== new Date(new Date().setHours(0,0,0,0)).getTime()) {
+                fetch("/api/change", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        "direction": "time_out",
+                        "time": timeDialogExitTime.getTime(),
+                    }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        handleResponseSnackbarOpen(data.success, data.message);
+                    })
+                    .then(props.handleUserUpdate)
+                    .catch(error => {
+                        handleResponseSnackbarOpen(false, data.message);
+                        console.log(error);
+                    });
+            }
+
+
         } else {
             setShowTimeDialog(true)
         }
@@ -214,7 +259,9 @@ function HomePage(props) {
 
     const handleDialogEnterTimeChange = (date) => {
         console.log(date, '<-- Enter Time')
-        setTimeDialogEnterTime(date);
+        if (date !== timeDialogEnterTime) {
+            setTimeDialogEnterTime(date);
+        }
     }
 
     const handleDialogExitTimeChange = (date) => {
@@ -349,6 +396,10 @@ function HomePage(props) {
 
     // Sets the shown places and the pinned places assuming the /me route has been returned and the user is not null.
     useEffect(() => {
+        console.log(userState);
+
+        userState.time_in !== null ? setTimeDialogEnterTime(new Date(userState.time_in)) : null
+
         setShownPlaces(
             checkLocations("userState")
         );

@@ -19,9 +19,10 @@ export default auth0.requireAuthentication(async function handler(req, res) {
             }
 
             // Update the last location's direction key with the new time
-            person.locations[person.locations.length - 1][req.body.direction] = req.body.time;
+            person.log[person.log.length - 1][req.body.direction] = req.body.time;
             // TODO: Maybe add person.hasEdited = true; so we can record the change was made
             // Push the update to the database
+            person.markModified('log');
             await person.save();
 
             res.status(200).json({success: true, message: "Time updated to " + req.body.time});

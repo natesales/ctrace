@@ -31,8 +31,11 @@ export default auth0.requireAuthentication(async function me(req, res) {
         if (person.log.length > 0 && !("time_out" in person.log[person.log.length - 1])) {
             // console.log("Found the checked in location")
             response.current_location = await Location.findById(person.log[person.log.length - 1].location);
+            response.time_in = person.log[person.log.length -1].time_in;
+            
         } else {
             response.current_location = null;
+            response.time_in = null;
         }
 
         if (person.pinned_locations.length > 0) {
