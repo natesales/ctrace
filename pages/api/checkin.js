@@ -30,6 +30,11 @@ export default auth0.requireAuthentication(async function handler(req, res) {
             }
 
             location.current_occupancy += 1;
+            location.log.push({
+                user: person._id,
+                time_in: new Date(),
+            })
+            location.markModified('log')
             await location.save();
 
             // Push the new checkin

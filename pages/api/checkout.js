@@ -12,6 +12,8 @@ export default auth0.requireAuthentication(async function handler(req, res) {
 
     switch (method) {
         case 'POST':
+            const time_marked = new Date()
+
             const person = await Person.findOne({"uid": user.nickname});
             if (person == null) {
                 return res.status(400).json({success: false, message: "Person with this UID doesn't exist"});
@@ -25,12 +27,14 @@ export default auth0.requireAuthentication(async function handler(req, res) {
             // Set the time_out
             await Person.findOne({uid: user.nickname}).then(async (doc) => {
                 let entry = doc.log[doc.log.length - 1];
-                entry["time_out"] = new Date();
+                entry["time_out"] = time_marked;
                 doc.markModified('log');
                 await doc.save();
             }).then(async () => {
                 const location = await Location.findOne({_id: person.log[person.log.length - 1].location});
                 location.current_occupancy -= 1;
+                location.log[location.log.length - 1].time_out = time_marked;
+                location.markModified("log")
                 await location.save();
                 res.status(200).json({success: true, message: "Checked out of '" + location.name + "'"})
             })
