@@ -8,7 +8,6 @@ import LocationCard from "@components/LocationCard";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import SearchIcon from "@material-ui/icons/Search";
-import {fetchUser} from "../lib/user";
 import {ReactSortable} from "react-sortablejs";
 import theme from "@components/MainTheme";
 import LocationAlert from "@components/LocationAlert";
@@ -779,21 +778,27 @@ export default function Home() {
     const initTime = new Date();
 
     useEffect(() => {
-        fetchUser().then(data => {
-            if (data === null) {
-                window.location.href = "/api/login?redirectTo=/home"
-            }
-            setUserState(data)
-        }).then(() => {
-            setLoadingState(false);
+        fetch("/api/me", {
+            credentials: "include",
+        }).then(response => response.json()
+        ).then(data => {
+            data.error === "not_authenticated" ? window.location.href = "/api/login?redirectTo=/home" : setUserState(data)
+        }).catch(error => {
+            console.log(error)
         })
     }, [])
+
+    useEffect(() => {
+        if (userState !== null) {
+            setLoadingState(false)
+        }
+    }, [userState])
 
     const handleUserUpdate = () => {
         fetch("/api/me", {
             credentials: "include",
         }).then(response => response.json()).then((data) => {
-            setUserState(data);
+            data.status === 401 ? window.location.href = "/api/login?redirectTo=/home" : setUserState(data)
         });
     }
 
