@@ -1,4 +1,3 @@
-import {fetchUser} from "../lib/user";
 import {useEffect} from "react";
 import {useRouter} from "next/router";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -9,7 +8,9 @@ const CodeHandler = () => {
     console.log(router.query)
 
     useEffect(() => {
-        fetchUser().then(data => {
+        fetch("/api/me", {
+            credentials: "include",
+        }).then(response => response.json()).then(data => {
             const id = router.query.id
 
             if (id !== undefined) {
