@@ -19,6 +19,22 @@ const useStyles = makeStyles((theme) => ({
         margin: '10px 0px 5px, 10px',
         color: theme.palette.secondary.contrastText,
         opacity: ".87",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        textOverflow: "ellipsis",
+        // maxWidth: "70px"
+    },
+    locationNameCurrent: {
+        fontSize: '17px',
+        margin: '10px 0px 5px, 10px',
+        color: theme.palette.secondary.contrastText,
+        opacity: ".87",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        textOverflow: "ellipsis",
+        [theme.breakpoints.down('xs')]: {
+            maxWidth: "104px"
+        }
     },
     locationPopulation: {
         fontSize: '12px',
@@ -46,9 +62,13 @@ export default function LocationCard(props) {
     return (
         <Paper className={classes.placePaper} style={{display: props.isDisplayed ? '' : 'none'}} id={props.id}>
             <Box className={classes.cardType}>
+                {props.isCurrent ? 
+                <Typography variant="h4" className={classes.locationNameCurrent}>
+                {props.place.name}
+                </Typography> :
                 <Typography variant="h4" className={classes.locationName}>
                     {props.place.name}
-                </Typography>
+                </Typography>}
                 <Typography variant="h6" className={classes.locationPopulation}>
                     {
                         (props.place.current_occupancy === 1)

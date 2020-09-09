@@ -399,6 +399,7 @@ function HomePage(props) {
         // console.log(userState);
 
         setTimeDialogEnterTime(new Date(userState.time_in))
+        setTimeDialogExitTime(new Date(props.initTime))
 
         setShownPlaces(
             checkLocations("userState")
@@ -625,6 +626,7 @@ function HomePage(props) {
                                         handleTimeDialog={handleTimeDialog}
                                         isDisplayed={true}
                                         canDelete={false}
+                                        isCurrent={true}
                                         handleLocationEnter={handleLocationEnter}
                                         handleLocationLeave={handleLocationLeave}
                                     />
