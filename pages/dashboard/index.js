@@ -98,7 +98,7 @@ function UnThemedDashboard() {
                 }
             />
 
-            <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+            <AppBar position="absolute" className={clsx(classes.appBar && classes.appBarShift)}>
                 <Toolbar className={classes.toolbar}>
                     <IconButton
                         edge="start"
@@ -107,7 +107,7 @@ function UnThemedDashboard() {
                         onClick={() => {
                             window.location = "/api/admin/export"
                         }}
-                        className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+                        className={clsx(classes.menuButton && classes.menuButtonHidden)}
                     >
                         <GetAppIcon/>
                     </IconButton>
