@@ -8,4 +8,4 @@ Copy `.env.example` to `.env` in the root directory of your installation and mod
 
 To enforce a data retention policy, connect to your MongoDB database and run `db.people.createIndex({"createdAt": 1}, {expireAfterSeconds: 2592000})` to instruct the Mongo daemon to delete objects after 30 days.
 
-cTrace is also available as a docker image: `docker pull natesales/ctrace`
+cTrace is also available as a Docker image after configuring an `.env` file.  
