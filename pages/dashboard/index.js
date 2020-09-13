@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from "react";
-import clsx from "clsx";
 import {makeStyles, ThemeProvider} from "@material-ui/core/styles";
 import {AppBar, Box, Container, Grid, Paper, Snackbar, Toolbar, Typography} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import theme from "@components/MainTheme";
 import CloseIcon from "@material-ui/icons/Close"
 import LocationTable from "./LocationTable";
-import NewLocationForm from "./NewLocationForm";
 import GetAppIcon from "@material-ui/icons/GetApp";
 
 const useStyles = makeStyles((theme) => ({
@@ -98,7 +96,7 @@ function UnThemedDashboard() {
                 }
             />
 
-            <AppBar position="absolute" className={clsx(classes.appBar && classes.appBarShift)}>
+            <AppBar position="absolute" className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
                     <IconButton
                         edge="start"
@@ -107,7 +105,7 @@ function UnThemedDashboard() {
                         onClick={() => {
                             window.location = "/api/admin/export"
                         }}
-                        className={clsx(classes.menuButton && classes.menuButtonHidden)}
+                        className={classes.menuButton}
                     >
                         <GetAppIcon/>
                     </IconButton>
@@ -119,14 +117,6 @@ function UnThemedDashboard() {
             <main className={classes.content}>
                 <div className={classes.appBarSpacer}/>
                 <Container maxWidth="lg" className={classes.container}>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <Paper className={classes.paper} elevation={3}>
-                                <NewLocationForm updateLocations={getLocations}/>
-                            </Paper>
-                        </Grid>
-                    </Grid>
-
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <Paper className={classes.paper} elevation={3}>
