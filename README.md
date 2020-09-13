@@ -1,4 +1,4 @@
-# cTrace ![Release](https://img.shields.io/badge/release-v1.0.3--alpha-green)
+# cTrace ![Release](https://img.shields.io/badge/release-v1.0.4--alpha-green)
 
 Contact Tracing and Reporting Application
 
