@@ -18,7 +18,7 @@ services:
       - AUTH0_CLIENT_SECRET=YOUR-AUTH0-CLIENT-SECRET
       - SESSION_COOKIE_SECRET=YOUR-COOKIE-SECRET
       - REDIRECT_URI=http://localhost/api/callback
-      - POST_LOGOUT_REDIRECT_URI=http://localhost:3000/
+      - POST_LOGOUT_REDIRECT_URI=http://localhost/
       - BASE_URL=http://localhost/
       - MONGO_URI=mongodb://database/
     links:
