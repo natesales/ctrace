@@ -1,0 +1,12 @@
+# Example Caddyfile
+
+:80
+reverse_proxy web:3000
+
+basicauth /dashboard {
+    admin CHANGEME
+}
+
+basicauth /api/admin/* {
+    admin CHANGEME
+}
