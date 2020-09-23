@@ -1,0 +1,8 @@
+# Example Caddyfile
+
+:80
+reverse_proxy / web:3000
+
+basicauth /admin/* {
+    admin CHANGEME
+}
