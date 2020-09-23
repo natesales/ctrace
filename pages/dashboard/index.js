@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {makeStyles, ThemeProvider} from "@material-ui/core/styles";
-import {AppBar, Box, Container, Grid, Paper, Snackbar, Toolbar, Typography} from "@material-ui/core";
+import {AppBar, Box, Container, Grid, Paper, Toolbar, Typography} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import theme from "@components/MainTheme";
-import CloseIcon from "@material-ui/icons/Close"
+import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import LocationTable from "./LocationTable";
 import GetAppIcon from "@material-ui/icons/GetApp";
 
@@ -53,7 +53,6 @@ const useStyles = makeStyles((theme) => ({
 function UnThemedDashboard() {
     const classes = useStyles();
 
-    const [exportDialogOpen, setExportDialogOpen] = useState(false);
     const [locations, setLocations] = useState(null);
 
     useEffect(() => {
@@ -78,24 +77,6 @@ function UnThemedDashboard() {
 
     return (
         <div className={classes.root}>
-            <Snackbar
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                open={exportDialogOpen}
-                onClose={() => setExportDialogOpen(false)}
-                autoHideDuration={3000}
-                message="Location spreadsheet has been exported"
-                action={
-                    <React.Fragment>
-                        <IconButton size="small" aria-label="close" color="inherit" onClick={() => setExportDialogOpen(false)}>
-                            <CloseIcon/>
-                        </IconButton>
-                    </React.Fragment>
-                }
-            />
-
             <AppBar position="absolute" className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
                     <IconButton
@@ -108,6 +89,18 @@ function UnThemedDashboard() {
                         className={classes.menuButton}
                     >
                         <GetAppIcon/>
+                    </IconButton>
+
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="show qr codes"
+                        onClick={() => {
+                            window.location = "/dashboard/qrcodes"
+                        }}
+                        className={classes.menuButton}
+                    >
+                        <PhotoCameraIcon/>
                     </IconButton>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         cTrace Dashboard
