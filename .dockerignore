@@ -37,3 +37,6 @@ yarn-error.log*
 
 # MongoDB Database
 mongo-volume/
+
+# Caddy SSL certificates
+caddy/
