@@ -7,18 +7,21 @@ import mongoose from "mongoose";
 export default auth0.requireAuthentication(async function me(req, res) {
     try {
         const {user} = await auth0.getSession(req);
+        const user_id = user["sub"].split("|")[2];
 
         await dbConnect();
 
-        const response = {google_info: user};
-
-        const person = await Person.findOne({"uid": user.nickname});
+        const response = {
+            name: user.name,
+        };
+        
+        
+        const person = await Person.findOne({"uid": user_id});
         if (person === null) {
             const newPerson = new Person({
                 _id: new mongoose.Types.ObjectId(),
                 createdAt: new Date(),
-                uid: user.nickname,
-                name: user.name
+                uid: user_id,
             });
 
             newPerson.save((error) => {

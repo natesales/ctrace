@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     profilePhoto: {
         height: '30px',
         width: '30px',
+        background: 'white',
     }
 }));
 
@@ -37,7 +38,7 @@ function Nav(props) {
                 </Typography>
 
                 {/*TODO: This errors on login but redirects super fast*/}
-                <Avatar alt={props.user.google_info.nickname} src={props.user.google_info.picture} className={classes.profilePhoto} />
+                <div>{props["user"]["name"].split("@")[0]}</div>
             </Toolbar>
         </AppBar>
     )

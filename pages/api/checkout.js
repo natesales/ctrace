@@ -5,6 +5,7 @@ import auth0 from '../../lib/auth0';
 
 export default auth0.requireAuthentication(async function handler(req, res) {
     const {user} = await auth0.getSession(req);
+    const user_id = user["sub"].split("|")[2];
 
     const {method} = req;
 
@@ -14,7 +15,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
         case 'POST':
             const time_marked = new Date()
 
-            const person = await Person.findOne({"uid": user.nickname});
+            const person = await Person.findOne({"uid": user_id});
             if (person == null) {
                 return res.status(400).json({success: false, message: "Person with this UID doesn't exist"});
             }
@@ -25,7 +26,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
             }
 
             // Set the time_out
-            await Person.findOne({uid: user.nickname}).then(async (doc) => {
+            await Person.findOne({uid: user_id}).then(async (doc) => {
                 let entry = doc.log[doc.log.length - 1];
                 entry["time_out"] = time_marked;
                 doc.markModified('log');
