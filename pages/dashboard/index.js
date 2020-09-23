@@ -6,6 +6,7 @@ import theme from "@components/MainTheme";
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import LocationTable from "./LocationTable";
 import GetAppIcon from "@material-ui/icons/GetApp";
+import NewLocationForm from "./NewLocationForm";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -111,6 +112,12 @@ function UnThemedDashboard() {
                 <div className={classes.appBarSpacer}/>
                 <Container maxWidth="lg" className={classes.container}>
                     <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                            <Paper className={classes.paper} elevation={3}>
+                                <NewLocationForm/>
+                            </Paper>
+                        </Grid>
+
                         <Grid item xs={12}>
                             <Paper className={classes.paper} elevation={3}>
                                 <LocationTable locations={locations}/>
