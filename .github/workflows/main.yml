@@ -23,3 +23,12 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
+
+  build-docker-image:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name:
+        run: echo {{ secrets.DOCKERHUB_TOKEN }} | docker login -u {{ secrets.DOCKERHUB_USERNAME }} --password-stdin
