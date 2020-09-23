@@ -10,7 +10,7 @@ services:
       - ./mongo-volume:/data/db
 
   web:
-    build: .
+    image: cgtrace/ctrace
     container_name: ctrace-web
     environment:
       - AUTH0_DOMAIN=c-trace.us.auth0.com
