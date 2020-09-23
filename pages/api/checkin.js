@@ -38,7 +38,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
             await location.save();
 
             // Push the new checkin
-            const updated_person = await Person.update({uid: user.nickname}, {
+            const updated_person = await Person.updateOne({uid: user.nickname}, {
                 $push: {
                     log: {
                         location: req.body.location,
