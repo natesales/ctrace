@@ -42,3 +42,6 @@ mongo-volume/
 
 # Caddy SSL certificates
 caddy/
+
+# Docker Compose
+docker-compose.yml
