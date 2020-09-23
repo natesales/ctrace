@@ -38,4 +38,4 @@ jobs:
       - name: Build
         run: docker build -t cgtrace/ctrtace .
       - name: Deploy
-        run: docker push cgtrace/ctrtace:${{ github.ref }}
+        run: docker push cgtrace/ctrtace
