@@ -43,3 +43,6 @@ caddy/
 
 # Docker Compose
 docker-compose.yml
+
+# GitHub Workflows
+.github/
