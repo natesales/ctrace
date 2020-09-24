@@ -28,7 +28,7 @@ jobs:
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: Edit the README
-        run: sed -i '/Release/c\# cTrace ![Release](https://img.shields.io/badge/release-${{ steps.vars.outputs.tag }})' README.md
+        run: sed -i '/Release/c\![Release](https://img.shields.io/badge/release-${{ steps.vars.outputs.tag }})' README.md
       - name: Add and Commit
         run: |
           git config --local user.email "nate@natesales.net"
