@@ -38,7 +38,11 @@ jobs:
       - name: Get tag name
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-      - name: Build
+      - name: Build tag
         run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/ctrace:${{ steps.vars.outputs.tag }} .
-      - name: Push
+      - name: Build latest
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/ctrace:latest .
+      - name: Push tag
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/ctrace:${{ steps.vars.outputs.tag }}
+      - name: Push latest
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/ctrace:latest
