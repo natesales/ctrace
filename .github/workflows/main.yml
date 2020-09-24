@@ -28,9 +28,17 @@ jobs:
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: Edit the README
-        run: sed '/https:\/\/img./c\# cTrace ![Release](https://img.shields.io/badge/release-${{ steps.vars.outputs.tag }})' README.md
-      - name: Cat README
-        run: cat README.md
+        run: sed '/https:\/\/img./c\# cTrace ![Release](https://img.shields.io/badge/release-${{ steps.vars.outputs.tag }})' README.md > README.md
+      - name: Add and Commit
+        run: |
+          git config --local user.email "nate@natesales.net"
+          git config --local user.name "Nate Sales (Deploy Bot)"
+          git add README.md
+          git commit -m "Auto bump version to ${{ steps.vars.outputs.tag }}"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
   build-docker:
     name: Build and deploy Docker image
