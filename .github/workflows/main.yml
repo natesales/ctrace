@@ -24,6 +24,14 @@ jobs:
           draft: false
           prerelease: false
 
+      - name: Get tag name
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Edit the README
+        run: sed '/https:\/\/img./c\# cTrace ![Release](https://img.shields.io/badge/release-${{ steps.vars.outputs.tag }})' README.md
+      - name: Cat README
+        run: cat README.md
+
   build-docker:
     name: Build and deploy Docker image
     runs-on: ubuntu-latest
