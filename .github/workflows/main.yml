@@ -24,17 +24,11 @@ jobs:
           draft: false
           prerelease: false
 
-  update-readme:
-    name: Update README
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
       - name: Get tag name
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: Edit the README
-        run: sed -i '/Release/c\![Release](https://img.shields.io/badge/release-${{ steps.vars.outputs.tag }}&color=green)' README.md
+        run: sed -i '/Release/c\![Release](https://img.shields.io/badge/release-${{ steps.vars.outputs.tag }})' README.md
       - name: Add and Commit
         run: |
           git config --local user.email "nate@natesales.net"
