@@ -233,7 +233,7 @@ function HomePage(props) {
                             })
                             .then(props.handleUserUpdate)
                             .catch(error => {
-                                handleResponseSnackbarOpen(false, data.message);
+                                handleResponseSnackbarOpen(false, error.message);
                                 console.log(error);
                             });
                     }
@@ -266,6 +266,14 @@ function HomePage(props) {
                 setTimeDialogExitError(false)
                 setTimeDialogExitTime(date);
             }
+        }
+    }
+
+    const handleTimeDialogFormatError = (name) => {
+        if (name === "enter") {
+            setTimeDialogEnterError(true)
+        } else if (name === "exit") {
+            setTimeDialogExitError(true)
         }
     }
 
@@ -570,6 +578,8 @@ function HomePage(props) {
                                 onChange={handleDialogEnterTimeChange}
                                 error={timeDialogEnterError}
                                 errorMessage={"Future entrance times are not allowed."}
+                                // handleFormatError={handleTimeDialogFormatError}
+                                format="yyyy/MM/dd hh:mm a"
                             />
                             <CustomTimePicker
                                 label="Change exit time"
@@ -579,6 +589,8 @@ function HomePage(props) {
                                 onChange={handleDialogExitTimeChange}
                                 error={timeDialogExitError}
                                 errorMessage={"Future exit times are not allowed."}
+                                // handleFormatError={handleTimeDialogFormatError}
+                                format="yyyy/MM/dd hh:mm a"
                             />
                         </Box>
                     </MuiPickersUtilsProvider>

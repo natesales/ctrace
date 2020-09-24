@@ -7,6 +7,14 @@ body {
     background-color: #575757;
 }
 
+.login-body {
+    background-image: url(https://www.catlin.edu/uploaded/images/VeracrossImages/1800x1800-Veracross-Background6.jpg?1549319927594);
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100vw;
+    height: 100vh;
+}
+
 a {
     color: inherit;
     text-decoration: none;
