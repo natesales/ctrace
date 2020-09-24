@@ -6,6 +6,7 @@ import auth0 from '../../lib/auth0'
 export default auth0.requireAuthentication(async function handler(req, res) {
 
     const {user} = await auth0.getSession(req);
+    const user_id = user["sub"].split("|")[2];
 
     const {method} = req;
 
@@ -13,7 +14,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
 
     switch (method) {
         case 'POST':
-            const person = await Person.findOne({"uid": user.nickname});
+            const person = await Person.findOne({"uid": user_id});
             if (person == null) {
                 return res.status(400).json({success: false});
             }

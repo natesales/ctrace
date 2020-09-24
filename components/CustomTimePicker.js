@@ -33,6 +33,8 @@ export default function CustomTimePicker(props) {
                 value={props.value}
                 onChange={props.onChange}
                 error={props.error}
+                // onError={(error) => props.handleFormatError(error)}
+                format={props.format}
                 KeyboardButtonProps={{
                     'aria-label': 'change time',
                 }}
