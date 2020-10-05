@@ -3,7 +3,6 @@ import Location from "../../../models/Location";
 import Person from "../../../models/Person";
 import stringify from "csv-stringify";
 import strftime from "strftime";
-import config from "../../../lib/config";
 
 function getLocationName(id, locations) {
     for (const location in locations) {
@@ -14,7 +13,7 @@ function getLocationName(id, locations) {
 }
 
 export default async function handler(req, res) {
-    if (config.ADMIN_ENABLED) {
+    if (process.env.ADMIN_ENABLED) {
         try {
             const {method} = req
 

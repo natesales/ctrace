@@ -1,13 +1,9 @@
 import dbConnect from "../../../utils/dbConnect";
 import Location from "../../../models/Location";
 import QRCode from "qrcode";
-import dotenv from "dotenv";
-import config from "../../../lib/config";
-
-dotenv.config();
 
 export default async function handler(req, res) {
-    if (config.ADMIN_ENABLED) {
+    if (process.env.ADMIN_ENABLED) {
         const {method} = req;
 
         await dbConnect();

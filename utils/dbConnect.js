@@ -1,8 +1,5 @@
 import mongoose from "mongoose";
-import config from "lib/config";
 
-// TODO: Extract to .env
-const MONGO_URI = config.MONGO_URI;
 const connection = {}
 
 async function dbConnect() {
@@ -10,7 +7,7 @@ async function dbConnect() {
         return;
     }
 
-    const db = await mongoose.connect(MONGO_URI, {
+    const db = await mongoose.connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
