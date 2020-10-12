@@ -1,5 +1,5 @@
 # cTrace
-![Release](https://img.shields.io/badge/release-v1.1.14-alpha?style=for-the-badge&color=green)
+![Release](https://img.shields.io/badge/release-v1.1.15-alpha?style=for-the-badge&color=green)
 ![Docker](https://img.shields.io/badge/docker-cgtrace/ctrace-blue?link=https://hub.docker.com/repository/docker/cgtrace/ctrace&style=for-the-badge&logo=docker)
 
 Contact Tracing and Reporting Application
