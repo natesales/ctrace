@@ -6,7 +6,7 @@ import HistoryIcon from '@material-ui/icons/History';
 
 const useStyles = makeStyles((theme) => ({
     placePaper: {
-        height: '58px',
+        // height: '58px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -20,9 +20,7 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.secondary.contrastText,
         opacity: ".87",
         overflow: "hidden",
-        whiteSpace: "nowrap",
-        textOverflow: "ellipsis",
-        // maxWidth: "70px"
+        display: 'block',
     },
     locationNameCurrent: {
         fontSize: '17px',
@@ -43,6 +41,9 @@ const useStyles = makeStyles((theme) => ({
     },
     cardType: {
         margin: '8px',
+        overflow: "hidden",
+        display: 'block',
+        maxWidth: 'calc(100% - 130px) !important'
     },
     actionButton: {
         margin: '8px',

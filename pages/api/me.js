@@ -3,6 +3,7 @@ import dbConnect from "../../utils/dbConnect";
 import Person from "../../models/Person";
 import Location from "../../models/Location";
 import mongoose from "mongoose";
+import { LiveTv } from "@material-ui/icons";
 
 export default auth0.requireAuthentication(async function me(req, res) {
     try {
@@ -16,13 +17,15 @@ export default auth0.requireAuthentication(async function me(req, res) {
         };
         
         
-        const person = await Person.findOne({"uid": user_id});
+        let person = await Person.findOne({"uid": user_id});
         if (person === null) {
             const newPerson = new Person({
                 _id: new mongoose.Types.ObjectId(),
                 createdAt: new Date(),
                 uid: user_id,
             });
+
+            person = newPerson;
 
             newPerson.save((error) => {
                 if (error) {
