@@ -114,13 +114,13 @@ function UnThemedDashboard() {
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <Paper className={classes.paper} elevation={3}>
-                                <NewLocationForm/>
+                                <NewLocationForm updateLocations={getLocations}/>
                             </Paper>
                         </Grid>
 
                         <Grid item xs={12}>
                             <Paper className={classes.paper} elevation={3}>
-                                <LocationTable locations={locations}/>
+                                <LocationTable locations={locations} updateLocations={getLocations}/>
                             </Paper>
                         </Grid>
                     </Grid>
@@ -128,11 +128,6 @@ function UnThemedDashboard() {
                     <Box pt={4}>
                         <Typography variant="body2" color="textSecondary" align="center">
                             {"cTrace Dashboard"}
-                            {/*<Link color="inherit" href="https://material-ui.com/">*/}
-                            {/*    Your Website*/}
-                            {/*</Link>{" "}*/}
-                            {/*{new Date().getFullYear()}*/}
-                            {/*{"."}*/}
                         </Typography>
                     </Box>
                 </Container>
