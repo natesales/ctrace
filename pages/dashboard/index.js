@@ -7,6 +7,7 @@ import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import LocationTable from "./LocationTable";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import NewLocationForm from "./NewLocationForm";
+import ExportDialog from "./ExportDialog"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,6 +56,7 @@ function UnThemedDashboard() {
     const classes = useStyles();
 
     const [locations, setLocations] = useState(null);
+    const [exportDialogOpen, setDialog] = useState(false);
 
     useEffect(() => {
         getLocations();
@@ -80,7 +82,7 @@ function UnThemedDashboard() {
         <div className={classes.root}>
             <AppBar position="absolute" className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
-                    <IconButton
+                    {/* <IconButton
                         edge="start"
                         color="inherit"
                         aria-label="export spreadsheet"
@@ -90,7 +92,21 @@ function UnThemedDashboard() {
                         className={classes.menuButton}
                     >
                         <GetAppIcon/>
+                    </IconButton> */}
+
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="export spreadsheet"
+                        onClick={() => {
+                            setDialog(true);
+                        }}
+                        className={classes.menuButton}
+                    >
+                        <GetAppIcon/>
                     </IconButton>
+
+                    <ExportDialog open={exportDialogOpen} handleClose={() => {setDialog(false)}} />
 
                     <IconButton
                         edge="start"
