@@ -17,7 +17,12 @@ export default function LocationTable(props) {
 
     const deleteLocation = (event) => {
         event.preventDefault();
-        console.log(event.target.parentElement.id);
+        let locationId;
+        if (event.target.parentElement.id !== "") {
+            locationId = event.target.parentElement.id;
+        } else {
+            locationId = event.currentTarget.id;
+        }
         fetch("/api/admin/location", {
             method: "POST",
             // TODO: Authenticate this
@@ -25,7 +30,7 @@ export default function LocationTable(props) {
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 isDelete: true,
-                name: event.target.parentElement.id,
+                name: locationId,
             }),
         }).then(response => response.json()).then(() => {
             props.updateLocations();

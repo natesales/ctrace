@@ -8,6 +8,8 @@ function getLocationName(id, locations) {
     for (const location in locations) {
         if (locations[location]._id.toString() === id) {
             return locations[location].name;
+        } else {
+            return "Deleted Location";
         }
     }
 }
@@ -27,9 +29,9 @@ export default async function handler(req, res) {
 
                     for await (const person of Person.find()) {
                         for (const entry in person.log) {
-                            const location_name = await getLocationName(person.log[entry].location, locations);
+                            const location_name = getLocationName(person.log[entry].location, locations);
                             console.log(location_name)
-                            export_object.push([person.name, location_name, strftime("%I:%M %p %B %d, %Y", new Date(person.log[entry].time_in)), person.log[entry].time_out ? strftime("%I:%M %p %B-%d-%Y", new Date(person.log[entry].time_in)) : "Not checked out"])
+                            export_object.push([person.uid, location_name, strftime("%I:%M %p %B %d, %Y", new Date(person.log[entry].time_in)), person.log[entry].time_out ? strftime("%I:%M %p %B %d, %Y", new Date(person.log[entry].time_out)) : "Not checked out"])
                         }
                     }
 
