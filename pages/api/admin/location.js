@@ -25,6 +25,10 @@ export default async function handler(req, res) {
                     res.status(200).json({success: false});
                 }
 
+                Location.find().sort({"name": 1}).forEach((e) => {
+                    Location.insert(e)
+                })
+
                 break;
             default:
                 res.status(400).json({success: false});
