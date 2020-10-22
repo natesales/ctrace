@@ -29,6 +29,7 @@ export default function NewLocationForm(props) {
             // credentials: "include",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
+                isDelete: false,
                 "name": name,
                 "max_occupancy": Number(maxOccupancy)
             }),

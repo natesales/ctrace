@@ -4,12 +4,16 @@ import Location from "../../../models/Location";
 export default async function handler(req, res) {
     if (process.env.ADMIN_ENABLED) {
         const {method} = req;
-
+        const isDelete = req.body.isDelete;
         await dbConnect();
 
         switch (method) {
             case 'POST':
-                const location = await Location.findOne({"name": req.body.name});
+                if (isDelete) {
+                    await Location.findOneAndDelete({"name": req.body.name})
+                    res.status(200).json({success: true});
+                } else {
+                    const location = await Location.findOne({"name": req.body.name});
                 if (location !== null) {
                     return res.status(400).json({success: false, message: "Location with this name already exists"});
                 }
@@ -24,10 +28,7 @@ export default async function handler(req, res) {
                 } else {
                     res.status(200).json({success: false});
                 }
-
-                Location.find().sort({"name": 1}).forEach((e) => {
-                    Location.insert(e)
-                })
+                }
 
                 break;
             default:

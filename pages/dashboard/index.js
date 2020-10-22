@@ -7,6 +7,7 @@ import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import LocationTable from "./LocationTable";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import NewLocationForm from "./NewLocationForm";
+import ExportDialog from "./ExportDialog"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,6 +56,7 @@ function UnThemedDashboard() {
     const classes = useStyles();
 
     const [locations, setLocations] = useState(null);
+    const [exportDialogOpen, setDialog] = useState(false);
 
     useEffect(() => {
         getLocations();
@@ -80,7 +82,7 @@ function UnThemedDashboard() {
         <div className={classes.root}>
             <AppBar position="absolute" className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
-                    <IconButton
+                    {/* <IconButton
                         edge="start"
                         color="inherit"
                         aria-label="export spreadsheet"
@@ -90,7 +92,21 @@ function UnThemedDashboard() {
                         className={classes.menuButton}
                     >
                         <GetAppIcon/>
+                    </IconButton> */}
+
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="export spreadsheet"
+                        onClick={() => {
+                            setDialog(true);
+                        }}
+                        className={classes.menuButton}
+                    >
+                        <GetAppIcon/>
                     </IconButton>
+
+                    <ExportDialog open={exportDialogOpen} handleClose={() => {setDialog(false)}} />
 
                     <IconButton
                         edge="start"
@@ -114,13 +130,13 @@ function UnThemedDashboard() {
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <Paper className={classes.paper} elevation={3}>
-                                <NewLocationForm/>
+                                <NewLocationForm updateLocations={getLocations}/>
                             </Paper>
                         </Grid>
 
                         <Grid item xs={12}>
                             <Paper className={classes.paper} elevation={3}>
-                                <LocationTable locations={locations}/>
+                                <LocationTable locations={locations} updateLocations={getLocations}/>
                             </Paper>
                         </Grid>
                     </Grid>
@@ -128,11 +144,6 @@ function UnThemedDashboard() {
                     <Box pt={4}>
                         <Typography variant="body2" color="textSecondary" align="center">
                             {"cTrace Dashboard"}
-                            {/*<Link color="inherit" href="https://material-ui.com/">*/}
-                            {/*    Your Website*/}
-                            {/*</Link>{" "}*/}
-                            {/*{new Date().getFullYear()}*/}
-                            {/*{"."}*/}
                         </Typography>
                     </Box>
                 </Container>
