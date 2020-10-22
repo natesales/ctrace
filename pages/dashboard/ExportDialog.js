@@ -21,16 +21,22 @@ const useStyles = makeStyles(theme => ({
         margin: '0 5px 0 0',
     },
     formTitle: {
-        margin: '10px 0 2px 0'
+        margin: '12px 0 8px 0'
     },
     timeEditFlex: {
         display: "flex",
         flexDirection: 'column',
-        margin: 'auto',
+        width: '100%',
     },
     containerRoot: {
         display: "flex",
         flexDirection: "column"
+    },
+    dialogTitle: {
+        paddingBottom: '5px',
+    },
+    topForm: {
+        marginTop: '0px !important',
     }
 }))
 
@@ -39,20 +45,29 @@ export default function ExportDialog(props) {
 
     const [ startTime, setStartTime ] = useState(new Date());
     const [ endTime, setEndTime ] = useState(new Date());
+    const [ uid, setUID ] = useState(null);
+    const [ uid15, setUID15 ] = useState('');
 
-    const handleUserChoice = () => {
+    const handleUserIDExport = async (is15) => {
+        if (is15) {
+            // console.log(uid15);
+            window.location = "/api/admin/export?uid15=" + uid15 + "&is15=true"
+        } else {
+            // console.log(uid);
+            window.location = "/api/admin/export?uid=" + uid + "&is15=false"
+        }
+    }
 
+    const handleTimeExport = () => {
+        window.location = "/api/admin/export?start_time=" + startTime.getTime() + "&end_time=" + endTime.getTime();
     }
 
     return (
         <Dialog open={props.open} onClose={props.handleClose} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">Export Options</DialogTitle>
+            <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>Export Options</DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                    Choose how you want to export cTrace data.
-                </DialogContentText>
-                <DialogContentText className={classes.formTitle}>
-                    Sort by User:
+                <DialogContentText className={classes.formTitle, classes.topForm}>
+                    Sort by User:  (leave empty for all records)
                 </DialogContentText>
                 <div className={classes.formLine}>
                     <TextField
@@ -62,10 +77,18 @@ export default function ExportDialog(props) {
                         label="User ID"
                         type="text"
                         className={classes.formText}
+                        value={uid}
+                        onChange={(event) => {
+                            if (event.target.value !== '') {
+                                setUID(event.target.value)
+                            } else {
+                                setUID(null)
+                            }
+                        }}
                     />
-                    <Button onClick={handleUserChoice} variant="contained" color="primary">Export</Button>
+                    <Button onClick={() => {handleUserIDExport(false)}} variant="contained" color="primary">Export</Button>
                 </div>
-                <DialogContentText className={classes.formTitle}>
+                {/* <DialogContentText className={classes.formTitle}>
                     Sort by all {'>'}15 min with User:
                 </DialogContentText>
                 <div className={classes.formLine}>
@@ -76,9 +99,11 @@ export default function ExportDialog(props) {
                         label="User ID"
                         type="text"
                         className={classes.formText}
+                        value={uid15}
+                        onChange={(event) => {setUID15(event.target.value)}}
                     />
-                    <Button onClick={handleUserChoice} variant="contained" color="primary">Export</Button>
-                </div>
+                    <Button onClick={() => {handleUserIDExport(true)}} variant="contained" color="primary">Export</Button>
+                </div> */}
                 <DialogContentText className={classes.formTitle}>
                     Sort by time frame:
                 </DialogContentText>
@@ -118,7 +143,7 @@ export default function ExportDialog(props) {
                                 />
                             </Box>
                         </MuiPickersUtilsProvider>
-                        <Button onClick={handleUserChoice} variant="contained" color="primary">Export</Button>
+                        <Button onClick={handleTimeExport} variant="contained" color="primary">Export</Button>
                     </Box>
                 </div>
             </DialogContent>
