@@ -3,7 +3,6 @@ import dbConnect from "../../utils/dbConnect";
 import Person from "../../models/Person";
 import Location from "../../models/Location";
 import mongoose from "mongoose";
-import { LiveTv } from "@material-ui/icons";
 
 export default auth0.requireAuthentication(async function me(req, res) {
     try {
