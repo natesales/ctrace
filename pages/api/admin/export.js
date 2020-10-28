@@ -13,11 +13,15 @@ function getLocationName(id, locations) {
     return "Deleted Location";
 }
 
+function getDate(timestamp) {
+    return strftime("%I:%M %p %B %d, %Y", new Date(new Date(timestamp).toLocaleString('en-US', {timeZone: 'America/Los_Angeles'})))
+}
+
 export default async function handler(req, res) {
     if (process.env.ADMIN_ENABLED) {
         try {
             const {method} = req
-            
+
             const uid = req.query.uid;
             const is15 = req.query.is15;
             const start_time = req.query.start_time;
@@ -66,7 +70,7 @@ export default async function handler(req, res) {
                             if (person !== null) {
                                 for (const entry of person.log) {
                                     const location_name = getLocationName(entry.location, locations);
-                                    export_object.push([person.uid, location_name, strftime("%I:%M %p %B %d, %Y", new Date(entry.time_in)), entry.time_out ? strftime("%I:%M %p %B %d, %Y", new Date(entry.time_out)) : "Not checked out"])
+                                    export_object.push([person.uid, location_name, getDate(entry.time_in), entry.time_out ? getDate(entry.time_out) : "Not checked out"])
                                 }
                             } else {
                                 // res.redirect('/dashboard');
@@ -80,7 +84,7 @@ export default async function handler(req, res) {
                                 const time_in = new Date(entry.time_in);
                                 const time_out = entry.time_out ? new Date(entry.time_out) : null;
                                 if (time_in >= start_time && (time_out <= end_time || time_out == null)) {
-                                    export_object.push([person.uid, location_name, strftime("%I:%M %p %B %d, %Y", new Date(entry.time_in)), entry.time_out ? strftime("%I:%M %p %B %d, %Y", new Date(entry.time_out)) : "Not checked out"])
+                                    export_object.push([person.uid, location_name, getDate(entry.time_in), entry.time_out ? getDate(entry.time_out) : "Not checked out"])
                                 }
                             }
                         }
@@ -88,13 +92,13 @@ export default async function handler(req, res) {
                         for await (const person of Person.find()) {
                             for (const entry of person.log) {
                                 const location_name = getLocationName(entry.location, locations);
-                                export_object.push([person.uid, location_name, strftime("%I:%M %p %B %d, %Y", new Date(entry.time_in)), entry.time_out ? strftime("%I:%M %p %B %d, %Y", new Date(entry.time_out)) : "Not checked out"])
+                                export_object.push([person.uid, location_name, getDate(entry.time_in), entry.time_out ? getDate(entry.time_out) : "Not checked out"])
                             }
                         }
                     }
 
                     stringify(export_object, function (err, output) {
-                        res.setHeader("Content-Disposition", "inline; filename=\"cTrace-Export-" + strftime("%I-%M-%p-%B-%d-%Y") + "-.csv\"")
+                        res.setHeader("Content-Disposition", "inline; filename=\"cTrace-Export-" + strftime("%I-%M-%p-%B-%d-%Y") + "-export.csv\"")
                         res.status(200).send(Buffer.from(output));
                     });
 
