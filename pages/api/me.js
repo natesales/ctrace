@@ -53,7 +53,7 @@ export default auth0.requireAuthentication(async function me(req, res) {
             response.pinned_locations = null;
         }
 
-        response.locations = await Location.find({});
+        response.locations = await Location.find().collation({locale: "en"}).sort("name");
 
         // console.log(response, 'RESPONSE FROM ME');
         res.json(response);
