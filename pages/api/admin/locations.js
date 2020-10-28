@@ -9,7 +9,8 @@ export default async function handler(req, res) {
 
         switch (method) {
             case 'GET':
-                const locations = await Location.find();
+                const locations = await Location.find().collation({locale: "en"}).sort("name");
+
                 res.status(200).json({success: true, data: {locations: locations}});
                 break;
 
