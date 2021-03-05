@@ -2,8 +2,8 @@ import dbConnect from "../../utils/dbConnect";
 import Person from "../../models/Person";
 import auth0 from "../../lib/auth0";
 
-export default auth0.requireAuthentication(async function handler(req, res) {
-    const {user} = await auth0.getSession(req);
+export default auth0.withApiAuthRequired(async function handler(req, res) {
+    const {user} = await auth0.getSession(req, res);
     const user_id = user["sub"].split("|")[2];
 
     await dbConnect();
@@ -29,7 +29,7 @@ export default auth0.requireAuthentication(async function handler(req, res) {
             break;
         default:
             res.status(400).json({success: false});
-            console.log('Response was default');
+            // console.log('Response was default');
             break;
     }
 

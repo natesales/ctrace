@@ -3,9 +3,9 @@ import Person from '../../models/Person';
 import Location from '../../models/Location';
 import auth0 from '../../lib/auth0'
 
-export default auth0.requireAuthentication(async function handler(req, res) {
+export default auth0.withApiAuthRequired(async function handler(req, res) {
 
-    const {user} = await auth0.getSession(req);
+    const {user} = await auth0.getSession(req, res);
     const user_id = user["sub"].split("|")[2];
 
     const {method} = req;

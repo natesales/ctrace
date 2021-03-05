@@ -198,9 +198,6 @@ function HomePage(props) {
     });
 
     const handleTimeDialog = (event, reason) => {
-        // console.log(event.currentTarget.id)
-        // console.log(reason)
-
         if (reason == "backdropClick") {
             setShowTimeDialog(false)
             setTimeDialogEnterTime(userState.time_in)
@@ -209,7 +206,6 @@ function HomePage(props) {
             setTimeDialogExitError(false)
         } else {
             if (showTimeDialog) {
-                
                 // console.log(timeDialogExitTime, 'Dialog exit time')
                 // console.log(props.initTime, 'initTime from props')
                 if (!timeDialogEnterError && !timeDialogExitError) {
@@ -246,7 +242,7 @@ function HomePage(props) {
     }
 
     const handleDialogEnterTimeChange = (date) => {
-        console.log(date, '<-- Enter Time')
+        // console.log(date, '<-- Enter Time')
         if (date !== timeDialogEnterTime) {
             if (date.getTime() > new Date(userState.time_in).getTime() || date.getTime() > new Date(timeDialogExitTime).getTime()) {
                 setTimeDialogEnterError(true)
@@ -258,7 +254,7 @@ function HomePage(props) {
     }
 
     const handleDialogExitTimeChange = (date) => {
-        console.log(date, '<-- Exit Time')
+        // console.log(date, '<-- Exit Time')
         if (date !== timeDialogExitTime) {
             if (date.getTime() > new Date(props.initTime).getTime() || date.getTime() < new Date(timeDialogEnterTime).getTime()) {
                 setTimeDialogExitError(true)
@@ -552,11 +548,6 @@ function HomePage(props) {
         setShowResponseSnackbar(false);
     };
 
-    const cancelScroll = (event) => {
-        console.log('scrolled')
-        // event.preventDefault();
-    }
-
     return (
         <div className={classes.root} style={{position:  showTimeDialog && fullScreen ? "fixed" : "initial"}}>
             {userState.current_location ? 
@@ -790,13 +781,13 @@ export default function Home() {
     const [loadingState, setLoadingState] = useState(true);
     
     const initTime = new Date();
-
+    
     useEffect(() => {
         fetch("/api/me", {
             credentials: "include",
         }).then(response => response.json()
         ).then(data => {
-            data.error === "not_authenticated" ? window.location.href = "/api/login?redirectTo=/home" : setUserState(data)
+            data.error === "not_authenticated" ? window.location.href = "/api/login?returnTo=/home" : setUserState(data)
         }).catch(error => {
             console.log(error)
         })
@@ -812,7 +803,7 @@ export default function Home() {
         fetch("/api/me", {
             credentials: "include",
         }).then(response => response.json()).then((data) => {
-            data.status === 401 ? window.location.href = "/api/login?redirectTo=/home" : setUserState(data)
+            data.status === 401 ? window.location.href = "/api/login?returnTo=/home" : setUserState(data)
         });
     }
 

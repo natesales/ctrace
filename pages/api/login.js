@@ -3,7 +3,7 @@ import auth0 from "../../lib/auth0"
 export default async function login(req, res) {
     try {
         await auth0.handleLogin(req, res, {
-            authParams: {
+            authorizationParams: {
                 connection: 'Veracross',
             }
         })

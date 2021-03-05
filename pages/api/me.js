@@ -4,9 +4,9 @@ import Person from "../../models/Person";
 import Location from "../../models/Location";
 import mongoose from "mongoose";
 
-export default auth0.requireAuthentication(async function me(req, res) {
+export default auth0.withApiAuthRequired(async function me(req, res) {
     try {
-        const {user} = await auth0.getSession(req);
+        const {user} = await auth0.getSession(req, res);
         const user_id = user["sub"].split("|")[2];
 
         await dbConnect();
@@ -58,7 +58,7 @@ export default auth0.requireAuthentication(async function me(req, res) {
         // console.log(response, 'RESPONSE FROM ME');
         res.json(response);
     } catch (error) {
-        // console.error(error);
+        console.error(error);
         res.status(error.status || 500).end(error.message);
     }
 })

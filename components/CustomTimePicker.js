@@ -23,7 +23,7 @@ export default function CustomTimePicker(props) {
             <KeyboardDateTimePicker
                 variant="dialog"
                 margin="normal"
-                id="time-picker"
+                id={"time-picker"}
                 label={props.label}
                 onOpen={() => {window.scrollTo(0, 1)}}
                 minDate={new Date(new Date().setDate(new Date().getDate() - 2))}
